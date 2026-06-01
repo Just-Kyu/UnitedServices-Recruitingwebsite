@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Companies — United Services Recruiting</title>
+<meta name="description" content="Hire pre-vetted, ready-to-drive CDL talent. We bring carriers verified drivers matched to their equipment, lanes and clearance requirements — placement in days.">
+<meta name="theme-color" content="#080B12">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="For Companies — United Services Recruiting">
+<meta property="og:description" content="Hire pre-vetted, ready-to-drive talent. Verified CDL drivers, matched and ready to start.">
+<meta property="og:image" content="assets/logo-full.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="companies.css">
+</head>
+<body class="loading">
+
+<div id="loader">
+  <div class="load-stage">
+    <img src="assets/logo-mark.png" alt="United Services">
+    <div class="load-bar"><i></i></div>
+    <div class="load-cap">United Services · Recruiting</div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<div class="nav-shell">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-brand" href="index.html">
+      <img src="assets/logo-mark.png" alt="">
+      <span><span class="bt">United Services</span><br><span class="bs">Recruiting</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#matcher">For Drivers</a>
+      <a href="for-companies.html" class="active">For Companies</a>
+      <a href="index.html#why">Why Us</a>
+      <a href="#contact">Partner</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="#contact">Contact</a>
+      <a class="btn btn-chrome btn-sm" href="#contact" data-magnetic="0.3">Request drivers</a>
+    </div>
+    <button class="nav-toggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </nav>
+</div>
+<div class="m-menu">
+  <button class="m-close" aria-label="Close menu">&times;</button>
+  <a href="index.html#matcher">For Drivers</a>
+  <a href="for-companies.html">For Companies</a>
+  <a href="index.html#why">Why Us</a>
+  <a href="#contact">Partner</a>
+  <div class="row">
+    <a class="btn btn-ghost" href="#contact">Contact</a>
+    <a class="btn btn-chrome" href="#contact">Request drivers</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="page-hero bp-grid">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="ph-grid">
+      <div>
+        <span class="eyebrow reveal"><span class="num">01</span>&nbsp;/&nbsp;For Companies</span>
+        <h1 class="reveal" data-d="1"><span class="chrome-text">Hire pre-vetted,</span><br>ready-to-drive talent.</h1>
+        <p class="ph-sub reveal" data-d="2">Stop sifting through unqualified applicants. We bring you verified CDL drivers — matched to your equipment, lanes and clearance requirements — ready to start now.</p>
+        <div class="hero-cta reveal" data-d="3">
+          <a class="btn btn-chrome btn-lg" href="#board" data-magnetic="0.3">View available drivers<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-ghost btn-lg" href="#contact">Partner with us</a>
+        </div>
+        <div class="ph-stats reveal" data-d="4">
+          <div class="ph-stat"><div class="v"><span data-count="312">0</span></div><div class="k">Drivers available</div></div>
+          <div class="ph-stat"><div class="v"><span data-count="6">0</span> days</div><div class="k">Avg. placement</div></div>
+          <div class="ph-stat"><div class="v"><span data-count="94">0</span>%</div><div class="k">90-day retention</div></div>
+        </div>
+      </div>
+      <div class="reveal" data-d="2">
+        <div class="u-stage"><div class="u-spin"><img src="assets/logo-mark.png" alt="United Services mark"></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- DRIVERS BOARD -->
+<section class="section board" id="board" data-screen-label="Drivers board">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="num">02</span>&nbsp;/&nbsp;Available drivers</span>
+      <h2>The board, live.</h2>
+      <p>Anonymized profiles of drivers ready to work right now. Filter by equipment, experience and clearance, then request an intro.</p>
+    </div>
+    <div class="board-bar reveal" data-d="1">
+      <div class="live-count"><span class="n" id="board-count">0</span><span class="t">drivers matching</span></div>
+      <span class="pill live"><span class="dot"></span>Updated continuously</span>
+    </div>
+    <div class="filters reveal" data-d="1" id="filters"></div>
+    <div class="drivers-grid reveal" data-d="2" id="drivers-grid"></div>
+  </div>
+</section>
+
+<!-- VALUE PROPS -->
+<section class="section" id="why" data-screen-label="Value props">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="num">03</span>&nbsp;/&nbsp;Why partner with us</span>
+      <h2>Fewer empty seats.<br>Lower turnover.</h2>
+    </div>
+    <div class="vprops">
+      <div class="card vprop edge-top reveal" data-d="1">
+        <div class="vp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg></div>
+        <h3>Vetted before you see them</h3>
+        <p>Every driver is screened for license class, MVR, experience and clearance. You only meet candidates who actually fit your role.</p>
+      </div>
+      <div class="card vprop edge-top reveal" data-d="2">
+        <div class="vp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Placement in days, not weeks</h3>
+        <p>Our active pool means we can present matched drivers fast — average time to a signed driver is under a week.</p>
+      </div>
+      <div class="card vprop edge-top reveal" data-d="3">
+        <div class="vp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Drivers who stay</h3>
+        <p>We match on lifestyle fit — home time, routes, equipment — not just pay. That's why our placements hit 94% retention at 90 days.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNER FORM -->
+<section class="section partner" id="contact" data-screen-label="Partner form">
+  <div class="wrap">
+    <div class="partner-grid">
+      <div class="reveal">
+        <span class="eyebrow"><span class="num">04</span>&nbsp;/&nbsp;Request drivers</span>
+        <h2 style="font-size:clamp(32px,5vw,52px);margin-top:18px;line-height:1.0">Tell us who<br>you need.</h2>
+        <p style="color:var(--silver-txt);font-size:17px;margin-top:20px;max-width:380px;line-height:1.6">Share your lanes and requirements. A recruiter will reach out within one business day with matched drivers from the board.</p>
+        <div style="margin-top:32px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:12px;color:var(--silver-txt);font-size:14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steel-hi)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(800) 555-0199</div>
+          <div style="display:flex;align-items:center;gap:12px;color:var(--silver-txt);font-size:14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steel-hi)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>partners@unitedservices.com</div>
+        </div>
+      </div>
+      <div class="card partner-form reveal" data-d="1" id="partner-card">
+        <form id="partner-form" novalidate>
+          <div class="form-row">
+            <div class="field"><label for="p-co">Company</label><input id="p-co" name="company" type="text" placeholder="Acme Logistics" required></div>
+            <div class="field"><label for="p-name">Your name</label><input id="p-name" name="name" type="text" placeholder="Jordan Reed" required></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="p-email">Work email</label><input id="p-email" name="email" type="email" placeholder="you@company.com" required></div>
+            <div class="field"><label for="p-phone">Phone</label><input id="p-phone" name="phone" type="tel" placeholder="(555) 000-0000"></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="p-eq">Equipment needed</label>
+              <select id="p-eq" name="equipment"><option value="">Select…</option><option>Dry Van</option><option>Flatbed</option><option>Reefer</option><option>Step Deck</option><option>Tanker</option><option>Power Only</option><option>Car Hauler</option><option>Mixed fleet</option></select>
+            </div>
+            <div class="field"><label for="p-count">How many drivers</label>
+              <select id="p-count" name="count"><option value="">Select…</option><option>1–5</option><option>6–15</option><option>16–50</option><option>50+</option></select>
+            </div>
+          </div>
+          <div class="field"><label for="p-notes">Lanes &amp; notes</label><textarea id="p-notes" name="notes" rows="3" placeholder="Routes, home-time, pay range, clearance requirements…"></textarea></div>
+          <button class="btn btn-chrome btn-lg" type="submit" data-magnetic="0.25">Request drivers<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer dot-matrix">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo-mark.png" alt="United Services">
+        <p style="max-width:280px;color:var(--silver-dim);font-size:14px">United Services Recruiting connects reliable CDL drivers with carriers hiring across all 48 states. Part of the United Services family.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Drivers</h5>
+        <a href="index.html#matcher">Find my job</a>
+        <a href="apply.html">Apply now</a>
+        <a href="index.html#offers">Live openings</a>
+        <a href="index.html#how">How it works</a>
+      </div>
+      <div class="foot-col">
+        <h5>Companies</h5>
+        <a href="for-companies.html#board">Available drivers</a>
+        <a href="for-companies.html#contact">Request drivers</a>
+        <a href="for-companies.html#why">Why partner</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="tel:+18005550199">(800) 555-0199</a>
+        <a href="mailto:partners@unitedservices.com">partners@unitedservices.com</a>
+        <a href="#">Dallas, TX · Nationwide</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-fam">United Services&nbsp;&nbsp;<span class="sep">·</span>&nbsp;<b>ELD</b> <span class="sep">·</span> <b>Accounting</b> <span class="sep">·</span> <b>Fleet</b> <span class="sep">·</span> <span class="me">Recruiting</span></div>
+      <div style="font-family:var(--font-mono);font-size:12px;color:var(--silver-dim)">© 2026 United Services. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+<script src="js/drivers.js"></script>
+<script>
+(function () {
+  var form = document.getElementById('partner-form');
+  if (!form) return;
+  function showOk() {
+    var card = document.getElementById('partner-card');
+    card.innerHTML = '<div class="form-ok"><div class="ok-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><h3>Request received.</h3><p>A recruiter will reach out within one business day with matched drivers from the board.</p></div>';
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var ok = true;
+    form.querySelectorAll('[required]').forEach(function (f) {
+      if (!f.value.trim()) { ok = false; f.style.borderColor = '#EF4444'; f.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.18)'; }
+    });
+    var email = document.getElementById('p-email');
+    if (email.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) { ok = false; email.style.borderColor = '#EF4444'; }
+    if (!ok) return;
+    var btn = form.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = true;
+    var payload = {
+      company: form.querySelector('#p-co').value.trim(),
+      name: form.querySelector('#p-name').value.trim(),
+      email: email.value.trim(),
+      phone: form.querySelector('#p-phone').value.trim(),
+      equipment: form.querySelector('#p-eq').value,
+      count: form.querySelector('#p-count').value,
+      notes: form.querySelector('#p-notes').value.trim()
+    };
+    // Post to the API; show confirmation regardless of backend availability.
+    fetch('/api/partner', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    }).then(showOk).catch(showOk);
+  });
+  form.querySelectorAll('input,select,textarea').forEach(function (f) {
+    f.addEventListener('input', function () { f.style.borderColor = ''; f.style.boxShadow = ''; });
+  });
+})();
+</script>
+</body>
+</html>

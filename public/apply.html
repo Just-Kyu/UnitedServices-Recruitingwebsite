@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply — United Services Recruiting</title>
+<meta name="description" content="Apply in three minutes to get matched with CDL driving jobs at top US carriers. Every equipment type and route — SAP and no-experience drivers welcome.">
+<meta name="theme-color" content="#080B12">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Apply — United Services Recruiting">
+<meta property="og:description" content="Three quick steps to your next driving job. No résumé required to start.">
+<meta property="og:image" content="assets/logo-full.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="apply.css">
+</head>
+<body class="loading">
+
+<div id="loader">
+  <div class="load-stage">
+    <img src="assets/logo-mark.png" alt="United Services">
+    <div class="load-bar"><i></i></div>
+    <div class="load-cap">United Services · Recruiting</div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<div class="nav-shell">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-brand" href="index.html">
+      <img src="assets/logo-mark.png" alt="">
+      <span><span class="bt">United Services</span><br><span class="bs">Recruiting</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#matcher">For Drivers</a>
+      <a href="for-companies.html">For Companies</a>
+      <a href="index.html#why">Why Us</a>
+      <a href="index.html#how">How it works</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="for-companies.html#contact">Contact</a>
+      <a class="btn btn-chrome btn-sm" href="apply.html" data-magnetic="0.3">Apply</a>
+    </div>
+    <button class="nav-toggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </nav>
+</div>
+<div class="m-menu">
+  <button class="m-close" aria-label="Close menu">&times;</button>
+  <a href="index.html#matcher">For Drivers</a>
+  <a href="for-companies.html">For Companies</a>
+  <a href="index.html#why">Why Us</a>
+  <a href="index.html#how">How it works</a>
+  <div class="row"><a class="btn btn-ghost" href="for-companies.html#contact">Contact</a><a class="btn btn-chrome" href="apply.html">Apply</a></div>
+</div>
+
+<main class="apply-wrap bp-grid">
+  <div class="apply-inner">
+    <div class="apply-head">
+      <span class="eyebrow" style="justify-content:center">Driver application</span>
+      <h1 style="margin-top:14px"><span class="chrome-text">Let's find</span> your next job.</h1>
+      <p>Three quick steps. No résumé required to start — we'll take it from here.</p>
+    </div>
+
+    <div id="apply-shell">
+      <!-- progress -->
+      <div class="steps-bar">
+        <div class="step-node"><div class="step-dot">1</div><div class="step-bar-line"><i></i></div></div>
+        <div class="step-node"><div class="step-dot">2</div><div class="step-bar-line"><i></i></div></div>
+        <div class="step-node"><div class="step-dot">3</div></div>
+      </div>
+      <div class="step-labels"><span>Contact</span><span>Experience</span><span>Details</span></div>
+
+      <div class="card apply-card">
+        <form id="apply-form" novalidate>
+          <!-- STEP 1 -->
+          <div class="apply-step active">
+            <h2>How do we reach you?</h2>
+            <p class="step-sub">We'll only use this to share matched offers — no spam.</p>
+            <div class="field">
+              <label for="full-name">Full name <span class="req">*</span></label>
+              <input id="full-name" type="text" placeholder="Jordan Reed" data-required>
+              <span class="err-msg">Please enter your name.</span>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="phone">Phone <span class="req">*</span></label>
+                <input id="phone" type="tel" placeholder="(555) 000-0000" data-required>
+                <span class="err-msg">Enter a valid phone number.</span>
+              </div>
+              <div class="field">
+                <label for="email">Email <span class="req">*</span></label>
+                <input id="email" type="email" placeholder="you@email.com" data-required>
+                <span class="err-msg">Enter a valid email.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="apply-step">
+            <h2>Tell us about your driving.</h2>
+            <p class="step-sub">This helps us match you to the right carriers and lanes.</p>
+            <div class="row2">
+              <div class="field">
+                <label for="cdl-class">CDL class <span class="req">*</span></label>
+                <select id="cdl-class" data-required>
+                  <option value="">Select…</option>
+                  <option>CDL-A</option><option>CDL-B</option><option>CDL-C</option>
+                  <option>No CDL yet</option>
+                </select>
+                <span class="err-msg">Select your CDL class.</span>
+              </div>
+              <div class="field">
+                <label for="experience">Years of experience <span class="req">*</span></label>
+                <select id="experience" data-required>
+                  <option value="">Select…</option>
+                  <option>No experience</option><option>Less than 1 year</option>
+                  <option>1–2 years</option><option>3–5 years</option><option>5+ years</option>
+                </select>
+                <span class="err-msg">Select your experience.</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Equipment experience <span style="color:var(--silver-dim);text-transform:none;letter-spacing:0">(select all that apply)</span></label>
+              <div class="eq-select">
+                <span class="eq-opt">Dry Van</span><span class="eq-opt">Flatbed</span><span class="eq-opt">Reefer</span>
+                <span class="eq-opt">Step Deck</span><span class="eq-opt">Tanker</span><span class="eq-opt">Power Only</span>
+                <span class="eq-opt">Car Hauler</span><span class="eq-opt">None yet</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Preferred route type <span class="req">*</span></label>
+              <div class="seg" id="route-seg" data-required-seg role="radiogroup" aria-label="Preferred route type">
+                <span class="seg-opt">OTR</span><span class="seg-opt">Regional</span><span class="seg-opt">Local</span><span class="seg-opt">Dedicated</span>
+              </div>
+              <span class="err-msg">Pick a route type.</span>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="apply-step">
+            <h2>A few last details.</h2>
+            <p class="step-sub">Almost done — this rounds out your profile.</p>
+            <div class="field">
+              <label>SAP status <span class="req">*</span></label>
+              <div class="seg" id="sap-seg" data-required-seg style="max-width:280px" role="radiogroup" aria-label="SAP status">
+                <span class="seg-opt">Yes — SAP</span><span class="seg-opt">No</span>
+              </div>
+              <span class="err-msg">Select your SAP status.</span>
+            </div>
+            <div class="field">
+              <label for="location">Current location / preferred states <span class="req">*</span></label>
+              <input id="location" type="text" placeholder="e.g. Dallas, TX — open to TX, OK, LA" data-required>
+              <span class="err-msg">Tell us where you're based.</span>
+            </div>
+            <div class="field">
+              <label>Résumé <span style="color:var(--silver-dim);text-transform:none;letter-spacing:0">(optional)</span></label>
+              <div class="upload" id="upload">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <div class="up-main">Upload your résumé</div>
+                <div class="up-sub">PDF, DOC — or skip it</div>
+              </div>
+              <input id="resume" type="file" accept=".pdf,.doc,.docx" hidden>
+            </div>
+            <div class="field">
+              <label for="notes">Notes <span style="color:var(--silver-dim);text-transform:none;letter-spacing:0">(optional)</span></label>
+              <textarea id="notes" rows="3" placeholder="Anything we should know — home-time needs, endorsements, pay expectations…"></textarea>
+            </div>
+          </div>
+
+          <div class="apply-nav" id="apply-nav">
+            <button class="btn btn-ghost btn-lg btn-back" type="button" id="btn-back">Back</button>
+            <button class="btn btn-chrome btn-lg" type="button" id="btn-next" data-magnetic="0.2" style="margin-left:auto">Continue</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="apply-success card apply-card" id="apply-success">
+      <div class="ok-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h2>Application received.</h2>
+      <p>A recruiter is already reviewing your profile against live openings. Expect a call or text within one business day.</p>
+      <div class="summary" id="summary"></div>
+      <div class="ref">Reference: <span id="ref-num">USR-000000</span></div>
+      <a class="btn btn-chrome btn-lg" href="index.html">Back to home</a>
+    </div>
+  </div>
+</main>
+
+<script src="js/site.js"></script>
+<script src="js/apply.js"></script>
+</body>
+</html>
