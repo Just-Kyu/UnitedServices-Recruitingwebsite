@@ -1,0 +1,17 @@
+{
+  "name": "unitedservices-recruiting",
+  "version": "1.0.0",
+  "private": true,
+  "description": "United Services Recruiting — driver matching marketing site + API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

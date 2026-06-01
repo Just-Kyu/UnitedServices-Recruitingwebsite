@@ -1,0 +1,17 @@
+node_modules/
+npm-debug.log*
+.env
+.env.*
+.DS_Store
+
+# Stray untracked site duplicates left at repo root by the design export.
+# The canonical site lives in public/.
+/index.html
+/apply.html
+/for-companies.html
+/styles.css
+/home.css
+/companies.css
+/apply.css
+/assets/
+/js/
