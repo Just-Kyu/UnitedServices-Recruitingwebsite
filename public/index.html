@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>United Services Recruiting — We find the job. You drive.</title>
+<meta name="description" content="United Services Recruiting matches reliable CDL drivers with top US carriers hiring now — every equipment type and route, including SAP and no-experience drivers.">
+<meta name="theme-color" content="#080B12">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="United Services Recruiting — We find the job. You drive.">
+<meta property="og:description" content="We match reliable CDL drivers with top US carriers that are hiring right now.">
+<meta property="og:image" content="assets/logo-full.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.svg">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="home.css">
+</head>
+<body class="loading">
+
+<!-- ░░ Loader ░░ -->
+<div id="loader">
+  <div class="load-stage">
+    <img src="assets/logo-mark.png" alt="United Services">
+    <div class="load-bar"><i></i></div>
+    <div class="load-cap">United Services · Recruiting</div>
+  </div>
+</div>
+
+<!-- ░░ Navbar ░░ -->
+<div class="nav-shell">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-brand" href="index.html">
+      <img src="assets/logo-mark.png" alt="">
+      <span><span class="bt">United Services</span><br><span class="bs">Recruiting</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#matcher">For Drivers</a>
+      <a href="for-companies.html">For Companies</a>
+      <a href="index.html#why">Why Us</a>
+      <a href="index.html#how">How it works</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="for-companies.html#contact">Contact</a>
+      <a class="btn btn-chrome btn-sm" href="apply.html" data-magnetic="0.3">Apply</a>
+    </div>
+    <button class="nav-toggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </nav>
+</div>
+
+<!-- ░░ Mobile menu ░░ -->
+<div class="m-menu">
+  <button class="m-close" aria-label="Close menu">&times;</button>
+  <a href="index.html#matcher">For Drivers</a>
+  <a href="for-companies.html">For Companies</a>
+  <a href="index.html#why">Why Us</a>
+  <a href="index.html#how">How it works</a>
+  <div class="row">
+    <a class="btn btn-ghost" href="for-companies.html#contact">Contact</a>
+    <a class="btn btn-chrome" href="apply.html">Apply</a>
+  </div>
+</div>
+
+<!-- ░░ HERO ░░ -->
+<header class="hero" data-screen-label="Hero">
+  <div class="hero-glow"></div>
+  <div id="truck-stage" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <span class="eyebrow reveal"><span class="num">01</span>&nbsp;/&nbsp;For Drivers</span>
+      <h1 class="reveal" data-d="1"><span class="chrome-text">We find the job.</span><br><span class="l2">You drive.</span></h1>
+      <p class="hero-sub reveal" data-d="2">We match reliable CDL drivers with top US carriers that are hiring right now — every equipment type, every route, including SAP and no-experience drivers.</p>
+      <div class="hero-cta reveal" data-d="3">
+        <a class="btn btn-chrome btn-lg" href="#matcher" data-magnetic="0.3">Find my job<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost btn-lg" href="#how">How it works</a>
+      </div>
+      <div class="hero-stats reveal" data-d="4">
+        <div class="hero-stat"><div class="v"><span data-count="640">0</span>+</div><div class="k">Live openings</div></div>
+        <div class="hero-stat"><div class="v"><span data-count="120">0</span>+</div><div class="k">Carrier partners</div></div>
+        <div class="hero-stat"><div class="v"><span data-count="48">0</span></div><div class="k">States covered</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll to explore<span class="line"></span></div>
+  <div class="hero-fade"></div>
+</header>
+
+<!-- ░░ MATCHER ░░ -->
+<section class="section matcher dot-matrix" id="matcher" data-screen-label="Matcher">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="num">02</span>&nbsp;/&nbsp;The matcher</span>
+      <h2>Do we have a job<br>for <span class="chrome-text">someone like you?</span></h2>
+      <p>Tell us your situation. We'll show you — instantly — how many live openings match, and the offers we have waiting.</p>
+    </div>
+    <div class="matcher-grid">
+      <div class="reveal" data-d="1">
+        <div class="matcher-chips" id="matcher-chips"></div>
+      </div>
+      <div class="reveal" data-d="2">
+        <div class="matcher-result" id="matcher-result"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ WHY US ░░ -->
+<section class="section bp-grid" id="why" data-screen-label="Why us">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="num">03</span>&nbsp;/&nbsp;Why choose us</span>
+      <h2>Real offers.<br>Not dead-end listings.</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item reveal" data-d="1">
+        <svg class="why-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+        <div class="why-num">01</div>
+        <h3>Real offers, not dead-end listings</h3>
+        <p>Every opening on our board is a live role with a carrier actively hiring — not a recycled ad. You talk to a recruiter, not a job board.</p>
+      </div>
+      <div class="why-item reveal" data-d="2">
+        <svg class="why-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        <div class="why-num">02</div>
+        <h3>SAP &amp; no-experience drivers welcome</h3>
+        <p>Returning to the road or just starting out? We work with carriers who hire SAP-cleared and entry-level drivers — and offer paid training routes.</p>
+      </div>
+      <div class="why-item reveal" data-d="3">
+        <svg class="why-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <div class="why-num">03</div>
+        <h3>Flatbed, reefer, dry van — all equipment</h3>
+        <p>Whatever you pull, we have lanes for it. Dry van, flatbed, reefer, step deck, power only, tanker and car hauler — OTR, regional or local.</p>
+      </div>
+      <div class="why-item reveal" data-d="4">
+        <svg class="why-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>
+        <div class="why-num">04</div>
+        <h3>We handle the paperwork, you keep driving</h3>
+        <p>Applications, verifications, scheduling — we manage the back-and-forth with carriers so you spend less time on hold and more time earning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ EQUIPMENT 3D ░░ -->
+<section class="section equip" id="equipment" data-screen-label="Equipment">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow"><span class="num">04</span>&nbsp;/&nbsp;Equipment &amp; routes</span>
+      <h2>Lanes for every rig.</h2>
+      <p>Pick the equipment you run and the route that fits your life. We'll match you to carriers hiring for exactly that.</p>
+    </div>
+    <div class="equip-grid">
+      <div class="card equip-card edge-top reveal" data-d="1"><div class="equip-stage"><div class="cube" data-w="90" data-h="46" data-d="40"></div></div><h4>Dry Van</h4><div class="ec-sub">53' · No-touch</div></div>
+      <div class="card equip-card edge-top reveal" data-d="1"><div class="equip-stage"><div class="cube" data-w="92" data-h="20" data-d="40"></div></div><h4>Flatbed</h4><div class="ec-sub">Tarp pay</div></div>
+      <div class="card equip-card edge-top reveal" data-d="2"><div class="equip-stage"><div class="cube" data-w="88" data-h="48" data-d="40"></div></div><h4>Reefer</h4><div class="ec-sub">Temp-controlled</div></div>
+      <div class="card equip-card edge-top reveal" data-d="2"><div class="equip-stage"><div class="cube" data-w="92" data-h="26" data-d="40"></div></div><h4>Step Deck</h4><div class="ec-sub">Drop deck</div></div>
+      <div class="card equip-card edge-top reveal" data-d="1"><div class="equip-stage"><div class="cube" data-w="56" data-h="42" data-d="42"></div></div><h4>Power Only</h4><div class="ec-sub">Bring the tractor</div></div>
+      <div class="card equip-card edge-top reveal" data-d="2"><div class="equip-stage"><div class="cube" data-w="96" data-h="32" data-d="36"></div></div><h4>Tanker</h4><div class="ec-sub">Liquid bulk</div></div>
+      <div class="card equip-card edge-top reveal" data-d="3"><div class="equip-stage"><div class="cube" data-w="94" data-h="38" data-d="40"></div></div><h4>Car Hauler</h4><div class="ec-sub">Auto transport</div></div>
+      <div class="card equip-card edge-top reveal" data-d="3"><div class="equip-stage"><div class="cube" data-w="70" data-h="44" data-d="44"></div></div><h4>Owner-Operator</h4><div class="ec-sub">Run your own</div></div>
+    </div>
+    <div class="routes reveal" data-d="2">
+      <span class="route-pill"><b>OTR</b> — Over the road</span>
+      <span class="route-pill"><b>Regional</b> — Home weekly</span>
+      <span class="route-pill"><b>Local</b> — Home daily</span>
+      <span class="route-pill"><b>Dedicated</b> — Same lanes</span>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ LIVE OFFERS ░░ -->
+<section class="section bp-grid" id="offers" data-screen-label="Offers">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="num">05</span>&nbsp;/&nbsp;Live openings</span>
+      <h2>A few of the offers<br>on the board today.</h2>
+      <p>Sample openings filtered by equipment, route, pay and experience level. New roles are added daily.</p>
+    </div>
+    <div class="offers-grid">
+      <div class="card offer-card edge-top reveal" data-d="1">
+        <div class="oc-top"><div><div class="oc-co">Cardinal Freightways</div><div class="oc-loc">Columbus, OH · OTR</div></div><div class="oc-pay">$0.62<span style="font-size:13px">/mi</span></div></div>
+        <div class="oc-meta"><span>Dry Van</span><span>CDL-A</span><span>2+ yrs</span></div>
+        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="card offer-card edge-top reveal" data-d="2">
+        <div class="oc-top"><div><div class="oc-co">Ironwood Carriers</div><div class="oc-loc">Dallas, TX · Regional</div></div><div class="oc-pay">$1,500<span style="font-size:13px">/wk</span></div></div>
+        <div class="oc-meta"><span>Flatbed</span><span>CDL-A</span><span>Home weekends</span></div>
+        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="card offer-card edge-top reveal" data-d="3">
+        <div class="oc-top"><div><div class="oc-co">Summit Hauling Co.</div><div class="oc-loc">Phoenix, AZ · OTR</div></div><div class="oc-pay">Paid<span style="font-size:13px"> CDL</span></div></div>
+        <div class="oc-meta"><span>Dry Van</span><span>No experience</span><span>Training</span></div>
+        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="card offer-card edge-top reveal" data-d="1">
+        <div class="oc-top"><div><div class="oc-co">Polar Line Logistics</div><div class="oc-loc">Chicago, IL · OTR</div></div><div class="oc-pay">$0.64<span style="font-size:13px">/mi</span></div></div>
+        <div class="oc-meta"><span>Reefer</span><span>CDL-A</span><span>$5k sign-on</span></div>
+        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="card offer-card edge-top reveal" data-d="2">
+        <div class="oc-top"><div><div class="oc-co">Meridian Transport</div><div class="oc-loc">Atlanta, GA · Regional</div></div><div class="oc-pay">$1,450<span style="font-size:13px">/wk</span></div></div>
+        <div class="oc-meta"><span>Dry Van</span><span>SAP friendly</span><span>CDL-A</span></div>
+        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="card offer-card edge-top reveal" data-d="3">
+        <div class="oc-top"><div><div class="oc-co">Crossroads Express</div><div class="oc-loc">Newark, NJ · Local</div></div><div class="oc-pay">$26<span style="font-size:13px">/hr</span></div></div>
+        <div class="oc-meta"><span>Dry Van</span><span>CDL-A</span><span>Home daily</span></div>
+        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ HOW IT WORKS ░░ -->
+<section class="section" id="how" data-screen-label="How it works">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow"><span class="num">06</span>&nbsp;/&nbsp;How it works</span>
+      <h2>Three steps to your<br>next driving job.</h2>
+    </div>
+    <div class="steps">
+      <div class="card step edge-top reveal" data-d="1"><div class="step-line"></div><div class="step-num">01</div><h3>Apply in 3 minutes</h3><p>Tell us your CDL class, experience, equipment and the routes you want. No résumé required to start.</p></div>
+      <div class="card step edge-top reveal" data-d="2"><div class="step-line"></div><div class="step-num">02</div><h3>We match you</h3><p>A recruiter pairs your profile with live carrier openings and brings you the offers that actually fit.</p></div>
+      <div class="card step edge-top reveal" data-d="3"><div class="step-num">03</div><h3>Start driving</h3><p>Pick the offer you like. We handle the paperwork and onboarding so you're rolling — and earning — fast.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ CTA BAND ░░ -->
+<section class="section cta-band" data-screen-label="CTA">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div class="cta-inner reveal">
+      <h2 class="chrome-text">Your next mile<br>starts here.</h2>
+      <p>Join thousands of drivers we've matched with carriers that respect their time, their equipment and their pay.</p>
+      <div class="hero-cta">
+        <a class="btn btn-chrome btn-lg" href="apply.html" data-magnetic="0.3">Find my job<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost btn-lg" href="for-companies.html">I'm hiring drivers</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ FOOTER ░░ -->
+<footer class="footer dot-matrix">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo-mark.png" alt="United Services">
+        <p style="max-width:280px;color:var(--silver-dim);font-size:14px">United Services Recruiting connects reliable CDL drivers with carriers hiring across all 48 states. Part of the United Services family.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Drivers</h5>
+        <a href="index.html#matcher">Find my job</a>
+        <a href="apply.html">Apply now</a>
+        <a href="index.html#offers">Live openings</a>
+        <a href="index.html#how">How it works</a>
+      </div>
+      <div class="foot-col">
+        <h5>Companies</h5>
+        <a href="for-companies.html">Available drivers</a>
+        <a href="for-companies.html#contact">Request drivers</a>
+        <a href="for-companies.html#why">Why partner</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="tel:+18005550199">(800) 555-0199</a>
+        <a href="mailto:drivers@unitedservices.com">drivers@unitedservices.com</a>
+        <a href="#">Dallas, TX · Nationwide</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-fam">
+        United Services&nbsp;&nbsp;<span class="sep">·</span>&nbsp;<b>ELD</b> <span class="sep">·</span> <b>Accounting</b> <span class="sep">·</span> <b>Fleet</b> <span class="sep">·</span> <span class="me">Recruiting</span>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:12px;color:var(--silver-dim)">© 2026 United Services. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+<script src="js/site.js"></script>
+<script src="js/hero3d.js"></script>
+<script src="js/matcher.js"></script>
+<script src="js/equip.js"></script>
+</body>
+</html>
