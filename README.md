@@ -8,8 +8,10 @@ exported design artifacts).
 
 ## Stack
 
-- **Frontend:** static HTML/CSS/JS in `public/` (no build step). Three.js (CDN)
-  powers the hero wireframe truck; everything else is hand-rolled CSS/JS.
+- **Frontend:** static HTML/CSS/JS in `public/` (no build step). Three.js
+  (CDN) drives the hero — a Tesla Semi GLB rendered with a procedural
+  environment map, auto-rotation, and mouse parallax. Everything else is
+  hand-rolled CSS/JS.
 - **Backend:** a small Express server (`server.js`) that serves `public/` and
   exposes a JSON API for the application and partner forms.
 
@@ -60,3 +62,27 @@ reference number.
 3. Railway auto-detects Node via `package.json`/`railway.json`, runs
    `npm install` then `npm start`, and health-checks `/healthz`. No env vars
    are required to boot.
+
+## Binary assets (add locally before serving)
+
+These files are referenced by the site but are not stored in the repo (they
+have to be dropped in by hand):
+
+```
+public/assets/logo-mark.png      navbar + footer mark
+public/assets/logo-full.png      OG image / hero references
+public/assets/logo-chrome.png    chrome variant
+public/models/tesla-semi.glb     Tesla Semi model used by the hero
+```
+
+The hero loads `public/models/tesla-semi.glb`. Use the optimized 348 KB
+variant by default; if it fails to load (e.g. the meshopt decoder isn't
+present), rename the larger uncompressed `tesla-semi-web.glb` to
+`tesla-semi.glb` instead.
+
+## Credits
+
+The hero 3D model is **"Tesla Semi"** by
+[Aleksei Rozumnyi](https://sketchfab.com/Aleksei.Rozumnyi),
+licensed under [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/) —
+[original on Sketchfab](https://sketchfab.com/3d-models/tesla-semi-39ffc7c746184e0c9ebd5bbcd0b405dd).

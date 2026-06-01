@@ -1,162 +1,159 @@
-/* United Services Recruiting — hero wireframe truck (Three.js r149 UMD)
-   Glowing silver-blue line truck on near-black navy, auto-rotate + mouse parallax. */
+/* United Services Recruiting — hero Tesla Semi 3D
+ *
+ * Vanilla Three.js port of Hero3DTruck.jsx (Aleksei Rozumnyi's Tesla Semi,
+ * CC-BY-4.0 — https://sketchfab.com/3d-models/tesla-semi-39ffc7c746184e0c9ebd5bbcd0b405dd).
+ * Loads /models/tesla-semi.glb, preserves the GLB's PBR materials (body,
+ * glass, lights, tires), tunes glass + headlight emissives, lights the scene
+ * with a procedural city-style envMap, then auto-rotates with mouse parallax.
+ */
 (function () {
   'use strict';
   if (typeof THREE === 'undefined') { console.warn('THREE not loaded'); return; }
+  if (typeof THREE.GLTFLoader === 'undefined') { console.warn('GLTFLoader not loaded'); return; }
   var mount = document.getElementById('truck-stage');
   if (!mount) return;
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isMobile = innerWidth < 760;
 
-  var COL = { steel: 0x6db4ff, silver: 0xc7d0db, dim: 0x47678f, white: 0xeaf2ff };
-
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.1, 200);
-  camera.position.set(7.4, 3.0, 10.5);
-  camera.lookAt(0, 0.4, 0);
+
+  var camera = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.1, 100);
+  camera.position.set(4.5, 1.6, 6);
+  camera.lookAt(0, 0, 0);
 
   var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(mount.clientWidth, mount.clientHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  if ('outputColorSpace' in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
+  else renderer.outputEncoding = THREE.sRGBEncoding;
   mount.appendChild(renderer.domElement);
 
-  var truck = new THREE.Group();
-  scene.add(truck);
+  // Lights mirror the React component
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  var key = new THREE.DirectionalLight(0xffffff, 1.4);
+  key.position.set(5, 8, 5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  scene.add(key);
+  var rim = new THREE.DirectionalLight(0x4DA3FF, 0.6);
+  rim.position.set(-6, 3, -4);
+  scene.add(rim);
 
-  function mat(color, opacity) {
-    return new THREE.LineBasicMaterial({ color: color, transparent: true, opacity: opacity == null ? 1 : opacity });
-  }
-  function boxEdges(w, h, d, color, opacity) {
-    var g = new THREE.BoxGeometry(w, h, d);
-    var e = new THREE.EdgesGeometry(g);
-    return new THREE.LineSegments(e, mat(color, opacity));
-  }
-  function ring(radius, seg, color, opacity) {
-    var pts = [];
-    for (var i = 0; i <= seg; i++) { var a = (i / seg) * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * radius, Math.sin(a) * radius, 0)); }
-    var g = new THREE.BufferGeometry().setFromPoints(pts);
-    return new THREE.Line(g, mat(color, opacity));
-  }
+  // Procedural environment map — stands in for drei's "city" preset.
+  // A few warm/cool blocks above a dark navy floor give the metallic body
+  // believable highlights without an external HDR fetch.
+  function buildEnvMap() {
+    var envScene = new THREE.Scene();
+    function block(color, x, y, z, w, h, d) {
+      var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshBasicMaterial({ color: color }));
+      m.position.set(x, y, z); envScene.add(m);
+    }
+    block(0x222a36, 0,  -2, 0, 50, 0.1, 50);                    // floor (deep navy)
+    block(0x6e7a8a, 0,  10, 0, 50, 0.1, 50);                    // ceiling (silver-gray sky)
+    block(0x9aa6b8, -8,  4,  0, 0.1, 6, 14);                    // left soft fill
+    block(0x4e6280,  8,  4,  0, 0.1, 6, 14);                    // right cool fill
+    block(0xffe6b3,  3,  6,  4, 1, 0.4, 3);                     // warm strip (front-right)
+    block(0xc8d6ff, -4,  7, -3, 3, 0.4, 1);                     // cool strip (back-left)
 
-  // ---- Trailer (rear, silver) ----
-  var trailer = boxEdges(6.2, 2.7, 2.5, COL.silver, 0.55);
-  trailer.position.set(-1.7, 1.35, 0);
-  truck.add(trailer);
-  // trailer rib lines
-  for (var rx = -4.0; rx <= 0.6; rx += 0.92) {
-    var rib = boxEdges(0.01, 2.7, 2.5, COL.dim, 0.4);
-    rib.position.set(rx, 1.35, 0); truck.add(rib);
+    var pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+    var tex = pmrem.fromScene(envScene, 0.04).texture;
+    pmrem.dispose();
+    return tex;
   }
+  scene.environment = buildEnvMap();
 
-  // ---- Cab (front, steel-blue, brighter) ----
-  var cab = boxEdges(1.9, 2.05, 2.35, COL.steel, 0.95);
-  cab.position.set(2.85, 1.05, 0);
-  truck.add(cab);
-  // windshield slab
-  var wind = boxEdges(0.55, 0.95, 2.0, COL.white, 1);
-  wind.position.set(3.55, 1.55, 0);
-  wind.rotation.z = -0.32;
-  truck.add(wind);
-  // hood
-  var hood = boxEdges(1.0, 0.95, 2.2, COL.steel, 0.9);
-  hood.position.set(4.25, 0.5, 0);
-  truck.add(hood);
-  // connector between cab & trailer
-  var neck = boxEdges(0.7, 0.5, 1.6, COL.dim, 0.6);
-  neck.position.set(1.75, 0.6, 0);
-  truck.add(neck);
+  // Soft contact shadow under the truck (ContactShadows equivalent).
+  var shadowGeo = new THREE.CircleGeometry(3.5, 48);
+  var shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.45 });
+  var contactShadow = new THREE.Mesh(shadowGeo, shadowMat);
+  contactShadow.rotation.x = -Math.PI / 2;
+  contactShadow.position.y = -1.4;
+  scene.add(contactShadow);
 
-  // ---- Wheels ----
-  var wheelDefs = [-3.6, -2.4, 1.95, 3.55];
-  wheelDefs.forEach(function (wx, i) {
-    [-1.28, 1.28].forEach(function (wz) {
-      var r = i >= 2 ? 0.62 : 0.66;
-      var w = ring(r, 26, i >= 2 ? COL.steel : COL.silver, 0.85);
-      w.position.set(wx, r, wz); w.rotation.y = Math.PI / 2;
-      truck.add(w);
-      var hubR = ring(r * 0.42, 16, COL.dim, 0.7);
-      hubR.position.set(wx, r, wz); hubR.rotation.y = Math.PI / 2;
-      truck.add(hubR);
+  var truckGroup = new THREE.Group();
+  scene.add(truckGroup);
+
+  var loader = new THREE.GLTFLoader();
+  loader.load('models/tesla-semi.glb', function (gltf) {
+    var truck = gltf.scene;
+    truck.scale.setScalar(1.5);
+    truck.position.set(0, -0.7, 0);
+
+    truck.traverse(function (o) {
+      if (!o.isMesh || !o.material) return;
+      o.castShadow = true;
+      var mats = Array.isArray(o.material) ? o.material : [o.material];
+      mats.forEach(function (m) {
+        m.envMapIntensity = 1.25;
+        var name = (m.name || '').toLowerCase();
+        if (name.indexOf('glass') !== -1) {
+          m.transparent = true;
+          m.opacity = 0.35;
+          m.roughness = 0.05;
+          m.metalness = 0.1;
+        } else if (name.indexOf('light') !== -1) {
+          m.emissive = new THREE.Color(0xfff6e0);
+          m.emissiveIntensity = 0.6;
+        }
+      });
     });
+
+    truckGroup.add(truck);
+  }, undefined, function (err) {
+    console.warn('Tesla Semi model failed to load — drop tesla-semi.glb into public/models/.', err);
   });
 
-  // ---- Underglow / chassis line ----
-  var chassis = boxEdges(8.6, 0.12, 1.4, COL.dim, 0.5);
-  chassis.position.set(-0.3, 0.34, 0);
-  truck.add(chassis);
-
-  // center truck group
-  truck.position.y = -0.6;
-  truck.rotation.y = -0.35;
-
-  // ---- Ground grid ----
-  var grid = new THREE.GridHelper(46, 46, 0x2b4a72, 0x16263f);
-  grid.material.transparent = true; grid.material.opacity = 0.22;
-  grid.position.y = -0.3;
-  scene.add(grid);
-
-  // ---- Particle field ----
-  var pCount = isMobile ? 360 : 1100;
-  var pGeo = new THREE.BufferGeometry();
-  var pos = new Float32Array(pCount * 3);
-  for (var i = 0; i < pCount; i++) {
-    pos[i * 3] = (Math.random() - 0.5) * 40;
-    pos[i * 3 + 1] = Math.random() * 16 - 2;
-    pos[i * 3 + 2] = (Math.random() - 0.5) * 30;
-  }
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  var pMat = new THREE.PointsMaterial({ color: 0x9fb3d0, size: 0.05, transparent: true, opacity: 0.6, sizeAttenuation: true });
-  var points = new THREE.Points(pGeo, pMat);
-  scene.add(points);
-
-  // ---- Interaction ----
-  var targetRX = 0, targetRY = 0, curRX = 0, curRY = 0;
+  // Mouse parallax target
+  var pointer = { x: 0, y: 0 };
   if (!isMobile && !reduce) {
     window.addEventListener('mousemove', function (e) {
-      targetRY = (e.clientX / innerWidth - 0.5) * 0.5;
-      targetRX = (e.clientY / innerHeight - 0.5) * 0.22;
+      pointer.x = (e.clientX / innerWidth) * 2 - 1;
+      pointer.y = -(e.clientY / innerHeight) * 2 + 1;
     });
   }
-  var scrollRot = 0;
-  window.addEventListener('scroll', function () {
-    var h = innerHeight;
-    scrollRot = Math.min(window.scrollY / h, 1) * 0.9;
-  }, { passive: true });
 
   function resize() {
-    var w = mount.clientWidth, h = mount.clientHeight;
-    camera.aspect = w / h; camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
+    camera.aspect = mount.clientWidth / mount.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(mount.clientWidth, mount.clientHeight);
   }
   window.addEventListener('resize', resize);
 
-  var t0 = performance.now();
-  var started = false;
-  function renderFrame() {
-    var t = (performance.now() - t0) / 1000;
-    var spin = reduce ? 0 : t * 0.12;
-    truck.rotation.y = -0.35 + spin + scrollRot + targetRY * 0.6;
-    curRX += (targetRX - curRX) * 0.06;
-    truck.rotation.x = curRX;
-    truck.position.y = -0.6 + Math.sin(t * 0.7) * 0.06;
-    points.rotation.y = t * 0.012;
+  var prev = performance.now();
+  var t0 = prev;
+  function tick(now) {
+    var delta = Math.min((now - prev) / 1000, 0.05);
+    prev = now;
+    var t = (now - t0) / 1000;
+
+    // Float (drei <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.4} />)
+    var floatBob = Math.sin(t * 1.2) * 0.05 * 0.4;
+
+    // Slow auto-rotate + smoothed parallax tilt/drift
+    truckGroup.rotation.y += delta * (reduce ? 0 : 0.15);
+    var tiltX = pointer.y * 0.08;
+    var driftX = pointer.x * 0.25;
+    truckGroup.rotation.x += (tiltX - truckGroup.rotation.x) * 0.05;
+    truckGroup.position.x += (driftX - truckGroup.position.x) * 0.05;
+    truckGroup.position.y = -0.7 + floatBob;
+
     renderer.render(scene, camera);
+    requestAnimationFrame(tick);
   }
-  function animate() {
-    requestAnimationFrame(animate);
-    renderFrame();
-  }
-  resize();
-  renderFrame();              // immediate first paint (survives rAF throttling)
-  animate();
-  // extra safety paints in case rAF is throttled early
-  setTimeout(renderFrame, 120);
-  setTimeout(renderFrame, 500);
-  // fade in
+
+  // Fade in once loaded (loader event from site.js)
   renderer.domElement.style.opacity = 0;
   renderer.domElement.style.transition = 'opacity 1.2s ease';
   function reveal() { renderer.domElement.style.opacity = 1; }
   window.addEventListener('loader:done', reveal);
   setTimeout(reveal, 2000);
+
+  resize();
+  requestAnimationFrame(tick);
 })();
