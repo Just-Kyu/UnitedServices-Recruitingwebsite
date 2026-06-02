@@ -2,9 +2,15 @@
  *
  * Vanilla Three.js port of Hero3DTruck.jsx (Aleksei Rozumnyi's Tesla Semi,
  * CC-BY-4.0 — https://sketchfab.com/3d-models/tesla-semi-39ffc7c746184e0c9ebd5bbcd0b405dd).
- * Loads /models/tesla-semi.glb, preserves the GLB's PBR materials (body,
- * glass, lights, tires), tunes glass + headlight emissives, lights the scene
- * with a procedural city-style envMap, then auto-rotates with mouse parallax.
+ *
+ * Loads /models/tesla-semi-web.glb (the uncompressed 2.7 MB variant). The
+ * sibling tesla-semi.glb is Meshopt-compressed; the React original used
+ * drei's useGLTF which auto-wires MeshoptDecoder, but we don't, so we load
+ * the plain variant to keep vanilla GLTFLoader happy.
+ *
+ * Preserves the GLB's PBR materials (body, glass, lights, tires), tunes
+ * glass + headlight emissives, lights the scene with a procedural
+ * city-style envMap, then auto-rotates with mouse parallax.
  */
 (function () {
   'use strict';
@@ -80,7 +86,7 @@
   scene.add(truckGroup);
 
   var loader = new THREE.GLTFLoader();
-  loader.load('models/tesla-semi.glb', function (gltf) {
+  loader.load('models/tesla-semi-web.glb', function (gltf) {
     var truck = gltf.scene;
     truck.scale.setScalar(1.5);
     truck.position.set(0, -0.7, 0);
@@ -106,7 +112,7 @@
 
     truckGroup.add(truck);
   }, undefined, function (err) {
-    console.warn('Tesla Semi model failed to load — drop tesla-semi.glb into public/models/.', err);
+    console.warn('Tesla Semi model failed to load — drop tesla-semi-web.glb into public/models/.', err);
   });
 
   // Mouse parallax target
