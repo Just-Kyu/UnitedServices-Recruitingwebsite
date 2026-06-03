@@ -131,15 +131,127 @@
 .offer-card .oc-foot a svg { width: 16px; height: 16px; }
 .offer-card:hover .oc-foot a { gap: 10px; color: var(--steel-hi); }
 
-/* ─────────── HOW IT WORKS ─────────── */
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: step; }
-@media (max-width: 820px) { .steps { grid-template-columns: 1fr; gap: 16px; } }
-.step { position: relative; padding: 32px; border-radius: 18px; }
-.step-num { font-family: var(--font-display); font-weight: 800; font-size: 64px; line-height: 1; background: var(--grad-chrome-text); -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 0.92; }
-.step h3 { font-size: 22px; margin: 14px 0 10px; }
-.step p { color: var(--silver-txt); font-size: 15px; line-height: 1.6; }
-.step .step-line { position: absolute; top: 56px; right: -24px; width: 24px; height: 1px; background: linear-gradient(90deg, var(--steel), transparent); }
-@media (max-width: 820px) { .step .step-line { display: none; } }
+/* ─────────── HOW IT WORKS — sticky stacking cards ─────────── */
+.how-sticky { position: relative; padding-block: 0; }
+.how-intro { padding-block: clamp(80px, 11vw, 160px) clamp(40px, 6vw, 80px); }
+.how-intro .sec-head p { font-size: clamp(16px, 1.7vw, 19px); color: var(--silver-txt); margin-top: 18px; max-width: 540px; margin-inline: auto; }
+
+.how-stack {
+  position: relative;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter) clamp(80px, 11vw, 160px);
+}
+
+.how-step {
+  position: sticky;
+  margin-bottom: 28px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #16243B 0%, #0A1322 60%, #080B12 100%);
+  border: 1px solid rgba(199,208,219,0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 40px 90px -40px rgba(0,0,0,0.9);
+}
+/* Stagger the sticky tops so cards visibly stack as you scroll past */
+.how-step[data-step="01"] { top: 90px; }
+.how-step[data-step="02"] { top: 110px; }
+.how-step[data-step="03"] { top: 130px; }
+.how-step::after {
+  content: "";
+  position: absolute; top: 0; left: 24px; right: 24px; height: 1px;
+  background: var(--grad-chrome-edge); opacity: .7;
+}
+
+.how-step-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.55fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+  padding: clamp(36px, 5.5vw, 72px);
+  min-height: 540px;
+}
+@media (max-width: 820px) {
+  .how-step-inner { grid-template-columns: 1fr; gap: 24px; min-height: 0; padding: 36px 28px; }
+}
+
+.how-step-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(120px, 18vw, 240px);
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  background: var(--grad-chrome-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.1));
+}
+
+.how-step-eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--steel);
+  padding-bottom: 14px;
+}
+
+.how-step h3 {
+  font-size: clamp(34px, 4.5vw, 56px);
+  line-height: 0.98;
+  margin: 0 0 22px;
+}
+
+.how-step-lead {
+  font-size: clamp(17px, 1.8vw, 21px);
+  color: var(--silver-txt);
+  line-height: 1.55;
+  margin: 0 0 28px;
+}
+
+.how-step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 26px;
+  display: grid;
+  gap: 14px;
+}
+.how-step-list li {
+  position: relative;
+  padding-left: 30px;
+  font-size: 15px;
+  color: var(--silver-txt);
+  line-height: 1.55;
+}
+.how-step-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--steel), transparent);
+}
+.how-step-list b {
+  color: #fff;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.how-step-note {
+  font-size: 14px;
+  color: var(--silver-dim);
+  line-height: 1.6;
+  border-top: 1px solid rgba(199,208,219,0.1);
+  padding-top: 18px;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .how-step { position: static; }
+}
 
 /* ─────────── CTA BAND ─────────── */
 .cta-band { position: relative; overflow: hidden; }
