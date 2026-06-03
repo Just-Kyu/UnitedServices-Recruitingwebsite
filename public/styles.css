@@ -66,6 +66,12 @@ a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 button { font-family: inherit; cursor: pointer; }
 
+/* Force the native <select> dropdown to use dark colors instead of OS white.
+   Supported in Chrome/Edge/Firefox; Safari uses system colors regardless. */
+select option { background-color: #0F1A2C; color: #fff; }
+select option:checked,
+select option:hover { background: linear-gradient(0deg, rgba(77,163,255,0.25), rgba(77,163,255,0.25)), #0F1A2C; color: #fff; }
+
 h1,h2,h3,h4 { font-family: var(--font-display); color: var(--white); margin: 0; letter-spacing: -0.025em; line-height: 1.02; font-weight: 800; }
 p { margin: 0; }
 
