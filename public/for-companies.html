@@ -207,6 +207,30 @@
 <script src="js/site.js"></script>
 <script src="js/drivers.js"></script>
 <script>
+// Hover/tap easter egg: full 360 flip + chrome flash on the U mark
+(function () {
+  var stage = document.querySelector('.u-stage');
+  var spin = stage && stage.querySelector('.u-spin');
+  if (!stage || !spin) return;
+  var flipping = false;
+  function flip() {
+    if (flipping) return;
+    flipping = true;
+    spin.classList.add('flip');
+    setTimeout(function () {
+      spin.classList.remove('flip');
+      flipping = false;
+    }, 1150);
+  }
+  stage.addEventListener('mouseenter', flip);
+  stage.addEventListener('click', flip);
+  stage.setAttribute('role', 'button');
+  stage.setAttribute('tabindex', '0');
+  stage.setAttribute('aria-label', 'Animate United Services mark');
+  stage.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); flip(); }
+  });
+})();
 (function () {
   var form = document.getElementById('partner-form');
   if (!form) return;
