@@ -207,21 +207,46 @@
 <script src="js/site.js"></script>
 <script src="js/drivers.js"></script>
 <script>
-// Hover/tap easter egg: full 360 flip + chrome flash on the U mark
+// Hover/tap easter egg: 360 flip + chrome flash on the U mark.
+// Uses WAAPI composite:'add' so the spin stacks on top of the running uFloat
+// keyframe animation — the flip starts from whatever pose the float is at
+// rather than snapping to a fixed orientation.
 (function () {
   var stage = document.querySelector('.u-stage');
   var spin = stage && stage.querySelector('.u-spin');
-  if (!stage || !spin) return;
+  var img = spin && spin.querySelector('img');
+  if (!stage || !spin || !img) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var flipping = false;
+
   function flip() {
-    if (flipping) return;
+    if (flipping || reduce) return;
     flipping = true;
-    spin.classList.add('flip');
-    setTimeout(function () {
-      spin.classList.remove('flip');
+
+    var spinAnim;
+    try {
+      spinAnim = spin.animate(
+        [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(360deg)' }],
+        { duration: 1100, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', composite: 'add' }
+      );
+    } catch (e) {
+      // Browser without composite:'add' (e.g. older Safari) — bail cleanly.
       flipping = false;
-    }, 1150);
+      return;
+    }
+
+    img.animate(
+      [
+        { filter: 'drop-shadow(0 0 0 transparent) brightness(1) contrast(1)', offset: 0 },
+        { filter: 'drop-shadow(0 0 30px rgba(124,192,255,0.55)) brightness(1.25) contrast(1.05)', offset: 0.35 },
+        { filter: 'drop-shadow(0 0 0 transparent) brightness(1) contrast(1)', offset: 1 }
+      ],
+      { duration: 1100, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' }
+    );
+
+    spinAnim.onfinish = function () { flipping = false; };
   }
+
   stage.addEventListener('mouseenter', flip);
   stage.addEventListener('click', flip);
   stage.setAttribute('role', 'button');
