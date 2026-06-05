@@ -14,10 +14,40 @@
  */
 (function () {
   'use strict';
-  if (typeof THREE === 'undefined') { console.warn('THREE not loaded'); return; }
-  if (typeof THREE.GLTFLoader === 'undefined') { console.warn('GLTFLoader not loaded'); return; }
+
+  // ── DEBUG: visible status panel (top-right) so we can diagnose without devtools ──
+  // Remove this block once the truck is confirmed rendering.
+  var dbg = document.createElement('div');
+  dbg.style.cssText = 'position:fixed;top:8px;right:8px;z-index:99999;background:rgba(0,0,0,0.85);color:#7CC0FF;font:11px/1.4 ui-monospace,monospace;padding:8px 10px;border:1px solid #4DA3FF;border-radius:6px;max-width:340px;pointer-events:none;white-space:pre';
+  document.documentElement.appendChild(dbg);
+  var dbgState = {
+    THREE: typeof THREE !== 'undefined' ? (THREE.REVISION || 'yes') : 'MISSING',
+    GLTFLoader: (typeof THREE !== 'undefined' && typeof THREE.GLTFLoader !== 'undefined') ? 'yes' : 'MISSING',
+    mount: '?', mountSize: '?', canvas: 'no', glb: 'pending', error: ''
+  };
+  function dbgRender() {
+    dbg.textContent =
+      'THREE r' + dbgState.THREE
+      + '\nGLTFLoader: ' + dbgState.GLTFLoader
+      + '\n#truck-stage: ' + dbgState.mount
+      + '\nMount size: ' + dbgState.mountSize
+      + '\nCanvas: ' + dbgState.canvas
+      + '\nGLB: ' + dbgState.glb
+      + (dbgState.error ? '\nERR: ' + dbgState.error : '');
+  }
+  window.addEventListener('error', function (e) {
+    dbgState.error = (e.message || '') + ' @ ' + ((e.filename || '?').split('/').pop()) + ':' + (e.lineno || '?');
+    dbgRender();
+  });
+  dbgRender();
+
+  if (typeof THREE === 'undefined') { dbgRender(); return; }
+  if (typeof THREE.GLTFLoader === 'undefined') { dbgRender(); return; }
   var mount = document.getElementById('truck-stage');
-  if (!mount) return;
+  if (!mount) { dbgState.mount = 'MISSING'; dbgRender(); return; }
+  dbgState.mount = 'found';
+  dbgState.mountSize = mount.clientWidth + 'x' + mount.clientHeight;
+  dbgRender();
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isMobile = innerWidth < 760;
@@ -38,6 +68,8 @@
   if ('outputColorSpace' in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
   else renderer.outputEncoding = THREE.sRGBEncoding;
   mount.appendChild(renderer.domElement);
+  dbgState.canvas = 'in DOM (' + mount.clientWidth + 'x' + mount.clientHeight + ')';
+  dbgRender();
 
   // Lights mirror the React component
   scene.add(new THREE.AmbientLight(0xffffff, 0.4));
@@ -111,8 +143,14 @@
     });
 
     truckGroup.add(truck);
-  }, undefined, function (err) {
+    dbgState.glb = 'LOADED (' + truck.children.length + ' meshes)';
+    dbgRender();
+  }, function (p) {
+    if (p && p.total) { dbgState.glb = 'loading ' + Math.round(100 * p.loaded / p.total) + '%'; dbgRender(); }
+  }, function (err) {
     console.warn('Tesla Semi model failed to load — drop tesla-semi-web.glb into public/models/.', err);
+    dbgState.glb = 'FAILED: ' + (err && err.message ? err.message : (err && err.type) || 'unknown');
+    dbgRender();
   });
 
   // Mouse parallax target (subtle, layered on top of the camera orbit)
@@ -165,6 +203,8 @@
     camera.updateProjectionMatrix();
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     updateCameraProgress();
+    dbgState.mountSize = mount.clientWidth + 'x' + mount.clientHeight;
+    dbgRender();
   }
   window.addEventListener('resize', resize);
 
