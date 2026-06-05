@@ -151,11 +151,10 @@
     if (!saga || isMobile || reduce) { cameraProgress = 0; return; }
     var rect = saga.getBoundingClientRect();
     var vh = innerHeight;
-    var total = saga.offsetHeight - vh;
-    if (total <= 0) { cameraProgress = 0; return; }
-    // Use the first ~3 viewports of the saga's scroll range for the orbit;
-    // the last vh acts as a hold so the camera settles before the matcher.
-    var orbitable = Math.max(vh, total - vh);
+    // Camera completes its orbit over the first ~2 viewport heights of scroll
+    // (one vh per scene transition); the remaining scroll holds at progress 1
+    // so scene 3 reads cleanly before the matcher section.
+    var orbitable = vh * 2;
     cameraProgress = Math.max(0, Math.min(1, -rect.top / orbitable));
   }
   window.addEventListener('scroll', updateCameraProgress, { passive: true });
@@ -217,5 +216,9 @@
   setTimeout(reveal, 2000);
 
   resize();
+  // Late-layout safety: re-measure after the saga's sticky/absolute children
+  // have settled. Without this, the canvas can boot at 0×0 in some browsers.
+  setTimeout(resize, 100);
+  setTimeout(resize, 600);
   requestAnimationFrame(tick);
 })();
