@@ -63,29 +63,65 @@
   </div>
 </div>
 
-<!-- ░░ HERO ░░ -->
-<header class="hero" data-screen-label="Hero">
-  <div class="hero-glow"></div>
-  <div id="truck-stage" aria-hidden="true"></div>
-  <div class="wrap">
-    <div class="hero-inner">
-      <span class="eyebrow reveal"><span class="num">01</span>&nbsp;/&nbsp;For Drivers</span>
-      <h1 class="reveal" data-d="1"><span class="chrome-text">We find the job.</span><br><span class="l2">You drive.</span></h1>
-      <p class="hero-sub reveal" data-d="2">We match reliable CDL drivers with top US carriers that are hiring right now — every equipment type, every route, including SAP and no-experience drivers.</p>
-      <div class="hero-cta reveal" data-d="3">
-        <a class="btn btn-chrome btn-lg" href="#matcher" data-magnetic="0.3">Find my job<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <a class="btn btn-ghost btn-lg" href="#how">How it works</a>
-      </div>
-      <div class="hero-stats reveal" data-d="4">
-        <div class="hero-stat"><div class="v"><span data-count="640">0</span>+</div><div class="k">Live openings</div></div>
-        <div class="hero-stat"><div class="v"><span data-count="120">0</span>+</div><div class="k">Carrier partners</div></div>
-        <div class="hero-stat"><div class="v"><span data-count="48">0</span></div><div class="k">States covered</div></div>
+<!-- ░░ HERO SAGA — sticky truck + 3 scroll-driven scenes ░░ -->
+<section class="hero-saga" id="hero-saga" data-screen-label="Hero">
+  <!-- Sticky stage: holds the Tesla Semi, glow, fade -->
+  <div class="hero-saga-stage">
+    <div class="hero-glow"></div>
+    <div id="truck-stage" aria-hidden="true"></div>
+    <div class="hero-fade"></div>
+  </div>
+
+  <!-- Scene 1: the hook -->
+  <article class="saga-scene" data-scene="1">
+    <div class="wrap">
+      <div class="hero-inner">
+        <span class="eyebrow reveal"><span class="num">01</span>&nbsp;/&nbsp;For Drivers</span>
+        <h1 class="reveal" data-d="1"><span class="chrome-text">We find the job.</span><br><span class="l2">You drive.</span></h1>
+        <p class="hero-sub reveal" data-d="2">We match reliable CDL drivers with top US carriers that are hiring right now — every equipment type, every route, including SAP and no-experience drivers.</p>
+        <div class="hero-cta reveal" data-d="3">
+          <a class="btn btn-chrome btn-lg" href="#matcher" data-magnetic="0.3">Find my job<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-ghost btn-lg" href="#how">How it works</a>
+        </div>
+        <div class="hero-stats reveal" data-d="4">
+          <div class="hero-stat"><div class="v"><span data-count="640">0</span>+</div><div class="k">Live openings</div></div>
+          <div class="hero-stat"><div class="v"><span data-count="120">0</span>+</div><div class="k">Carrier partners</div></div>
+          <div class="hero-stat"><div class="v"><span data-count="48">0</span></div><div class="k">States covered</div></div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="scroll-cue">Scroll to explore<span class="line"></span></div>
-  <div class="hero-fade"></div>
-</header>
+    <div class="scroll-cue">Scroll to explore<span class="line"></span></div>
+  </article>
+
+  <!-- Scene 2: breadth — every rig, every route -->
+  <article class="saga-scene" data-scene="2">
+    <div class="wrap">
+      <div class="hero-inner">
+        <span class="eyebrow reveal"><span class="num">02</span>&nbsp;/&nbsp;Every lane</span>
+        <h2 class="saga-h reveal" data-d="1"><span class="chrome-text">Every rig.</span><br>Every route.</h2>
+        <p class="hero-sub reveal" data-d="2">Dry Van, Flatbed, Reefer, Step Deck, Tanker, Power Only, Car Hauler. OTR, Regional, Local, Dedicated. SAP-cleared and zero-experience drivers welcome.</p>
+        <div class="saga-chips reveal" data-d="3">
+          <span>Dry Van</span><span>Flatbed</span><span>Reefer</span><span>Step Deck</span>
+          <span>OTR</span><span>Regional</span><span>Local</span><span>SAP-cleared</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Scene 3: hand-off to the matcher -->
+  <article class="saga-scene" data-scene="3">
+    <div class="wrap">
+      <div class="hero-inner">
+        <span class="eyebrow reveal"><span class="num">03</span>&nbsp;/&nbsp;Find your fit</span>
+        <h2 class="saga-h reveal" data-d="1">Find a job for you.<br><span class="chrome-text">In 30 seconds.</span></h2>
+        <p class="hero-sub reveal" data-d="2">Tell us what you drive and we'll show you — instantly — how many live openings match. No résumé. No login. Just answers.</p>
+        <div class="hero-cta reveal" data-d="3">
+          <a class="btn btn-chrome btn-lg" href="#matcher" data-magnetic="0.3">Open the matcher<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
 
 <!-- ░░ MATCHER ░░ -->
 <section class="section matcher dot-matrix" id="matcher" data-screen-label="Matcher">

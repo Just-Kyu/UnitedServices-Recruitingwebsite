@@ -115,7 +115,7 @@
     console.warn('Tesla Semi model failed to load — drop tesla-semi-web.glb into public/models/.', err);
   });
 
-  // Mouse parallax target
+  // Mouse parallax target (subtle, layered on top of the camera orbit)
   var pointer = { x: 0, y: 0 };
   if (!isMobile && !reduce) {
     window.addEventListener('mousemove', function (e) {
@@ -124,29 +124,85 @@
     });
   }
 
+  // Scroll-coupled camera orbit — the truck stays put while the camera
+  // travels from front-3/4 → side → rear-3/4 across the .hero-saga section.
+  var saga = document.getElementById('hero-saga');
+  var keyframes = [
+    { angle: Math.atan2(6, 4.5),  radius: 7.5, height: 1.6, look: 0.4 }, // front-3/4 (right-front)
+    { angle: Math.PI,             radius: 7.0, height: 1.5, look: 0.4 }, // side (driver door)
+    { angle: Math.PI * 1.35,      radius: 7.5, height: 2.0, look: 0.4 }  // rear-3/4 (left-rear, slightly elevated)
+  ];
+  var cameraProgress = 0;
+  function sampleCamera(p) {
+    p = Math.max(0, Math.min(1, p));
+    var seg, t;
+    if (p < 0.5) { seg = 0; t = p / 0.5; }
+    else         { seg = 1; t = (p - 0.5) / 0.5; }
+    var e = t * t * (3 - 2 * t); // smoothstep
+    var a = keyframes[seg], b = keyframes[seg + 1];
+    return {
+      angle:  a.angle  + (b.angle  - a.angle)  * e,
+      radius: a.radius + (b.radius - a.radius) * e,
+      height: a.height + (b.height - a.height) * e,
+      look:   a.look   + (b.look   - a.look)   * e
+    };
+  }
+  function updateCameraProgress() {
+    if (!saga || isMobile || reduce) { cameraProgress = 0; return; }
+    var rect = saga.getBoundingClientRect();
+    var vh = innerHeight;
+    var total = saga.offsetHeight - vh;
+    if (total <= 0) { cameraProgress = 0; return; }
+    // Use the first ~3 viewports of the saga's scroll range for the orbit;
+    // the last vh acts as a hold so the camera settles before the matcher.
+    var orbitable = Math.max(vh, total - vh);
+    cameraProgress = Math.max(0, Math.min(1, -rect.top / orbitable));
+  }
+  window.addEventListener('scroll', updateCameraProgress, { passive: true });
+  updateCameraProgress();
+
   function resize() {
     camera.aspect = mount.clientWidth / mount.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(mount.clientWidth, mount.clientHeight);
+    updateCameraProgress();
   }
   window.addEventListener('resize', resize);
 
   var prev = performance.now();
   var t0 = prev;
+  var camAngle = keyframes[0].angle, camRadius = keyframes[0].radius;
+  var camHeight = keyframes[0].height, camLook = keyframes[0].look;
   function tick(now) {
     var delta = Math.min((now - prev) / 1000, 0.05);
     prev = now;
     var t = (now - t0) / 1000;
 
-    // Float (drei <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.4} />)
-    var floatBob = Math.sin(t * 1.2) * 0.05 * 0.4;
+    var floatBob = Math.sin(t * 0.8) * 0.02; // gentler than before; the truck reads as planted
 
-    // Slow auto-rotate + smoothed parallax tilt/drift
-    truckGroup.rotation.y += delta * (reduce ? 0 : 0.15);
-    var tiltX = pointer.y * 0.08;
-    var driftX = pointer.x * 0.25;
-    truckGroup.rotation.x += (tiltX - truckGroup.rotation.x) * 0.05;
-    truckGroup.position.x += (driftX - truckGroup.position.x) * 0.05;
+    if (isMobile || reduce) {
+      // Mobile/reduced-motion: lock to the opening front-3/4 frame.
+      var f = keyframes[0];
+      camera.position.set(Math.cos(f.angle) * f.radius, f.height, Math.sin(f.angle) * f.radius);
+      camera.lookAt(0, f.look, 0);
+      truckGroup.rotation.y = -0.35;
+    } else {
+      var target = sampleCamera(cameraProgress);
+      var k = Math.min(1, delta * 6);
+      camAngle  += (target.angle  - camAngle)  * k;
+      camRadius += (target.radius - camRadius) * k;
+      camHeight += (target.height - camHeight) * k;
+      camLook   += (target.look   - camLook)   * k;
+      var px = pointer.x * 0.35;
+      var py = pointer.y * 0.15;
+      camera.position.set(
+        Math.cos(camAngle) * camRadius + px,
+        camHeight + py,
+        Math.sin(camAngle) * camRadius
+      );
+      camera.lookAt(0, camLook, 0);
+      truckGroup.rotation.y = 0;
+    }
     truckGroup.position.y = -0.7 + floatBob;
 
     renderer.render(scene, camera);
