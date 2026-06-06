@@ -40,22 +40,25 @@
   else renderer.outputEncoding = THREE.sRGBEncoding;
   mount.appendChild(renderer.domElement);
 
-  // Lights: dim ambient + a warm key + a cool steel-blue rim so the body
-  // picks up the warm/cool gradient from the reference render.
+  // Lights: dim ambient + a warm key that ORBITS WITH THE CAMERA (so the
+  // shadow direction rotates as you scroll) + a steel-blue rim + a soft
+  // warm pink fill (both fixed, so the body never goes flat).
   scene.add(new THREE.AmbientLight(0xffffff, 0.18));
   var key = new THREE.DirectionalLight(0xffe6c2, 1.6);
   key.position.set(5, 8, 5);
+  key.target.position.set(0, -0.4, 0);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
-  key.shadow.camera.near = 1; key.shadow.camera.far = 30;
-  key.shadow.camera.left = -8; key.shadow.camera.right = 8;
-  key.shadow.camera.top = 8; key.shadow.camera.bottom = -4;
+  key.shadow.camera.near = 1; key.shadow.camera.far = 36;
+  key.shadow.camera.left = -10; key.shadow.camera.right = 10;
+  key.shadow.camera.top = 10; key.shadow.camera.bottom = -6;
   key.shadow.bias = -0.0001;
   scene.add(key);
+  scene.add(key.target);
   var rim = new THREE.DirectionalLight(0x4DA3FF, 0.85);
   rim.position.set(-6, 3, -4);
   scene.add(rim);
-  var fill = new THREE.DirectionalLight(0xff7aa3, 0.35); // soft warm pink fill (opposite side)
+  var fill = new THREE.DirectionalLight(0xff7aa3, 0.35); // soft warm pink fill
   fill.position.set(-4, 1.5, 5);
   scene.add(fill);
 
@@ -218,6 +221,8 @@
       camera.position.set(Math.cos(f.angle) * f.radius, f.height, Math.sin(f.angle) * f.radius);
       camera.lookAt(0, f.look, 0);
       truckGroup.rotation.y = -0.35;
+      // Sun ahead-right of camera, shadow falls behind the truck from POV.
+      key.position.set(Math.cos(f.angle - 0.5) * 11, 9, Math.sin(f.angle - 0.5) * 11);
     } else {
       var target = sampleCamera(cameraProgress);
       var k = Math.min(1, delta * 6);
@@ -234,6 +239,11 @@
       );
       camera.lookAt(0, camLook, 0);
       truckGroup.rotation.y = 0;
+      // Key light orbits with the camera at a fixed -0.5 rad offset
+      // (the "sun" is just to the left of camera POV). The shadow under
+      // the truck rotates as you scroll instead of pointing the same way.
+      var lightAngle = camAngle - 0.5;
+      key.position.set(Math.cos(lightAngle) * 11, 9, Math.sin(lightAngle) * 11);
     }
     truckGroup.position.y = -0.7 + floatBob;
 
