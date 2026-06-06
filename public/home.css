@@ -34,18 +34,24 @@
 .saga-scene[data-scene="1"] { top: 0; }
 .saga-scene[data-scene="2"] { top: 100svh; align-items: center; justify-content: flex-end; text-align: right; }
 .saga-scene[data-scene="2"] .wrap { display: flex; justify-content: flex-end; }
-.saga-scene[data-scene="3"] { top: 200svh; }
+/* Scene 3: by then the camera is on the truck's left side, so right-align
+   the copy to keep it readable against the empty side of the canvas. */
+.saga-scene[data-scene="3"] { top: 200svh; align-items: center; justify-content: flex-end; text-align: right; }
+.saga-scene[data-scene="3"] .wrap { display: flex; justify-content: flex-end; }
 
 .hero-inner { max-width: 720px; }
-.saga-scene[data-scene="2"] .hero-inner { max-width: 620px; }
+.saga-scene[data-scene="2"] .hero-inner,
+.saga-scene[data-scene="3"] .hero-inner { max-width: 620px; }
 .saga-scene h1, .saga-scene .saga-h { font-size: clamp(44px, 7vw, 88px); line-height: 0.98; margin: 22px 0 0; font-family: var(--font-display); color: var(--white); letter-spacing: -0.025em; font-weight: 800; }
 .saga-scene[data-scene="2"] .saga-h,
 .saga-scene[data-scene="3"] .saga-h { font-size: clamp(38px, 5.6vw, 72px); }
 .saga-scene h1 .l2 { color: var(--white); }
 .hero-sub { font-size: clamp(16px, 2vw, 20px); color: var(--silver-txt); max-width: 480px; margin: 26px 0 38px; line-height: 1.6; }
-.saga-scene[data-scene="2"] .hero-sub { margin-left: auto; }
+.saga-scene[data-scene="2"] .hero-sub,
+.saga-scene[data-scene="3"] .hero-sub { margin-left: auto; }
 .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
-.saga-scene[data-scene="2"] .hero-cta { justify-content: flex-end; }
+.saga-scene[data-scene="2"] .hero-cta,
+.saga-scene[data-scene="3"] .hero-cta { justify-content: flex-end; }
 .hero-stats { display: flex; gap: 38px; margin-top: 54px; flex-wrap: wrap; }
 .hero-stat .v { font-family: var(--font-display); font-weight: 800; font-size: 32px; color: #fff; letter-spacing: -0.03em; line-height: 1; }
 .hero-stat .k { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--silver-dim); margin-top: 8px; }
@@ -63,7 +69,11 @@
   .saga-scene[data-scene="2"] .hero-inner,
   .saga-scene[data-scene="2"] .hero-sub,
   .saga-scene[data-scene="2"] .hero-cta,
-  .saga-scene[data-scene="2"] .saga-chips { max-width: 100%; margin-left: 0; margin-right: 0; justify-content: flex-start; text-align: left; }
+  .saga-scene[data-scene="2"] .saga-chips,
+  .saga-scene[data-scene="3"] .wrap,
+  .saga-scene[data-scene="3"] .hero-inner,
+  .saga-scene[data-scene="3"] .hero-sub,
+  .saga-scene[data-scene="3"] .hero-cta { max-width: 100%; margin-left: 0; margin-right: 0; justify-content: flex-start; text-align: left; }
   .saga-chips { justify-content: flex-start; max-width: 100%; }
   #truck-stage { opacity: 0.6; }
   .hero-inner { max-width: 100%; }

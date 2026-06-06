@@ -83,14 +83,16 @@
   }
   scene.environment = buildEnvMap();
 
-  // Stronger elliptical contact shadow so the truck looks grounded
-  // (matches the dark pool under the cab in the reference render).
-  var shadowGeo = new THREE.CircleGeometry(3.8, 64);
-  var shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.72, depthWrite: false });
-  var contactShadow = new THREE.Mesh(shadowGeo, shadowMat);
-  contactShadow.rotation.x = -Math.PI / 2;
-  contactShadow.position.y = -1.38;
-  scene.add(contactShadow);
+  // Invisible ground plane that *only* catches the directional light's shadow.
+  // ShadowMaterial means nothing is drawn except where the truck shadow falls,
+  // so we don't see a floating dark disc when the camera orbits to the side.
+  var groundGeo = new THREE.PlaneGeometry(60, 60);
+  var groundMat = new THREE.ShadowMaterial({ opacity: 0.62 });
+  var ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -1.4;
+  ground.receiveShadow = true;
+  scene.add(ground);
 
   var truckGroup = new THREE.Group();
   scene.add(truckGroup);
