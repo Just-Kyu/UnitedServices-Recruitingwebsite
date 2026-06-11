@@ -153,20 +153,57 @@
 .why-item p { color: var(--silver-txt); font-size: 15px; line-height: 1.6; }
 .why-item .why-ico { position: absolute; top: 36px; right: 36px; width: 26px; height: 26px; color: var(--silver-dim); }
 
-/* ─────────── EQUIPMENT 3D ─────────── */
+/* ─────────── EQUIPMENT — full-bleed trailer convoy ─────────── */
 .equip { background: linear-gradient(180deg, #080B12, #0B1626 50%, #080B12); }
-.equip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-@media (max-width: 920px) { .equip-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 460px) { .equip-grid { grid-template-columns: 1fr 1fr; } }
-.equip-card { padding: 24px 20px 22px; text-align: center; border-radius: 16px; }
-.equip-stage { height: 96px; display: flex; align-items: center; justify-content: center; perspective: 600px; margin-bottom: 14px; }
-.cube { position: relative; transform-style: preserve-3d; animation: cubeSpin 14s linear infinite; }
-.equip-card:hover .cube { animation-duration: 5s; }
-@keyframes cubeSpin { from { transform: rotateX(-20deg) rotateY(0); } to { transform: rotateX(-20deg) rotateY(360deg); } }
-.cube .face { position: absolute; border: 1px solid rgba(124,160,210,0.55); background: rgba(77,163,255,0.05); box-shadow: inset 0 0 16px rgba(77,163,255,0.08); }
-.equip-card h4 { font-size: 16px; color: #fff; margin-bottom: 4px; }
-.equip-card .ec-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--silver-dim); }
-@media (prefers-reduced-motion: reduce) { .cube { animation: none; transform: rotateX(-18deg) rotateY(-28deg); } }
+
+.equip-convoy {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 56px 0 36px;
+  padding: 16px 0 8px;
+  /* Vertical scroll stays usable on touch; horizontal drags scrub. */
+  touch-action: pan-y;
+  cursor: grab;
+  -webkit-user-select: none; user-select: none;
+  /* Side fade so trailers slide in/out smoothly instead of clipping hard */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.equip-convoy.dragging { cursor: grabbing; }
+.equip-track {
+  display: flex;
+  gap: clamp(56px, 7vw, 96px);
+  width: max-content;
+  align-items: flex-end;
+  will-change: transform;
+}
+
+.equip-rig {
+  flex: 0 0 auto;
+  width: 260px;
+  text-align: center;
+  pointer-events: none;             /* drag handled on .equip-convoy */
+}
+.equip-rig-svg {
+  width: 240px;
+  height: 90px;
+  color: rgba(124, 192, 255, 0.85);
+  filter: drop-shadow(0 0 14px rgba(77, 163, 255, 0.18));
+  display: block;
+  margin: 0 auto 18px;
+}
+.equip-rig h4 { font-size: 16px; color: #fff; margin: 0 0 4px; font-family: var(--font-display); font-weight: 700; }
+.equip-rig .ec-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--silver-dim); }
+
+@media (max-width: 600px) {
+  .equip-rig { width: 200px; }
+  .equip-rig-svg { width: 184px; height: 70px; margin-bottom: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .equip-track { transform: none !important; }
+}
 
 /* routes row */
 .routes { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 44px; }

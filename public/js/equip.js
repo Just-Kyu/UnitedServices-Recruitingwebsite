@@ -1,31 +1,119 @@
-/* Builds CSS-3D wireframe boxes for equipment cards. Reads data-w/h/d (px). */
+/* United Services Recruiting — equipment convoy.
+ *
+ * A horizontal trailer marquee under "Lanes for every rig." Auto-scrolls
+ * right-to-left at a steady speed; users can drag/swipe to scrub manually
+ * and the marquee resumes from wherever they let go (with a touch of
+ * inertia so it feels physical). The track is duplicated once so the
+ * wrap-around is seamless.
+ */
 (function () {
   'use strict';
-  function buildBox(el) {
-    var w = +el.getAttribute('data-w') || 80;
-    var h = +el.getAttribute('data-h') || 50;
-    var d = +el.getAttribute('data-d') || 44;
-    var faces = [
-      { t: 'rotateY(0deg)   translateZ(' + (d / 2) + 'px)', w: w, h: h },   // front
-      { t: 'rotateY(180deg) translateZ(' + (d / 2) + 'px)', w: w, h: h },   // back
-      { t: 'rotateY(90deg)  translateZ(' + (w / 2) + 'px)', w: d, h: h },   // right
-      { t: 'rotateY(-90deg) translateZ(' + (w / 2) + 'px)', w: d, h: h },   // left
-      { t: 'rotateX(90deg)  translateZ(' + (h / 2) + 'px)', w: w, h: d },   // top
-      { t: 'rotateX(-90deg) translateZ(' + (h / 2) + 'px)', w: w, h: d }    // bottom
-    ];
-    faces.forEach(function (f) {
-      var d2 = document.createElement('div');
-      d2.className = 'face';
-      d2.style.width = f.w + 'px';
-      d2.style.height = f.h + 'px';
-      d2.style.left = '50%'; d2.style.top = '50%';
-      d2.style.marginLeft = (-f.w / 2) + 'px';
-      d2.style.marginTop = (-f.h / 2) + 'px';
-      d2.style.transform = f.t;
-      el.appendChild(d2);
-    });
-    el.style.width = w + 'px';
-    el.style.height = h + 'px';
+  var convoy = document.getElementById('equip-convoy');
+  var track = document.getElementById('equip-track');
+  if (!convoy || !track) return;
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Duplicate every rig once so we can wrap the offset without a visible jump.
+  var original = Array.prototype.slice.call(track.children);
+  original.forEach(function (rig) {
+    var clone = rig.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  });
+
+  var offset = 0;                    // current translateX in px (≤ 0)
+  var halfWidth = 0;                 // width of one copy of the rigs
+  var autoSpeed = 36;                // px/s left-ward drift
+  var velocity = 0;                  // px/s — used while inertia is decaying
+  var inertiaDecay = 1.6;            // higher = stops sooner
+  var isDragging = false;
+  var dragStartX = 0;
+  var dragStartOffset = 0;
+  var lastPointerX = 0;
+  var lastPointerTime = 0;
+  var hovering = false;
+  var activePointer = null;
+
+  function measure() {
+    // halfWidth = total track width / 2 (since we duplicated children once)
+    halfWidth = track.scrollWidth / 2;
   }
-  document.querySelectorAll('.cube').forEach(buildBox);
+  measure();
+  // Re-measure once images/fonts settle.
+  window.addEventListener('load', measure);
+  window.addEventListener('resize', measure);
+
+  var lastFrame = performance.now();
+  function tick(now) {
+    var delta = Math.min((now - lastFrame) / 1000, 0.05);
+    lastFrame = now;
+
+    if (!isDragging) {
+      var drift = autoSpeed;
+      if (hovering) drift *= 0.35;                       // slow on hover, don't stop
+      if (reduce) drift = 0;
+      offset -= drift * delta;
+
+      if (Math.abs(velocity) > 1) {
+        offset += velocity * delta;
+        velocity *= Math.exp(-inertiaDecay * delta);
+      } else {
+        velocity = 0;
+      }
+    }
+
+    // Wrap so the marquee never reaches the end of the duplicated track
+    if (halfWidth > 0) {
+      while (offset <= -halfWidth) offset += halfWidth;
+      while (offset > 0) offset -= halfWidth;
+    }
+
+    track.style.transform = 'translate3d(' + offset.toFixed(2) + 'px, 0, 0)';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  convoy.addEventListener('mouseenter', function () { hovering = true; });
+  convoy.addEventListener('mouseleave', function () { hovering = false; });
+
+  convoy.addEventListener('pointerdown', function (e) {
+    if (e.button !== undefined && e.button !== 0) return;
+    isDragging = true;
+    activePointer = e.pointerId;
+    dragStartX = e.clientX;
+    dragStartOffset = offset;
+    lastPointerX = e.clientX;
+    lastPointerTime = performance.now();
+    velocity = 0;
+    convoy.classList.add('dragging');
+    try { convoy.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  convoy.addEventListener('pointermove', function (e) {
+    if (!isDragging || e.pointerId !== activePointer) return;
+    var dx = e.clientX - dragStartX;
+    offset = dragStartOffset + dx;
+    // Track instantaneous velocity for hand-off into inertia
+    var now = performance.now();
+    var dt = (now - lastPointerTime) / 1000;
+    if (dt > 0) velocity = (e.clientX - lastPointerX) / dt;
+    lastPointerX = e.clientX;
+    lastPointerTime = now;
+  });
+  function endDrag(e) {
+    if (!isDragging) return;
+    if (e && e.pointerId !== undefined && e.pointerId !== activePointer) return;
+    isDragging = false;
+    activePointer = null;
+    convoy.classList.remove('dragging');
+    if (e && e.pointerId !== undefined) {
+      try { convoy.releasePointerCapture(e.pointerId); } catch (_) {}
+    }
+  }
+  convoy.addEventListener('pointerup', endDrag);
+  convoy.addEventListener('pointercancel', endDrag);
+  convoy.addEventListener('pointerleave', function (e) {
+    // pointerleave on capture is rare but guard anyway
+    if (isDragging) endDrag(e);
+  });
 })();

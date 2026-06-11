@@ -185,16 +185,147 @@
       <h2>Lanes for every rig.</h2>
       <p>Pick the equipment you run and the route that fits your life. We'll match you to carriers hiring for exactly that.</p>
     </div>
-    <div class="equip-grid">
-      <div class="card equip-card edge-top reveal" data-d="1"><div class="equip-stage"><div class="cube" data-w="90" data-h="46" data-d="40"></div></div><h4>Dry Van</h4><div class="ec-sub">53' · No-touch</div></div>
-      <div class="card equip-card edge-top reveal" data-d="1"><div class="equip-stage"><div class="cube" data-w="92" data-h="20" data-d="40"></div></div><h4>Flatbed</h4><div class="ec-sub">Tarp pay</div></div>
-      <div class="card equip-card edge-top reveal" data-d="2"><div class="equip-stage"><div class="cube" data-w="88" data-h="48" data-d="40"></div></div><h4>Reefer</h4><div class="ec-sub">Temp-controlled</div></div>
-      <div class="card equip-card edge-top reveal" data-d="2"><div class="equip-stage"><div class="cube" data-w="92" data-h="26" data-d="40"></div></div><h4>Step Deck</h4><div class="ec-sub">Drop deck</div></div>
-      <div class="card equip-card edge-top reveal" data-d="1"><div class="equip-stage"><div class="cube" data-w="56" data-h="42" data-d="42"></div></div><h4>Power Only</h4><div class="ec-sub">Bring the tractor</div></div>
-      <div class="card equip-card edge-top reveal" data-d="2"><div class="equip-stage"><div class="cube" data-w="96" data-h="32" data-d="36"></div></div><h4>Tanker</h4><div class="ec-sub">Liquid bulk</div></div>
-      <div class="card equip-card edge-top reveal" data-d="3"><div class="equip-stage"><div class="cube" data-w="94" data-h="38" data-d="40"></div></div><h4>Car Hauler</h4><div class="ec-sub">Auto transport</div></div>
-      <div class="card equip-card edge-top reveal" data-d="3"><div class="equip-stage"><div class="cube" data-w="70" data-h="44" data-d="44"></div></div><h4>Owner-Operator</h4><div class="ec-sub">Run your own</div></div>
+  </div>
+
+  <!-- Full-bleed trailer convoy: auto-scrolls right-to-left, drag / swipe to scrub -->
+  <div class="equip-convoy" id="equip-convoy" aria-label="Equipment types">
+    <div class="equip-track" id="equip-track">
+      <article class="equip-rig" data-type="dry-van">
+        <svg class="equip-rig-svg" viewBox="0 0 240 90" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <rect x="62" y="14" width="160" height="50"/>
+          <line x1="78" y1="14" x2="78" y2="64" opacity="0.45"/>
+          <line x1="110" y1="14" x2="110" y2="64" opacity="0.45"/>
+          <line x1="146" y1="14" x2="146" y2="64" opacity="0.45"/>
+          <line x1="182" y1="14" x2="182" y2="64" opacity="0.45"/>
+          <path d="M8 64 L8 32 L18 22 L48 22 L62 30 L62 64 Z"/>
+          <path d="M20 32 L20 42 L42 42 L42 32" opacity="0.5"/>
+          <circle cx="24" cy="72" r="7"/>
+          <circle cx="78" cy="72" r="7"/>
+          <circle cx="188" cy="72" r="7"/>
+          <circle cx="208" cy="72" r="7"/>
+        </svg>
+        <h4>Dry Van</h4>
+        <div class="ec-sub">53' · No-touch</div>
+      </article>
+
+      <article class="equip-rig" data-type="flatbed">
+        <svg class="equip-rig-svg" viewBox="0 0 240 90" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <rect x="62" y="56" width="160" height="9"/>
+          <path d="M8 64 L8 32 L18 22 L48 22 L62 30 L62 64 Z"/>
+          <path d="M20 32 L20 42 L42 42 L42 32" opacity="0.5"/>
+          <circle cx="24" cy="72" r="7"/>
+          <circle cx="78" cy="72" r="7"/>
+          <circle cx="188" cy="72" r="7"/>
+          <circle cx="208" cy="72" r="7"/>
+        </svg>
+        <h4>Flatbed</h4>
+        <div class="ec-sub">Tarp pay</div>
+      </article>
+
+      <article class="equip-rig" data-type="reefer">
+        <svg class="equip-rig-svg" viewBox="0 0 240 90" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <rect x="62" y="14" width="160" height="50"/>
+          <rect x="62" y="4" width="26" height="11"/>
+          <line x1="66" y1="8" x2="84" y2="8" opacity="0.6"/>
+          <line x1="66" y1="11" x2="84" y2="11" opacity="0.6"/>
+          <line x1="100" y1="14" x2="100" y2="64" opacity="0.4"/>
+          <line x1="140" y1="14" x2="140" y2="64" opacity="0.4"/>
+          <line x1="180" y1="14" x2="180" y2="64" opacity="0.4"/>
+          <path d="M8 64 L8 32 L18 22 L48 22 L62 30 L62 64 Z"/>
+          <path d="M20 32 L20 42 L42 42 L42 32" opacity="0.5"/>
+          <circle cx="24" cy="72" r="7"/>
+          <circle cx="78" cy="72" r="7"/>
+          <circle cx="188" cy="72" r="7"/>
+          <circle cx="208" cy="72" r="7"/>
+        </svg>
+        <h4>Reefer</h4>
+        <div class="ec-sub">Temp-controlled</div>
+      </article>
+
+      <article class="equip-rig" data-type="step-deck">
+        <svg class="equip-rig-svg" viewBox="0 0 240 90" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <path d="M62 42 L118 42 L118 56 L222 56 L222 65 L62 65 Z"/>
+          <path d="M8 64 L8 32 L18 22 L48 22 L62 30 L62 64 Z"/>
+          <path d="M20 32 L20 42 L42 42 L42 32" opacity="0.5"/>
+          <circle cx="24" cy="72" r="7"/>
+          <circle cx="78" cy="72" r="7"/>
+          <circle cx="190" cy="72" r="7"/>
+          <circle cx="208" cy="72" r="7"/>
+        </svg>
+        <h4>Step Deck</h4>
+        <div class="ec-sub">Drop deck</div>
+      </article>
+
+      <article class="equip-rig" data-type="power-only">
+        <svg class="equip-rig-svg" viewBox="0 0 240 90" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <path d="M40 64 L40 30 L50 20 L100 20 L120 30 L150 30 L150 64 Z"/>
+          <path d="M52 30 L52 42 L96 42 L96 30" opacity="0.5"/>
+          <line x1="120" y1="42" x2="150" y2="42" opacity="0.4"/>
+          <circle cx="62" cy="72" r="7"/>
+          <circle cx="132" cy="72" r="7"/>
+        </svg>
+        <h4>Power Only</h4>
+        <div class="ec-sub">Bring the tractor</div>
+      </article>
+
+      <article class="equip-rig" data-type="tanker">
+        <svg class="equip-rig-svg" viewBox="0 0 240 90" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <rect x="62" y="22" width="160" height="42" rx="20"/>
+          <line x1="62" y1="42" x2="222" y2="42" opacity="0.35"/>
+          <line x1="100" y1="22" x2="100" y2="64" opacity="0.35"/>
+          <line x1="142" y1="22" x2="142" y2="64" opacity="0.35"/>
+          <line x1="184" y1="22" x2="184" y2="64" opacity="0.35"/>
+          <ellipse cx="62" cy="43" rx="3" ry="20" opacity="0.5"/>
+          <ellipse cx="222" cy="43" rx="3" ry="20" opacity="0.5"/>
+          <path d="M8 64 L8 32 L18 22 L48 22 L62 30 L62 64 Z"/>
+          <path d="M20 32 L20 42 L42 42 L42 32" opacity="0.5"/>
+          <circle cx="24" cy="72" r="7"/>
+          <circle cx="78" cy="72" r="7"/>
+          <circle cx="188" cy="72" r="7"/>
+          <circle cx="208" cy="72" r="7"/>
+        </svg>
+        <h4>Tanker</h4>
+        <div class="ec-sub">Liquid bulk</div>
+      </article>
+
+      <article class="equip-rig" data-type="car-hauler">
+        <svg class="equip-rig-svg" viewBox="0 0 240 90" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <line x1="62" y1="28" x2="222" y2="22"/>
+          <line x1="62" y1="50" x2="222" y2="48"/>
+          <line x1="62" y1="64" x2="222" y2="64"/>
+          <path d="M74 28 L80 18 L98 18 L106 28" opacity="0.7"/>
+          <path d="M122 27 L128 17 L146 17 L154 27" opacity="0.7"/>
+          <path d="M170 25 L176 16 L194 16 L202 25" opacity="0.7"/>
+          <path d="M74 50 L80 42 L98 42 L106 50" opacity="0.7"/>
+          <path d="M122 49 L128 41 L146 41 L154 49" opacity="0.7"/>
+          <path d="M170 48 L176 40 L194 40 L202 48" opacity="0.7"/>
+          <path d="M8 64 L8 32 L18 22 L48 22 L62 30 L62 64 Z"/>
+          <path d="M20 32 L20 42 L42 42 L42 32" opacity="0.5"/>
+          <circle cx="24" cy="72" r="7"/>
+          <circle cx="78" cy="72" r="7"/>
+          <circle cx="188" cy="72" r="7"/>
+          <circle cx="208" cy="72" r="7"/>
+        </svg>
+        <h4>Car Hauler</h4>
+        <div class="ec-sub">Auto transport</div>
+      </article>
+
+      <article class="equip-rig" data-type="owner-op">
+        <svg class="equip-rig-svg" viewBox="0 0 240 90" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <path d="M30 64 L30 26 L42 16 L92 16 L120 26 L160 30 L160 64 Z"/>
+          <path d="M44 26 L44 40 L86 40 L86 26" opacity="0.5"/>
+          <line x1="120" y1="40" x2="160" y2="40" opacity="0.4"/>
+          <rect x="100" y="6" width="14" height="10" opacity="0.6"/>
+          <circle cx="54" cy="72" r="7"/>
+          <circle cx="140" cy="72" r="7"/>
+        </svg>
+        <h4>Owner-Operator</h4>
+        <div class="ec-sub">Run your own</div>
+      </article>
     </div>
+  </div>
+
+  <div class="wrap">
     <div class="routes reveal" data-d="2">
       <span class="route-pill"><b>OTR</b> — Over the road</span>
       <span class="route-pill"><b>Regional</b> — Home weekly</span>
