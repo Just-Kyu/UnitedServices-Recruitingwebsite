@@ -181,15 +181,15 @@
 
 .equip-rig {
   flex: 0 0 auto;
-  width: 260px;
+  width: 320px;
   text-align: center;
   pointer-events: none;             /* drag handled on .equip-convoy */
 }
 .equip-rig-svg {
-  width: 240px;
-  height: 90px;
-  color: rgba(124, 192, 255, 0.85);
-  filter: drop-shadow(0 0 14px rgba(77, 163, 255, 0.18));
+  width: 300px;
+  height: 110px;
+  color: rgba(124, 192, 255, 0.92);
+  filter: drop-shadow(0 0 18px rgba(77, 163, 255, 0.32));
   display: block;
   margin: 0 auto 18px;
 }
@@ -197,19 +197,97 @@
 .equip-rig .ec-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--silver-dim); }
 
 @media (max-width: 600px) {
-  .equip-rig { width: 200px; }
-  .equip-rig-svg { width: 184px; height: 70px; margin-bottom: 14px; }
+  .equip-rig { width: 240px; }
+  .equip-rig-svg { width: 220px; height: 80px; margin-bottom: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .equip-track { transform: none !important; }
 }
 
-/* routes row */
-.routes { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 44px; }
-.route-pill { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em; padding: 10px 20px; border-radius: 999px; border: 1px solid rgba(199,208,219,0.18); color: var(--silver-txt); background: rgba(255,255,255,0.02); transition: all .25s; }
-.route-pill b { color: #fff; font-weight: 600; }
-.route-pill:hover { border-color: var(--steel); color: #fff; box-shadow: 0 0 24px -6px var(--steel-glow); }
+/* ─────────── Routes marquee ─────────── */
+.routes-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 36px 0 0;
+  padding: 14px 0;
+  touch-action: pan-y;
+  -webkit-user-select: none; user-select: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.routes-track {
+  display: flex;
+  align-items: center;
+  gap: clamp(40px, 5vw, 70px);
+  width: max-content;
+  will-change: transform;
+}
+.route-word {
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 1.4vw, 17px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(199,208,219,0.78);
+  white-space: nowrap;
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.route-word b {
+  color: #fff;
+  font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: -0.005em;
+  font-size: clamp(16px, 1.6vw, 19px);
+  text-transform: none;
+  background: linear-gradient(180deg, #ffffff 0%, #d6e6ff 55%, #8aa9d6 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px rgba(124,192,255,0.55));
+  position: relative;
+}
+/* Steel-blue shine sweeping across the bold word, like a chrome reflection */
+.route-word b::after {
+  content: attr(data-text);
+  position: absolute; inset: 0;
+  background: linear-gradient(100deg,
+    transparent 30%,
+    rgba(255,255,255,0.9) 50%,
+    transparent 70%);
+  background-size: 220% 100%;
+  background-position: 200% 0;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: routeShine 6s linear infinite;
+  pointer-events: none;
+}
+.route-word em {
+  font-style: normal;
+  color: var(--steel);
+  opacity: 0.85;
+}
+.route-dot {
+  width: 6px; height: 6px; border-radius: 999px;
+  background: var(--steel);
+  box-shadow: 0 0 12px var(--steel-glow), 0 0 24px rgba(77,163,255,0.35);
+  flex: 0 0 6px;
+}
+
+@keyframes routeShine {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .routes-track { transform: none !important; }
+  .route-word b::after { animation: none; }
+}
+
+/* (Legacy .routes / .route-pill styles removed — replaced by .routes-marquee above.) */
 
 /* ─────────── OFFERS GRID ─────────── */
 .offers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }

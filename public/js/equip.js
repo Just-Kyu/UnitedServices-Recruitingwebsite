@@ -117,3 +117,42 @@
     if (isDragging) endDrag(e);
   });
 })();
+
+/* Routes marquee — same loop pattern, drifts a touch faster, no drag. */
+(function () {
+  'use strict';
+  var marquee = document.getElementById('routes-marquee');
+  var track = document.getElementById('routes-track');
+  if (!marquee || !track) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Duplicate the row once for a seamless wrap
+  var original = Array.prototype.slice.call(track.children);
+  original.forEach(function (el) {
+    var clone = el.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  });
+
+  var offset = 0;
+  var halfWidth = 0;
+  var speed = 60;
+  function measure() { halfWidth = track.scrollWidth / 2; }
+  measure();
+  window.addEventListener('load', measure);
+  window.addEventListener('resize', measure);
+
+  var last = performance.now();
+  function tick(now) {
+    var delta = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    if (!reduce) offset -= speed * delta;
+    if (halfWidth > 0) {
+      while (offset <= -halfWidth) offset += halfWidth;
+      while (offset > 0) offset -= halfWidth;
+    }
+    track.style.transform = 'translate3d(' + offset.toFixed(2) + 'px, 0, 0)';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
