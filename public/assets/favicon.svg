@@ -1,3 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 323 469" width="64" height="93">
-  <image x="0" y="0" width="323" height="469"></image>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="25%" stop-color="#E9EDF2"/>
+      <stop offset="55%" stop-color="#C3CAD3"/>
+      <stop offset="85%" stop-color="#8A95A3"/>
+      <stop offset="100%" stop-color="#B7C0CC"/>
+    </linearGradient>
+  </defs>
+  <!-- Dark navy background with rounded corners -->
+  <rect width="64" height="64" rx="12" fill="#0E1A2C"/>
+  <!-- U mark — left arm (cream/beige) with characteristic curved bottom -->
+  <path d="M15 8 L24 8 L24 38 C24 46 28 50 34 50 L26 54 C18 52 15 46 15 38 Z" fill="#EDE5DB"/>
+  <!-- U mark — right arm (chrome/silver gradient) with straight bottom edge -->
+  <path d="M40 8 L49 8 L49 38 C49 46 44 52 36 54 L34 50 C40 48 40 44 40 38 Z" fill="url(#c)"/>
 </svg>
