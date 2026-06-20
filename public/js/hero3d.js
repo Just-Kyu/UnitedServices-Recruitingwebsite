@@ -106,31 +106,70 @@
     truck.scale.setScalar(1.5);
     truck.position.set(0, -0.7, 0);
 
-    function isGlassish(m, nodeName) {
-      var n = ((m.name || '') + ' ' + nodeName).toLowerCase();
-      if (n.indexOf('glass') !== -1) return true;
-      if (n.indexOf('window') !== -1) return true;
-      if (n.indexOf('windshield') !== -1) return true;
-      if (n.indexOf('pane') !== -1) return true;
-      // Fallback: a smooth, originally-transparent material
-      if (m.transparent && m.opacity > 0 && m.opacity < 0.95 &&
+    function nameTag(m, nodeName) {
+      return ((m.name || '') + ' ' + (nodeName || '')).toLowerCase();
+    }
+    function isWheelish(tag) {
+      return tag.indexOf('tire') !== -1 ||
+             tag.indexOf('tyre') !== -1 ||
+             tag.indexOf('wheel') !== -1 ||
+             tag.indexOf('rubber') !== -1 ||
+             tag.indexOf('rim') !== -1 ||
+             tag.indexOf('hub') !== -1 ||
+             tag.indexOf('brake') !== -1 ||
+             tag.indexOf('caliper') !== -1;
+    }
+    function isRimish(tag) {
+      // Aluminum/chrome part of the wheel, vs. the rubber tire
+      return tag.indexOf('rim') !== -1 ||
+             tag.indexOf('hub') !== -1 ||
+             tag.indexOf('alloy') !== -1 ||
+             tag.indexOf('spoke') !== -1;
+    }
+    function isGlassish(tag, m) {
+      if (tag.indexOf('glass') !== -1) return true;
+      if (tag.indexOf('window') !== -1) return true;
+      if (tag.indexOf('windshield') !== -1) return true;
+      if (tag.indexOf('windscreen') !== -1) return true;
+      if (tag.indexOf('pane') !== -1) return true;
+      // Conservative fallback: smooth, originally-transparent — but never on wheels.
+      if (!isWheelish(tag) &&
+          m.transparent && m.opacity > 0 && m.opacity < 0.95 &&
           (m.roughness === undefined || m.roughness < 0.2)) return true;
       return false;
     }
-    function isLightish(m, nodeName) {
-      var n = ((m.name || '') + ' ' + nodeName).toLowerCase();
-      return n.indexOf('light') !== -1 || n.indexOf('lamp') !== -1 || n.indexOf('headlamp') !== -1;
+    function isLightish(tag) {
+      return tag.indexOf('light') !== -1 || tag.indexOf('lamp') !== -1 || tag.indexOf('headlamp') !== -1;
     }
 
     truck.traverse(function (o) {
       if (!o.isMesh || !o.material) return;
       o.castShadow = true;
       o.receiveShadow = true;
+      var tag = nameTag(o.material, o.name);
       var mats = Array.isArray(o.material) ? o.material : [o.material];
       mats.forEach(function (m) {
         m.envMapIntensity = 1.45;
+        var mtag = nameTag(m, o.name);
 
-        if (isGlassish(m, o.name)) {
+        if (isWheelish(mtag)) {
+          // Wheels: tires read as matte black rubber, rims/hubs as polished
+          // aluminum. Without this they got swept up by the glass fallback
+          // and turned invisible against the dark scene.
+          m.transparent = false;
+          m.opacity = 1;
+          if (isRimish(mtag)) {
+            if (m.color) m.color.setHex(0xb8c2cc);
+            if (typeof m.roughness === 'number') m.roughness = 0.35;
+            if (typeof m.metalness === 'number') m.metalness = 0.9;
+            m.envMapIntensity = 1.8;
+          } else {
+            if (m.color) m.color.setHex(0x1a1a1c);
+            if (typeof m.roughness === 'number') m.roughness = 0.88;
+            if (typeof m.metalness === 'number') m.metalness = 0.05;
+            m.envMapIntensity = 0.8;
+          }
+        } else if (isGlassish(mtag, m)) {
           // Dark mirror windshield (matches the reference: nearly black,
           // only the env-map highlight reads through as a sky reflection).
           m.transparent = false;
@@ -138,7 +177,7 @@
           if (typeof m.roughness === 'number') m.roughness = 0.04;
           if (typeof m.metalness === 'number') m.metalness = 0.85;
           m.envMapIntensity = 2.8;
-        } else if (isLightish(m, o.name)) {
+        } else if (isLightish(mtag)) {
           if (!m.emissive) m.emissive = new THREE.Color();
           m.emissive.setHex(0xfff6e0);
           m.emissiveIntensity = 0.9;
