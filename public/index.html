@@ -193,466 +193,393 @@
     <div class="equip-track" id="equip-track">
 
       <article class="equip-rig" data-type="dry-van">
-        <svg class="equip-rig-svg" viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <!-- trailer body -->
-          <rect x="86" y="22" width="200" height="58"/>
-          <!-- top marker lights -->
-          <rect x="92" y="20" width="4" height="2" opacity="0.7"/>
-          <rect x="190" y="20" width="4" height="2" opacity="0.7"/>
-          <rect x="276" y="20" width="4" height="2" opacity="0.7"/>
-          <!-- side panel ribs (corrugated reefer-look) -->
-          <g opacity="0.4">
-            <line x1="100" y1="24" x2="100" y2="78"/>
-            <line x1="114" y1="24" x2="114" y2="78"/>
-            <line x1="128" y1="24" x2="128" y2="78"/>
-            <line x1="142" y1="24" x2="142" y2="78"/>
-            <line x1="156" y1="24" x2="156" y2="78"/>
-            <line x1="170" y1="24" x2="170" y2="78"/>
-            <line x1="184" y1="24" x2="184" y2="78"/>
-            <line x1="198" y1="24" x2="198" y2="78"/>
-            <line x1="212" y1="24" x2="212" y2="78"/>
-            <line x1="226" y1="24" x2="226" y2="78"/>
-            <line x1="240" y1="24" x2="240" y2="78"/>
-            <line x1="254" y1="24" x2="254" y2="78"/>
-            <line x1="268" y1="24" x2="268" y2="78"/>
+        <svg class="equip-rig-svg" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <!-- main trailer body with subtle aero front-top -->
+          <path d="M20 78 L20 24 L34 14 L304 14 L304 78 Z"/>
+          <!-- subtle interior fill so the body reads as a solid panel -->
+          <path d="M20 24 L20 78 L304 78 L304 14 L34 14 Z" fill="rgba(77,163,255,0.04)" stroke="none"/>
+          <!-- top reflective markers -->
+          <rect x="42" y="12" width="6" height="3" opacity="0.75"/>
+          <rect x="160" y="12" width="6" height="3" opacity="0.75"/>
+          <rect x="284" y="12" width="6" height="3" opacity="0.75"/>
+          <!-- horizontal reflective stripes -->
+          <line x1="22" y1="32" x2="302" y2="32" opacity="0.45" stroke-width="0.9"/>
+          <line x1="22" y1="62" x2="302" y2="62" opacity="0.55"/>
+          <line x1="22" y1="64.5" x2="302" y2="64.5" opacity="0.45"/>
+          <!-- vertical panel seams (slight depth) -->
+          <g opacity="0.32" stroke-width="0.8">
+            <line x1="46" y1="16" x2="46" y2="78"/><line x1="64" y1="16" x2="64" y2="78"/>
+            <line x1="82" y1="16" x2="82" y2="78"/><line x1="100" y1="16" x2="100" y2="78"/>
+            <line x1="118" y1="16" x2="118" y2="78"/><line x1="136" y1="16" x2="136" y2="78"/>
+            <line x1="154" y1="16" x2="154" y2="78"/><line x1="172" y1="16" x2="172" y2="78"/>
+            <line x1="190" y1="16" x2="190" y2="78"/><line x1="208" y1="16" x2="208" y2="78"/>
+            <line x1="226" y1="16" x2="226" y2="78"/><line x1="244" y1="16" x2="244" y2="78"/>
+            <line x1="262" y1="16" x2="262" y2="78"/><line x1="280" y1="16" x2="280" y2="78"/>
           </g>
-          <!-- rear door split -->
-          <line x1="285" y1="34" x2="285" y2="68" opacity="0.7"/>
-          <rect x="283" y="46" width="4" height="6" opacity="0.7"/>
-          <!-- bottom rail / skirt -->
-          <line x1="86" y1="80" x2="286" y2="80"/>
-          <line x1="86" y1="83" x2="286" y2="83" opacity="0.4"/>
-          <!-- mud flap behind trailer wheels -->
-          <path d="M236 91 L236 100 L243 100 L243 91" opacity="0.45"/>
-          <!-- kingpin / hitch hint -->
-          <circle cx="92" cy="86" r="2.5" opacity="0.5"/>
-          <!-- tractor (cab) -->
-          <path d="M6 80 L6 36 L14 28 L34 28 L42 22 L62 22 L72 28 L78 36 L86 36 L86 80 Z"/>
-          <!-- windshield slant -->
-          <path d="M44 36 L52 28 L66 28 L66 36" opacity="0.55"/>
-          <!-- side window divider -->
-          <line x1="18" y1="38" x2="18" y2="56" opacity="0.5"/>
-          <line x1="34" y1="38" x2="34" y2="56" opacity="0.5"/>
-          <!-- door seam -->
-          <line x1="26" y1="38" x2="26" y2="78" opacity="0.35"/>
-          <!-- mirror -->
-          <rect x="48" y="32" width="2" height="6" opacity="0.6"/>
-          <!-- grille slats -->
-          <g opacity="0.45">
-            <line x1="11" y1="58" x2="11" y2="76"/>
-            <line x1="14" y1="58" x2="14" y2="76"/>
-            <line x1="17" y1="58" x2="17" y2="76"/>
+          <!-- rear door split + hinges -->
+          <line x1="304" y1="24" x2="304" y2="78" opacity="0.7"/>
+          <rect x="302" y="46" width="4" height="6" opacity="0.7"/>
+          <rect x="302" y="24" width="4" height="3" opacity="0.6"/>
+          <rect x="302" y="72" width="4" height="3" opacity="0.6"/>
+          <!-- chassis rail + aero side skirt -->
+          <line x1="20" y1="78" x2="304" y2="78"/>
+          <path d="M50 78 L260 78 L262 86 L48 86 Z" opacity="0.45"/>
+          <!-- landing gear -->
+          <line x1="40" y1="78" x2="40" y2="100" opacity="0.7"/>
+          <line x1="48" y1="78" x2="48" y2="100" opacity="0.7"/>
+          <line x1="36" y1="100" x2="52" y2="100" opacity="0.7"/>
+          <!-- mud flap -->
+          <path d="M232 102 L232 116 L244 116 L244 102" opacity="0.55"/>
+          <!-- tandem-axle wheels (detailed) -->
+          <g>
+            <circle cx="200" cy="100" r="13"/>
+            <circle cx="200" cy="100" r="9" opacity="0.6"/>
+            <circle cx="200" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8">
+              <line x1="200" y1="91" x2="200" y2="109"/>
+              <line x1="191" y1="100" x2="209" y2="100"/>
+              <line x1="193" y1="93" x2="207" y2="107"/>
+              <line x1="207" y1="93" x2="193" y2="107"/>
+            </g>
           </g>
-          <!-- headlights -->
-          <rect x="9" y="64" width="6" height="4" opacity="0.6"/>
-          <!-- bumper line -->
-          <line x1="6" y1="78" x2="22" y2="78" opacity="0.6"/>
-          <!-- fuel tank -->
-          <ellipse cx="58" cy="84" rx="14" ry="3" opacity="0.4"/>
-          <!-- twin exhaust stacks -->
-          <line x1="74" y1="22" x2="74" y2="2" opacity="0.6"/>
-          <line x1="80" y1="22" x2="80" y2="2" opacity="0.45"/>
-          <circle cx="74" cy="2" r="1.5" opacity="0.5"/>
-          <circle cx="80" cy="2" r="1.2" opacity="0.4"/>
-          <!-- tractor wheels (front + drive duals) -->
-          <circle cx="24" cy="90" r="9"/>
-          <circle cx="24" cy="90" r="4" opacity="0.55"/>
-          <circle cx="24" cy="90" r="6" opacity="0.3"/>
-          <line x1="24" y1="84" x2="24" y2="96" opacity="0.3"/>
-          <line x1="18" y1="90" x2="30" y2="90" opacity="0.3"/>
-          <circle cx="60" cy="90" r="9"/>
-          <circle cx="60" cy="90" r="4" opacity="0.55"/>
-          <circle cx="60" cy="90" r="6" opacity="0.3"/>
-          <circle cx="76" cy="90" r="9"/>
-          <circle cx="76" cy="90" r="4" opacity="0.55"/>
-          <circle cx="76" cy="90" r="6" opacity="0.3"/>
-          <!-- trailer wheels (dual axle, dual tires) -->
-          <circle cx="216" cy="90" r="9"/>
-          <circle cx="216" cy="90" r="4" opacity="0.55"/>
-          <circle cx="216" cy="90" r="6" opacity="0.3"/>
-          <line x1="216" y1="84" x2="216" y2="96" opacity="0.3"/>
-          <line x1="210" y1="90" x2="222" y2="90" opacity="0.3"/>
-          <circle cx="238" cy="90" r="9"/>
-          <circle cx="238" cy="90" r="4" opacity="0.55"/>
-          <circle cx="238" cy="90" r="6" opacity="0.3"/>
+          <g>
+            <circle cx="230" cy="100" r="13"/>
+            <circle cx="230" cy="100" r="9" opacity="0.6"/>
+            <circle cx="230" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8">
+              <line x1="230" y1="91" x2="230" y2="109"/>
+              <line x1="221" y1="100" x2="239" y2="100"/>
+              <line x1="223" y1="93" x2="237" y2="107"/>
+              <line x1="237" y1="93" x2="223" y2="107"/>
+            </g>
+          </g>
         </svg>
         <h4>Dry Van</h4>
         <div class="ec-sub">53' · No-touch</div>
       </article>
 
       <article class="equip-rig" data-type="flatbed">
-        <svg class="equip-rig-svg" viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <!-- main deck -->
-          <rect x="86" y="64" width="200" height="12"/>
-          <line x1="86" y1="69" x2="286" y2="69" opacity="0.4"/>
-          <!-- stake pockets along the side -->
-          <g opacity="0.55">
-            <line x1="98" y1="56" x2="98" y2="64"/>
-            <line x1="120" y1="56" x2="120" y2="64"/>
-            <line x1="142" y1="56" x2="142" y2="64"/>
-            <line x1="164" y1="56" x2="164" y2="64"/>
-            <line x1="186" y1="56" x2="186" y2="64"/>
-            <line x1="208" y1="56" x2="208" y2="64"/>
-            <line x1="230" y1="56" x2="230" y2="64"/>
-            <line x1="252" y1="56" x2="252" y2="64"/>
-            <line x1="274" y1="56" x2="274" y2="64"/>
+        <svg class="equip-rig-svg" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <!-- gooseneck front -->
+          <path d="M22 56 L40 56 L46 62 L46 78 L22 78 Z"/>
+          <!-- main deck rail -->
+          <rect x="46" y="62" width="258" height="16"/>
+          <line x1="46" y1="68" x2="304" y2="68" opacity="0.35"/>
+          <!-- stake pockets running the length -->
+          <g opacity="0.6">
+            <line x1="62" y1="56" x2="62" y2="62"/><line x1="84" y1="56" x2="84" y2="62"/>
+            <line x1="106" y1="56" x2="106" y2="62"/><line x1="128" y1="56" x2="128" y2="62"/>
+            <line x1="150" y1="56" x2="150" y2="62"/><line x1="172" y1="56" x2="172" y2="62"/>
+            <line x1="194" y1="56" x2="194" y2="62"/><line x1="216" y1="56" x2="216" y2="62"/>
+            <line x1="238" y1="56" x2="238" y2="62"/><line x1="260" y1="56" x2="260" y2="62"/>
+            <line x1="282" y1="56" x2="282" y2="62"/>
+          </g>
+          <!-- side rub rail -->
+          <line x1="46" y1="60" x2="304" y2="60" opacity="0.45"/>
+          <!-- chassis cross-members suggestion -->
+          <g opacity="0.3" stroke-width="0.7">
+            <line x1="80" y1="78" x2="80" y2="84"/>
+            <line x1="120" y1="78" x2="120" y2="84"/>
+            <line x1="160" y1="78" x2="160" y2="84"/>
+            <line x1="280" y1="78" x2="280" y2="84"/>
+            <line x1="46" y1="84" x2="304" y2="84"/>
           </g>
           <!-- kingpin -->
-          <circle cx="92" cy="80" r="2.5" opacity="0.5"/>
+          <circle cx="32" cy="78" r="3" opacity="0.6"/>
+          <!-- landing gear -->
+          <line x1="44" y1="78" x2="44" y2="100" opacity="0.7"/>
+          <line x1="52" y1="78" x2="52" y2="100" opacity="0.7"/>
+          <line x1="40" y1="100" x2="56" y2="100" opacity="0.7"/>
           <!-- mud flap -->
-          <path d="M236 91 L236 100 L243 100 L243 91" opacity="0.45"/>
-          <!-- tractor (same detailed cab) -->
-          <path d="M6 80 L6 36 L14 28 L34 28 L42 22 L62 22 L72 28 L78 36 L86 36 L86 80 Z"/>
-          <path d="M44 36 L52 28 L66 28 L66 36" opacity="0.55"/>
-          <line x1="18" y1="38" x2="18" y2="56" opacity="0.5"/>
-          <line x1="34" y1="38" x2="34" y2="56" opacity="0.5"/>
-          <line x1="26" y1="38" x2="26" y2="78" opacity="0.35"/>
-          <rect x="48" y="32" width="2" height="6" opacity="0.6"/>
-          <g opacity="0.45"><line x1="11" y1="58" x2="11" y2="76"/><line x1="14" y1="58" x2="14" y2="76"/><line x1="17" y1="58" x2="17" y2="76"/></g>
-          <rect x="9" y="64" width="6" height="4" opacity="0.6"/>
-          <line x1="6" y1="78" x2="22" y2="78" opacity="0.6"/>
-          <ellipse cx="58" cy="84" rx="14" ry="3" opacity="0.4"/>
-          <line x1="74" y1="22" x2="74" y2="2" opacity="0.6"/>
-          <line x1="80" y1="22" x2="80" y2="2" opacity="0.45"/>
-          <circle cx="74" cy="2" r="1.5" opacity="0.5"/>
-          <circle cx="80" cy="2" r="1.2" opacity="0.4"/>
-          <circle cx="24" cy="90" r="9"/><circle cx="24" cy="90" r="4" opacity="0.55"/><circle cx="24" cy="90" r="6" opacity="0.3"/>
-          <circle cx="60" cy="90" r="9"/><circle cx="60" cy="90" r="4" opacity="0.55"/><circle cx="60" cy="90" r="6" opacity="0.3"/>
-          <circle cx="76" cy="90" r="9"/><circle cx="76" cy="90" r="4" opacity="0.55"/><circle cx="76" cy="90" r="6" opacity="0.3"/>
-          <circle cx="216" cy="90" r="9"/><circle cx="216" cy="90" r="4" opacity="0.55"/><circle cx="216" cy="90" r="6" opacity="0.3"/>
-          <circle cx="238" cy="90" r="9"/><circle cx="238" cy="90" r="4" opacity="0.55"/><circle cx="238" cy="90" r="6" opacity="0.3"/>
+          <path d="M252 102 L252 116 L264 116 L264 102" opacity="0.55"/>
+          <!-- tridem axle (3 wheels — flatbed signature) -->
+          <g>
+            <circle cx="200" cy="100" r="13"/><circle cx="200" cy="100" r="9" opacity="0.6"/><circle cx="200" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="200" y1="91" x2="200" y2="109"/><line x1="191" y1="100" x2="209" y2="100"/><line x1="193" y1="93" x2="207" y2="107"/><line x1="207" y1="93" x2="193" y2="107"/></g>
+          </g>
+          <g>
+            <circle cx="226" cy="100" r="13"/><circle cx="226" cy="100" r="9" opacity="0.6"/><circle cx="226" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="226" y1="91" x2="226" y2="109"/><line x1="217" y1="100" x2="235" y2="100"/><line x1="219" y1="93" x2="233" y2="107"/><line x1="233" y1="93" x2="219" y2="107"/></g>
+          </g>
+          <g>
+            <circle cx="252" cy="100" r="13"/><circle cx="252" cy="100" r="9" opacity="0.6"/><circle cx="252" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="252" y1="91" x2="252" y2="109"/><line x1="243" y1="100" x2="261" y2="100"/><line x1="245" y1="93" x2="259" y2="107"/><line x1="259" y1="93" x2="245" y2="107"/></g>
+          </g>
         </svg>
         <h4>Flatbed</h4>
         <div class="ec-sub">Tarp pay</div>
       </article>
 
       <article class="equip-rig" data-type="reefer">
-        <svg class="equip-rig-svg" viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+        <svg class="equip-rig-svg" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <!-- Thermo King refrigeration unit on top-front -->
+          <path d="M30 14 L80 14 L80 32 L20 32 L20 24 Z"/>
+          <!-- intake grille on the unit -->
+          <g opacity="0.65" stroke-width="0.9">
+            <line x1="34" y1="18" x2="74" y2="18"/>
+            <line x1="34" y1="22" x2="74" y2="22"/>
+            <line x1="34" y1="26" x2="74" y2="26"/>
+            <line x1="34" y1="30" x2="74" y2="30"/>
+          </g>
+          <!-- TK badge area -->
+          <rect x="40" y="18" width="8" height="6" opacity="0.55"/>
           <!-- main reefer body -->
-          <rect x="86" y="22" width="200" height="58"/>
-          <!-- refrigeration unit (front-top) -->
-          <rect x="86" y="6" width="36" height="16"/>
-          <g opacity="0.65">
-            <line x1="92" y1="10" x2="116" y2="10"/>
-            <line x1="92" y1="13" x2="116" y2="13"/>
-            <line x1="92" y1="16" x2="116" y2="16"/>
-            <line x1="92" y1="19" x2="116" y2="19"/>
-          </g>
+          <path d="M20 32 L304 32 L304 78 L20 78 Z"/>
+          <path d="M20 32 L304 32 L304 78 L20 78 Z" fill="rgba(77,163,255,0.05)" stroke="none"/>
+          <!-- side door for loading (signature reefer) -->
+          <rect x="150" y="40" width="80" height="32" opacity="0.55"/>
+          <line x1="190" y1="40" x2="190" y2="72" opacity="0.45"/>
+          <rect x="186" y="54" width="8" height="3" opacity="0.6"/>
           <!-- corrugated panel ribs -->
-          <g opacity="0.4">
-            <line x1="138" y1="24" x2="138" y2="78"/>
-            <line x1="160" y1="24" x2="160" y2="78"/>
-            <line x1="182" y1="24" x2="182" y2="78"/>
-            <line x1="204" y1="24" x2="204" y2="78"/>
-            <line x1="226" y1="24" x2="226" y2="78"/>
-            <line x1="248" y1="24" x2="248" y2="78"/>
-            <line x1="270" y1="24" x2="270" y2="78"/>
+          <g opacity="0.35" stroke-width="0.8">
+            <line x1="100" y1="34" x2="100" y2="78"/><line x1="120" y1="34" x2="120" y2="78"/>
+            <line x1="140" y1="34" x2="140" y2="78"/><line x1="240" y1="34" x2="240" y2="78"/>
+            <line x1="260" y1="34" x2="260" y2="78"/><line x1="280" y1="34" x2="280" y2="78"/>
           </g>
-          <!-- side door rail -->
-          <rect x="160" y="36" width="60" height="32" opacity="0.4"/>
-          <!-- rear door split + hinges -->
-          <line x1="285" y1="34" x2="285" y2="68" opacity="0.7"/>
-          <rect x="283" y="46" width="4" height="6" opacity="0.7"/>
-          <!-- bottom rail -->
-          <line x1="86" y1="80" x2="286" y2="80"/>
-          <line x1="86" y1="83" x2="286" y2="83" opacity="0.4"/>
-          <path d="M236 91 L236 100 L243 100 L243 91" opacity="0.45"/>
-          <circle cx="92" cy="86" r="2.5" opacity="0.5"/>
-          <!-- tractor -->
-          <path d="M6 80 L6 36 L14 28 L34 28 L42 22 L62 22 L72 28 L78 36 L86 36 L86 80 Z"/>
-          <path d="M44 36 L52 28 L66 28 L66 36" opacity="0.55"/>
-          <line x1="18" y1="38" x2="18" y2="56" opacity="0.5"/>
-          <line x1="34" y1="38" x2="34" y2="56" opacity="0.5"/>
-          <line x1="26" y1="38" x2="26" y2="78" opacity="0.35"/>
-          <rect x="48" y="32" width="2" height="6" opacity="0.6"/>
-          <g opacity="0.45"><line x1="11" y1="58" x2="11" y2="76"/><line x1="14" y1="58" x2="14" y2="76"/><line x1="17" y1="58" x2="17" y2="76"/></g>
-          <rect x="9" y="64" width="6" height="4" opacity="0.6"/>
-          <line x1="6" y1="78" x2="22" y2="78" opacity="0.6"/>
-          <ellipse cx="58" cy="84" rx="14" ry="3" opacity="0.4"/>
-          <line x1="74" y1="22" x2="74" y2="2" opacity="0.6"/>
-          <line x1="80" y1="22" x2="80" y2="2" opacity="0.45"/>
-          <circle cx="74" cy="2" r="1.5" opacity="0.5"/>
-          <circle cx="80" cy="2" r="1.2" opacity="0.4"/>
-          <circle cx="24" cy="90" r="9"/><circle cx="24" cy="90" r="4" opacity="0.55"/><circle cx="24" cy="90" r="6" opacity="0.3"/>
-          <circle cx="60" cy="90" r="9"/><circle cx="60" cy="90" r="4" opacity="0.55"/><circle cx="60" cy="90" r="6" opacity="0.3"/>
-          <circle cx="76" cy="90" r="9"/><circle cx="76" cy="90" r="4" opacity="0.55"/><circle cx="76" cy="90" r="6" opacity="0.3"/>
-          <circle cx="216" cy="90" r="9"/><circle cx="216" cy="90" r="4" opacity="0.55"/><circle cx="216" cy="90" r="6" opacity="0.3"/>
-          <circle cx="238" cy="90" r="9"/><circle cx="238" cy="90" r="4" opacity="0.55"/><circle cx="238" cy="90" r="6" opacity="0.3"/>
+          <!-- reflective tape -->
+          <line x1="20" y1="62" x2="304" y2="62" opacity="0.55"/>
+          <line x1="20" y1="64.5" x2="304" y2="64.5" opacity="0.45"/>
+          <!-- rear door split -->
+          <line x1="304" y1="32" x2="304" y2="78" opacity="0.7"/>
+          <rect x="302" y="50" width="4" height="6" opacity="0.7"/>
+          <!-- chassis -->
+          <line x1="20" y1="78" x2="304" y2="78"/>
+          <path d="M50 78 L260 78 L262 86 L48 86 Z" opacity="0.45"/>
+          <line x1="40" y1="78" x2="40" y2="100" opacity="0.7"/>
+          <line x1="48" y1="78" x2="48" y2="100" opacity="0.7"/>
+          <line x1="36" y1="100" x2="52" y2="100" opacity="0.7"/>
+          <path d="M232 102 L232 116 L244 116 L244 102" opacity="0.55"/>
+          <!-- tandem-axle wheels -->
+          <g>
+            <circle cx="200" cy="100" r="13"/><circle cx="200" cy="100" r="9" opacity="0.6"/><circle cx="200" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="200" y1="91" x2="200" y2="109"/><line x1="191" y1="100" x2="209" y2="100"/><line x1="193" y1="93" x2="207" y2="107"/><line x1="207" y1="93" x2="193" y2="107"/></g>
+          </g>
+          <g>
+            <circle cx="230" cy="100" r="13"/><circle cx="230" cy="100" r="9" opacity="0.6"/><circle cx="230" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="230" y1="91" x2="230" y2="109"/><line x1="221" y1="100" x2="239" y2="100"/><line x1="223" y1="93" x2="237" y2="107"/><line x1="237" y1="93" x2="223" y2="107"/></g>
+          </g>
         </svg>
         <h4>Reefer</h4>
         <div class="ec-sub">Temp-controlled</div>
       </article>
 
-      <article class="equip-rig" data-type="step-deck">
-        <svg class="equip-rig-svg" viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <!-- high front deck + step + low rear deck -->
-          <path d="M86 48 L150 48 L150 64 L286 64 L286 76 L86 76 Z"/>
-          <line x1="86" y1="52" x2="150" y2="52" opacity="0.35"/>
-          <line x1="150" y1="68" x2="286" y2="68" opacity="0.35"/>
-          <line x1="86" y1="74" x2="286" y2="74" opacity="0.4"/>
-          <!-- stake pockets -->
-          <g opacity="0.55">
-            <line x1="98" y1="42" x2="98" y2="48"/>
-            <line x1="120" y1="42" x2="120" y2="48"/>
-            <line x1="142" y1="42" x2="142" y2="48"/>
-            <line x1="170" y1="58" x2="170" y2="64"/>
-            <line x1="200" y1="58" x2="200" y2="64"/>
-            <line x1="230" y1="58" x2="230" y2="64"/>
-            <line x1="260" y1="58" x2="260" y2="64"/>
-          </g>
-          <!-- kingpin -->
-          <circle cx="92" cy="80" r="2.5" opacity="0.5"/>
-          <path d="M236 88 L236 100 L243 100 L243 88" opacity="0.45"/>
-          <!-- tractor -->
-          <path d="M6 80 L6 36 L14 28 L34 28 L42 22 L62 22 L72 28 L78 36 L86 36 L86 80 Z"/>
-          <path d="M44 36 L52 28 L66 28 L66 36" opacity="0.55"/>
-          <line x1="18" y1="38" x2="18" y2="56" opacity="0.5"/>
-          <line x1="34" y1="38" x2="34" y2="56" opacity="0.5"/>
-          <line x1="26" y1="38" x2="26" y2="78" opacity="0.35"/>
-          <rect x="48" y="32" width="2" height="6" opacity="0.6"/>
-          <g opacity="0.45"><line x1="11" y1="58" x2="11" y2="76"/><line x1="14" y1="58" x2="14" y2="76"/><line x1="17" y1="58" x2="17" y2="76"/></g>
-          <rect x="9" y="64" width="6" height="4" opacity="0.6"/>
-          <line x1="6" y1="78" x2="22" y2="78" opacity="0.6"/>
-          <ellipse cx="58" cy="84" rx="14" ry="3" opacity="0.4"/>
-          <line x1="74" y1="22" x2="74" y2="2" opacity="0.6"/>
-          <line x1="80" y1="22" x2="80" y2="2" opacity="0.45"/>
-          <circle cx="74" cy="2" r="1.5" opacity="0.5"/>
-          <circle cx="80" cy="2" r="1.2" opacity="0.4"/>
-          <circle cx="24" cy="90" r="9"/><circle cx="24" cy="90" r="4" opacity="0.55"/><circle cx="24" cy="90" r="6" opacity="0.3"/>
-          <circle cx="60" cy="90" r="9"/><circle cx="60" cy="90" r="4" opacity="0.55"/><circle cx="60" cy="90" r="6" opacity="0.3"/>
-          <circle cx="76" cy="90" r="9"/><circle cx="76" cy="90" r="4" opacity="0.55"/><circle cx="76" cy="90" r="6" opacity="0.3"/>
-          <circle cx="216" cy="90" r="9"/><circle cx="216" cy="90" r="4" opacity="0.55"/><circle cx="216" cy="90" r="6" opacity="0.3"/>
-          <circle cx="238" cy="90" r="9"/><circle cx="238" cy="90" r="4" opacity="0.55"/><circle cx="238" cy="90" r="6" opacity="0.3"/>
-        </svg>
-        <h4>Step Deck</h4>
-        <div class="ec-sub">Drop deck</div>
-      </article>
-
       <article class="equip-rig" data-type="power-only">
-        <svg class="equip-rig-svg" viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <!-- detailed sleeper-cab tractor with bare fifth-wheel hitch -->
-          <path d="M44 80 L44 36 L52 28 L72 28 L80 22 L100 22 L110 28 L118 36 L126 28 L160 28 L172 36 L172 80 Z"/>
-          <!-- windshield -->
-          <path d="M82 36 L90 28 L104 28 L104 36" opacity="0.55"/>
-          <!-- door seam -->
-          <line x1="68" y1="36" x2="68" y2="78" opacity="0.4"/>
-          <!-- side window panes -->
-          <line x1="56" y1="38" x2="56" y2="56" opacity="0.5"/>
-          <line x1="72" y1="38" x2="72" y2="56" opacity="0.5"/>
-          <!-- sleeper window -->
-          <rect x="132" y="34" width="22" height="10" opacity="0.5"/>
-          <!-- mirror -->
-          <rect x="86" y="32" width="2" height="6" opacity="0.6"/>
+        <svg class="equip-rig-svg" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <!-- Freightliner Cascadia profile: aero hood + tall sleeper -->
+          <!-- hood (aerodynamic slope) -->
+          <path d="M22 88 L22 72 L28 62 L74 48 L90 44 L90 88 Z"/>
+          <path d="M22 88 L22 72 L28 62 L74 48 L90 44 L90 88 Z" fill="rgba(77,163,255,0.05)" stroke="none"/>
+          <!-- hood ridge accents -->
+          <line x1="28" y1="68" x2="80" y2="56" opacity="0.4"/>
+          <line x1="32" y1="74" x2="86" y2="62" opacity="0.35"/>
+          <!-- headlight clusters -->
+          <ellipse cx="30" cy="74" rx="6" ry="3" opacity="0.75"/>
+          <ellipse cx="30" cy="80" rx="6" ry="2" opacity="0.5"/>
           <!-- grille slats -->
-          <g opacity="0.45"><line x1="49" y1="58" x2="49" y2="76"/><line x1="52" y1="58" x2="52" y2="76"/><line x1="55" y1="58" x2="55" y2="76"/></g>
-          <rect x="47" y="64" width="6" height="4" opacity="0.6"/>
-          <line x1="44" y1="78" x2="60" y2="78" opacity="0.6"/>
-          <ellipse cx="100" cy="86" rx="18" ry="3" opacity="0.4"/>
-          <!-- exhaust stacks -->
-          <line x1="112" y1="28" x2="112" y2="2" opacity="0.6"/>
-          <line x1="118" y1="28" x2="118" y2="2" opacity="0.45"/>
-          <circle cx="112" cy="2" r="1.5" opacity="0.5"/>
-          <circle cx="118" cy="2" r="1.2" opacity="0.4"/>
-          <!-- fifth-wheel hitch (exposed since there's no trailer) -->
-          <line x1="172" y1="62" x2="220" y2="62"/>
-          <line x1="172" y1="68" x2="220" y2="68" opacity="0.5"/>
-          <line x1="220" y1="60" x2="220" y2="70" opacity="0.6"/>
-          <circle cx="200" cy="65" r="3" opacity="0.6"/>
-          <!-- wheels -->
-          <circle cx="62" cy="90" r="9"/><circle cx="62" cy="90" r="4" opacity="0.55"/><circle cx="62" cy="90" r="6" opacity="0.3"/>
-          <circle cx="146" cy="90" r="9"/><circle cx="146" cy="90" r="4" opacity="0.55"/><circle cx="146" cy="90" r="6" opacity="0.3"/>
-          <circle cx="162" cy="90" r="9"/><circle cx="162" cy="90" r="4" opacity="0.55"/><circle cx="162" cy="90" r="6" opacity="0.3"/>
+          <g opacity="0.55" stroke-width="0.9">
+            <line x1="46" y1="66" x2="46" y2="86"/><line x1="50" y1="66" x2="50" y2="86"/>
+            <line x1="54" y1="66" x2="54" y2="86"/><line x1="58" y1="66" x2="58" y2="86"/>
+            <line x1="62" y1="66" x2="62" y2="86"/><line x1="66" y1="66" x2="66" y2="86"/>
+          </g>
+          <!-- bumper -->
+          <line x1="22" y1="86" x2="70" y2="86" opacity="0.7"/>
+          <line x1="22" y1="88" x2="70" y2="88" opacity="0.5"/>
+          <!-- cab body (sleeper) -->
+          <path d="M90 88 L90 30 L98 22 L168 22 L176 28 L188 28 L188 88 Z"/>
+          <!-- chrome sun visor -->
+          <line x1="98" y1="20" x2="170" y2="20" opacity="0.7"/>
+          <line x1="98" y1="20" x2="98" y2="24" opacity="0.6"/>
+          <line x1="170" y1="20" x2="170" y2="24" opacity="0.6"/>
+          <!-- windshield slant -->
+          <path d="M94 44 L102 28 L130 28 L130 44" opacity="0.6"/>
+          <line x1="130" y1="30" x2="130" y2="44" opacity="0.4"/>
+          <!-- side window pane -->
+          <rect x="106" y="32" width="20" height="12" opacity="0.5"/>
+          <!-- mirror with stalk -->
+          <line x1="96" y1="28" x2="92" y2="44" opacity="0.7"/>
+          <rect x="89" y="34" width="4" height="12" opacity="0.65"/>
+          <!-- sleeper berth window -->
+          <rect x="138" y="34" width="36" height="10" opacity="0.5"/>
+          <line x1="156" y1="34" x2="156" y2="44" opacity="0.45"/>
+          <!-- panel seam -->
+          <line x1="130" y1="44" x2="130" y2="88" opacity="0.35"/>
+          <line x1="176" y1="60" x2="188" y2="60" opacity="0.35"/>
+          <!-- aero exhaust pipe (Cascadia routes exhaust behind cab) -->
+          <path d="M186 50 L196 36 L196 22 L192 22" opacity="0.7"/>
+          <circle cx="194" cy="22" r="2" opacity="0.55"/>
+          <!-- side fairing / running board -->
+          <path d="M22 92 L22 96 L188 96 L188 92" opacity="0.5"/>
+          <!-- chrome fuel tank -->
+          <ellipse cx="130" cy="98" rx="26" ry="4" opacity="0.55"/>
+          <line x1="104" y1="98" x2="156" y2="98" opacity="0.4"/>
+          <!-- battery box -->
+          <rect x="92" y="92" width="10" height="6" opacity="0.4"/>
+          <!-- step -->
+          <line x1="84" y1="84" x2="92" y2="92" opacity="0.5"/>
+          <!-- exposed fifth-wheel hitch (no trailer) -->
+          <line x1="188" y1="68" x2="238" y2="68"/>
+          <line x1="188" y1="76" x2="238" y2="76" opacity="0.55"/>
+          <line x1="238" y1="64" x2="238" y2="80" opacity="0.7"/>
+          <circle cx="218" cy="72" r="4" opacity="0.55"/>
+          <!-- front steer wheel -->
+          <g>
+            <circle cx="50" cy="102" r="12"/>
+            <circle cx="50" cy="102" r="8" opacity="0.6"/>
+            <circle cx="50" cy="102" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8">
+              <line x1="50" y1="94" x2="50" y2="110"/>
+              <line x1="42" y1="102" x2="58" y2="102"/>
+              <line x1="44" y1="96" x2="56" y2="108"/>
+              <line x1="56" y1="96" x2="44" y2="108"/>
+            </g>
+          </g>
+          <!-- drive axle tandem -->
+          <g>
+            <circle cx="150" cy="102" r="12"/><circle cx="150" cy="102" r="8" opacity="0.6"/><circle cx="150" cy="102" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="150" y1="94" x2="150" y2="110"/><line x1="142" y1="102" x2="158" y2="102"/><line x1="144" y1="96" x2="156" y2="108"/><line x1="156" y1="96" x2="144" y2="108"/></g>
+          </g>
+          <g>
+            <circle cx="178" cy="102" r="12"/><circle cx="178" cy="102" r="8" opacity="0.6"/><circle cx="178" cy="102" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="178" y1="94" x2="178" y2="110"/><line x1="170" y1="102" x2="186" y2="102"/><line x1="172" y1="96" x2="184" y2="108"/><line x1="184" y1="96" x2="172" y2="108"/></g>
+          </g>
         </svg>
         <h4>Power Only</h4>
         <div class="ec-sub">Bring the tractor</div>
       </article>
 
       <article class="equip-rig" data-type="tanker">
-        <svg class="equip-rig-svg" viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <!-- cylindrical tank with rounded caps -->
-          <rect x="86" y="28" width="200" height="52" rx="26"/>
-          <line x1="86" y1="54" x2="286" y2="54" opacity="0.35"/>
-          <!-- baffle ring divisions -->
-          <g opacity="0.45">
-            <line x1="118" y1="28" x2="118" y2="80"/>
-            <line x1="150" y1="28" x2="150" y2="80"/>
-            <line x1="182" y1="28" x2="182" y2="80"/>
-            <line x1="214" y1="28" x2="214" y2="80"/>
-            <line x1="246" y1="28" x2="246" y2="80"/>
+        <svg class="equip-rig-svg" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <!-- cylindrical body with proper end caps -->
+          <path d="M40 26 L290 26 L300 30 L304 44 L304 60 L300 74 L290 78 L40 78 L30 74 L26 60 L26 44 L30 30 Z"/>
+          <path d="M40 26 L290 26 L300 30 L304 44 L304 60 L300 74 L290 78 L40 78 L30 74 L26 60 L26 44 L30 30 Z" fill="rgba(77,163,255,0.05)" stroke="none"/>
+          <!-- horizontal seam down the middle (top half / bottom half) -->
+          <line x1="30" y1="52" x2="300" y2="52" opacity="0.35"/>
+          <!-- baffle ring divisions (vertical compartments) -->
+          <g opacity="0.5" stroke-width="0.9">
+            <line x1="80" y1="26" x2="80" y2="78"/>
+            <line x1="125" y1="26" x2="125" y2="78"/>
+            <line x1="170" y1="26" x2="170" y2="78"/>
+            <line x1="215" y1="26" x2="215" y2="78"/>
+            <line x1="260" y1="26" x2="260" y2="78"/>
           </g>
-          <!-- end caps suggestion -->
-          <ellipse cx="86" cy="54" rx="3" ry="26" opacity="0.5"/>
-          <ellipse cx="286" cy="54" rx="3" ry="26" opacity="0.5"/>
-          <!-- top manhole / valve -->
-          <rect x="142" y="22" width="8" height="6" opacity="0.6"/>
-          <rect x="200" y="22" width="6" height="6" opacity="0.55"/>
-          <!-- side ladder rungs -->
-          <g opacity="0.55">
-            <line x1="270" y1="40" x2="284" y2="40"/>
-            <line x1="270" y1="48" x2="284" y2="48"/>
-            <line x1="270" y1="56" x2="284" y2="56"/>
-            <line x1="270" y1="64" x2="284" y2="64"/>
-            <line x1="270" y1="72" x2="284" y2="72"/>
-            <line x1="270" y1="40" x2="270" y2="76"/>
+          <!-- top catwalk / handrail -->
+          <line x1="40" y1="24" x2="290" y2="24" opacity="0.6"/>
+          <line x1="40" y1="22" x2="290" y2="22" opacity="0.4"/>
+          <!-- top hatches / manholes -->
+          <rect x="52" y="18" width="10" height="8" opacity="0.65"/>
+          <rect x="100" y="18" width="10" height="8" opacity="0.65"/>
+          <rect x="148" y="18" width="10" height="8" opacity="0.65"/>
+          <rect x="196" y="18" width="10" height="8" opacity="0.65"/>
+          <rect x="244" y="18" width="10" height="8" opacity="0.65"/>
+          <!-- top valves between hatches -->
+          <circle cx="75" cy="22" r="1.5" opacity="0.6"/>
+          <circle cx="120" cy="22" r="1.5" opacity="0.6"/>
+          <circle cx="172" cy="22" r="1.5" opacity="0.6"/>
+          <circle cx="225" cy="22" r="1.5" opacity="0.6"/>
+          <!-- side ladder (rear) -->
+          <g opacity="0.6">
+            <line x1="278" y1="36" x2="278" y2="74"/>
+            <line x1="286" y1="36" x2="286" y2="74"/>
+            <line x1="278" y1="42" x2="286" y2="42"/>
+            <line x1="278" y1="50" x2="286" y2="50"/>
+            <line x1="278" y1="58" x2="286" y2="58"/>
+            <line x1="278" y1="66" x2="286" y2="66"/>
           </g>
-          <!-- kingpin / hitch -->
-          <circle cx="92" cy="84" r="2.5" opacity="0.5"/>
-          <!-- bottom rail -->
-          <line x1="100" y1="82" x2="272" y2="82" opacity="0.45"/>
-          <path d="M236 88 L236 100 L243 100 L243 88" opacity="0.45"/>
-          <!-- tractor -->
-          <path d="M6 80 L6 36 L14 28 L34 28 L42 22 L62 22 L72 28 L78 36 L86 36 L86 80 Z"/>
-          <path d="M44 36 L52 28 L66 28 L66 36" opacity="0.55"/>
-          <line x1="18" y1="38" x2="18" y2="56" opacity="0.5"/>
-          <line x1="34" y1="38" x2="34" y2="56" opacity="0.5"/>
-          <line x1="26" y1="38" x2="26" y2="78" opacity="0.35"/>
-          <rect x="48" y="32" width="2" height="6" opacity="0.6"/>
-          <g opacity="0.45"><line x1="11" y1="58" x2="11" y2="76"/><line x1="14" y1="58" x2="14" y2="76"/><line x1="17" y1="58" x2="17" y2="76"/></g>
-          <rect x="9" y="64" width="6" height="4" opacity="0.6"/>
-          <line x1="6" y1="78" x2="22" y2="78" opacity="0.6"/>
-          <ellipse cx="58" cy="84" rx="14" ry="3" opacity="0.4"/>
-          <line x1="74" y1="22" x2="74" y2="2" opacity="0.6"/>
-          <line x1="80" y1="22" x2="80" y2="2" opacity="0.45"/>
-          <circle cx="74" cy="2" r="1.5" opacity="0.5"/>
-          <circle cx="80" cy="2" r="1.2" opacity="0.4"/>
-          <circle cx="24" cy="90" r="9"/><circle cx="24" cy="90" r="4" opacity="0.55"/><circle cx="24" cy="90" r="6" opacity="0.3"/>
-          <circle cx="60" cy="90" r="9"/><circle cx="60" cy="90" r="4" opacity="0.55"/><circle cx="60" cy="90" r="6" opacity="0.3"/>
-          <circle cx="76" cy="90" r="9"/><circle cx="76" cy="90" r="4" opacity="0.55"/><circle cx="76" cy="90" r="6" opacity="0.3"/>
-          <circle cx="216" cy="90" r="9"/><circle cx="216" cy="90" r="4" opacity="0.55"/><circle cx="216" cy="90" r="6" opacity="0.3"/>
-          <circle cx="238" cy="90" r="9"/><circle cx="238" cy="90" r="4" opacity="0.55"/><circle cx="238" cy="90" r="6" opacity="0.3"/>
+          <!-- discharge piping at rear -->
+          <line x1="298" y1="60" x2="298" y2="78" opacity="0.55"/>
+          <circle cx="298" cy="80" r="2" opacity="0.55"/>
+          <!-- kingpin -->
+          <circle cx="40" cy="80" r="3" opacity="0.6"/>
+          <!-- landing gear -->
+          <line x1="50" y1="78" x2="50" y2="100" opacity="0.7"/>
+          <line x1="58" y1="78" x2="58" y2="100" opacity="0.7"/>
+          <line x1="46" y1="100" x2="62" y2="100" opacity="0.7"/>
+          <!-- mud flap -->
+          <path d="M252 102 L252 116 L264 116 L264 102" opacity="0.55"/>
+          <!-- tridem axle (tankers are heavy — 3 axles) -->
+          <g>
+            <circle cx="200" cy="100" r="13"/><circle cx="200" cy="100" r="9" opacity="0.6"/><circle cx="200" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="200" y1="91" x2="200" y2="109"/><line x1="191" y1="100" x2="209" y2="100"/><line x1="193" y1="93" x2="207" y2="107"/><line x1="207" y1="93" x2="193" y2="107"/></g>
+          </g>
+          <g>
+            <circle cx="226" cy="100" r="13"/><circle cx="226" cy="100" r="9" opacity="0.6"/><circle cx="226" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="226" y1="91" x2="226" y2="109"/><line x1="217" y1="100" x2="235" y2="100"/><line x1="219" y1="93" x2="233" y2="107"/><line x1="233" y1="93" x2="219" y2="107"/></g>
+          </g>
+          <g>
+            <circle cx="252" cy="100" r="13"/><circle cx="252" cy="100" r="9" opacity="0.6"/><circle cx="252" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="252" y1="91" x2="252" y2="109"/><line x1="243" y1="100" x2="261" y2="100"/><line x1="245" y1="93" x2="259" y2="107"/><line x1="259" y1="93" x2="245" y2="107"/></g>
+          </g>
         </svg>
         <h4>Tanker</h4>
         <div class="ec-sub">Liquid bulk</div>
       </article>
 
       <article class="equip-rig" data-type="car-hauler">
-        <svg class="equip-rig-svg" viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <!-- upper deck rail (slightly inclined down toward back) -->
-          <path d="M86 28 L268 26 L278 32 L278 38 L86 40 Z"/>
+        <svg class="equip-rig-svg" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <!-- upper deck rail (slightly inclined) -->
+          <path d="M24 26 L292 22 L302 28 L302 38 L24 42 Z"/>
           <!-- lower deck rail -->
-          <path d="M86 60 L286 60 L286 76 L86 76 Z"/>
-          <!-- vertical posts between decks -->
-          <g opacity="0.7">
-            <line x1="106" y1="40" x2="106" y2="60"/>
-            <line x1="142" y1="40" x2="142" y2="60"/>
-            <line x1="178" y1="40" x2="178" y2="60"/>
-            <line x1="214" y1="40" x2="214" y2="60"/>
-            <line x1="250" y1="40" x2="250" y2="60"/>
-            <line x1="278" y1="40" x2="278" y2="60"/>
+          <path d="M24 60 L302 60 L302 76 L24 76 Z"/>
+          <!-- vertical posts -->
+          <g opacity="0.75">
+            <line x1="44" y1="42" x2="44" y2="60"/><line x1="80" y1="42" x2="80" y2="60"/>
+            <line x1="116" y1="42" x2="116" y2="60"/><line x1="152" y1="42" x2="152" y2="60"/>
+            <line x1="188" y1="42" x2="188" y2="60"/><line x1="224" y1="42" x2="224" y2="60"/>
+            <line x1="260" y1="42" x2="260" y2="60"/><line x1="296" y1="42" x2="296" y2="60"/>
           </g>
-          <!-- diagonal X-trusses (the car-hauler signature) -->
-          <g opacity="0.55">
-            <line x1="106" y1="40" x2="142" y2="60"/>
-            <line x1="142" y1="40" x2="106" y2="60"/>
-            <line x1="142" y1="40" x2="178" y2="60"/>
-            <line x1="178" y1="40" x2="142" y2="60"/>
-            <line x1="178" y1="40" x2="214" y2="60"/>
-            <line x1="214" y1="40" x2="178" y2="60"/>
-            <line x1="214" y1="40" x2="250" y2="60"/>
-            <line x1="250" y1="40" x2="214" y2="60"/>
-            <line x1="250" y1="40" x2="278" y2="60"/>
-            <line x1="278" y1="40" x2="250" y2="60"/>
+          <!-- X-truss bracing between decks (the signature) -->
+          <g opacity="0.55" stroke-width="1">
+            <line x1="44" y1="42" x2="80" y2="60"/><line x1="80" y1="42" x2="44" y2="60"/>
+            <line x1="80" y1="42" x2="116" y2="60"/><line x1="116" y1="42" x2="80" y2="60"/>
+            <line x1="116" y1="42" x2="152" y2="60"/><line x1="152" y1="42" x2="116" y2="60"/>
+            <line x1="152" y1="42" x2="188" y2="60"/><line x1="188" y1="42" x2="152" y2="60"/>
+            <line x1="188" y1="42" x2="224" y2="60"/><line x1="224" y1="42" x2="188" y2="60"/>
+            <line x1="224" y1="42" x2="260" y2="60"/><line x1="260" y1="42" x2="224" y2="60"/>
+            <line x1="260" y1="42" x2="296" y2="60"/><line x1="296" y1="42" x2="260" y2="60"/>
           </g>
-          <!-- rear folded ramp -->
-          <path d="M286 60 L294 50 L294 38 L286 38" opacity="0.55"/>
+          <!-- folded rear ramp -->
+          <path d="M302 60 L312 50 L312 32 L302 32" opacity="0.6"/>
+          <line x1="306" y1="48" x2="308" y2="52" opacity="0.55"/>
+          <!-- folded front ramp -->
+          <path d="M24 60 L14 50 L14 32 L24 32" opacity="0.6"/>
           <!-- side ladder -->
-          <g opacity="0.6">
-            <line x1="92" y1="42" x2="92" y2="60"/>
-            <line x1="100" y1="42" x2="100" y2="60"/>
-            <line x1="92" y1="46" x2="100" y2="46"/>
-            <line x1="92" y1="52" x2="100" y2="52"/>
-            <line x1="92" y1="58" x2="100" y2="58"/>
+          <g opacity="0.65">
+            <line x1="30" y1="44" x2="30" y2="60"/><line x1="38" y1="44" x2="38" y2="60"/>
+            <line x1="30" y1="48" x2="38" y2="48"/><line x1="30" y1="54" x2="38" y2="54"/>
           </g>
-          <!-- deck reflective markers (red strip) -->
+          <!-- reflective markers along the lower rail -->
           <g opacity="0.55">
-            <rect x="120" y="73" width="6" height="3"/>
-            <rect x="160" y="73" width="6" height="3"/>
-            <rect x="200" y="73" width="6" height="3"/>
-            <rect x="240" y="73" width="6" height="3"/>
+            <rect x="60" y="71" width="8" height="3"/>
+            <rect x="110" y="71" width="8" height="3"/>
+            <rect x="160" y="71" width="8" height="3"/>
+            <rect x="210" y="71" width="8" height="3"/>
+            <rect x="270" y="71" width="8" height="3"/>
           </g>
           <!-- tail light -->
-          <circle cx="282" cy="68" r="2" opacity="0.6"/>
+          <circle cx="296" cy="68" r="2.5" opacity="0.7"/>
+          <!-- kingpin + landing gear -->
+          <circle cx="32" cy="78" r="3" opacity="0.6"/>
+          <line x1="44" y1="76" x2="44" y2="100" opacity="0.7"/>
+          <line x1="52" y1="76" x2="52" y2="100" opacity="0.7"/>
+          <line x1="40" y1="100" x2="56" y2="100" opacity="0.7"/>
           <!-- mud flap -->
-          <path d="M236 91 L236 100 L243 100 L243 91" opacity="0.45"/>
-          <!-- kingpin -->
-          <circle cx="92" cy="76" r="2.5" opacity="0.5"/>
-          <!-- tractor -->
-          <path d="M6 80 L6 36 L14 28 L34 28 L42 22 L62 22 L72 28 L78 36 L86 36 L86 80 Z"/>
-          <path d="M44 36 L52 28 L66 28 L66 36" opacity="0.55"/>
-          <line x1="18" y1="38" x2="18" y2="56" opacity="0.5"/>
-          <line x1="34" y1="38" x2="34" y2="56" opacity="0.5"/>
-          <line x1="26" y1="38" x2="26" y2="78" opacity="0.35"/>
-          <rect x="48" y="32" width="2" height="6" opacity="0.6"/>
-          <g opacity="0.45"><line x1="11" y1="58" x2="11" y2="76"/><line x1="14" y1="58" x2="14" y2="76"/><line x1="17" y1="58" x2="17" y2="76"/></g>
-          <rect x="9" y="64" width="6" height="4" opacity="0.6"/>
-          <line x1="6" y1="78" x2="22" y2="78" opacity="0.6"/>
-          <ellipse cx="58" cy="84" rx="14" ry="3" opacity="0.4"/>
-          <line x1="74" y1="22" x2="74" y2="2" opacity="0.6"/>
-          <line x1="80" y1="22" x2="80" y2="2" opacity="0.45"/>
-          <circle cx="74" cy="2" r="1.5" opacity="0.5"/>
-          <circle cx="80" cy="2" r="1.2" opacity="0.4"/>
-          <circle cx="24" cy="90" r="9"/><circle cx="24" cy="90" r="4" opacity="0.55"/><circle cx="24" cy="90" r="6" opacity="0.3"/>
-          <circle cx="60" cy="90" r="9"/><circle cx="60" cy="90" r="4" opacity="0.55"/><circle cx="60" cy="90" r="6" opacity="0.3"/>
-          <circle cx="76" cy="90" r="9"/><circle cx="76" cy="90" r="4" opacity="0.55"/><circle cx="76" cy="90" r="6" opacity="0.3"/>
-          <circle cx="216" cy="90" r="9"/><circle cx="216" cy="90" r="4" opacity="0.55"/><circle cx="216" cy="90" r="6" opacity="0.3"/>
-          <circle cx="238" cy="90" r="9"/><circle cx="238" cy="90" r="4" opacity="0.55"/><circle cx="238" cy="90" r="6" opacity="0.3"/>
+          <path d="M252 102 L252 116 L264 116 L264 102" opacity="0.55"/>
+          <!-- tridem wheels -->
+          <g>
+            <circle cx="200" cy="100" r="13"/><circle cx="200" cy="100" r="9" opacity="0.6"/><circle cx="200" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="200" y1="91" x2="200" y2="109"/><line x1="191" y1="100" x2="209" y2="100"/><line x1="193" y1="93" x2="207" y2="107"/><line x1="207" y1="93" x2="193" y2="107"/></g>
+          </g>
+          <g>
+            <circle cx="226" cy="100" r="13"/><circle cx="226" cy="100" r="9" opacity="0.6"/><circle cx="226" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="226" y1="91" x2="226" y2="109"/><line x1="217" y1="100" x2="235" y2="100"/><line x1="219" y1="93" x2="233" y2="107"/><line x1="233" y1="93" x2="219" y2="107"/></g>
+          </g>
+          <g>
+            <circle cx="252" cy="100" r="13"/><circle cx="252" cy="100" r="9" opacity="0.6"/><circle cx="252" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="252" y1="91" x2="252" y2="109"/><line x1="243" y1="100" x2="261" y2="100"/><line x1="245" y1="93" x2="259" y2="107"/><line x1="259" y1="93" x2="245" y2="107"/></g>
+          </g>
         </svg>
         <h4>Car Hauler</h4>
         <div class="ec-sub">Auto transport</div>
-      </article>
-
-      <article class="equip-rig" data-type="owner-op">
-        <svg class="equip-rig-svg" viewBox="0 0 300 110" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <!-- extended sleeper tractor -->
-          <path d="M30 80 L30 30 L40 20 L62 20 L72 14 L92 14 L102 20 L112 28 L130 22 L180 22 L196 30 L196 80 Z"/>
-          <!-- chrome sun visor over windshield -->
-          <line x1="72" y1="14" x2="92" y2="14"/>
-          <line x1="72" y1="8" x2="92" y2="8" opacity="0.6"/>
-          <line x1="72" y1="8" x2="72" y2="14" opacity="0.6"/>
-          <line x1="92" y1="8" x2="92" y2="14" opacity="0.6"/>
-          <!-- windshield slant -->
-          <path d="M74 30 L80 22 L96 22 L100 30" opacity="0.55"/>
-          <!-- side window divider -->
-          <line x1="48" y1="32" x2="48" y2="56" opacity="0.5"/>
-          <line x1="62" y1="32" x2="62" y2="56" opacity="0.5"/>
-          <!-- door seam -->
-          <line x1="56" y1="32" x2="56" y2="78" opacity="0.35"/>
-          <!-- big mirror -->
-          <rect x="68" y="22" width="2.5" height="10" opacity="0.6"/>
-          <!-- spotlight on roof -->
-          <circle cx="102" cy="12" r="2.5" opacity="0.7"/>
-          <!-- antenna -->
-          <line x1="170" y1="22" x2="170" y2="4" opacity="0.45"/>
-          <!-- sleeper berth window -->
-          <rect x="140" y="32" width="32" height="10" opacity="0.5"/>
-          <!-- chrome grille -->
-          <g opacity="0.5"><line x1="33" y1="50" x2="33" y2="78"/><line x1="36" y1="50" x2="36" y2="78"/><line x1="39" y1="50" x2="39" y2="78"/></g>
-          <rect x="31" y="56" width="9" height="5" opacity="0.6"/>
-          <line x1="30" y1="78" x2="46" y2="78" opacity="0.6"/>
-          <!-- headlights -->
-          <ellipse cx="34" cy="64" rx="4" ry="2" opacity="0.6"/>
-          <!-- twin polished exhaust stacks -->
-          <line x1="118" y1="28" x2="118" y2="0" opacity="0.7"/>
-          <line x1="124" y1="28" x2="124" y2="0" opacity="0.55"/>
-          <circle cx="118" cy="0" r="1.8" opacity="0.6"/>
-          <circle cx="124" cy="0" r="1.5" opacity="0.5"/>
-          <!-- dual chrome fuel tanks -->
-          <ellipse cx="100" cy="86" rx="22" ry="3.5" opacity="0.5"/>
-          <ellipse cx="156" cy="86" rx="16" ry="3.5" opacity="0.5"/>
-          <!-- rocker / running board -->
-          <line x1="46" y1="84" x2="190" y2="84" opacity="0.4"/>
-          <!-- fifth-wheel exposed (no trailer attached) -->
-          <line x1="196" y1="62" x2="240" y2="62"/>
-          <line x1="196" y1="68" x2="240" y2="68" opacity="0.5"/>
-          <line x1="240" y1="60" x2="240" y2="70" opacity="0.6"/>
-          <circle cx="220" cy="65" r="3" opacity="0.6"/>
-          <!-- wheels -->
-          <circle cx="50" cy="90" r="9"/><circle cx="50" cy="90" r="4" opacity="0.55"/><circle cx="50" cy="90" r="6" opacity="0.3"/>
-          <circle cx="166" cy="90" r="9"/><circle cx="166" cy="90" r="4" opacity="0.55"/><circle cx="166" cy="90" r="6" opacity="0.3"/>
-          <circle cx="182" cy="90" r="9"/><circle cx="182" cy="90" r="4" opacity="0.55"/><circle cx="182" cy="90" r="6" opacity="0.3"/>
-        </svg>
-        <h4>Owner-Operator</h4>
-        <div class="ec-sub">Run your own</div>
       </article>
     </div>
   </div>
