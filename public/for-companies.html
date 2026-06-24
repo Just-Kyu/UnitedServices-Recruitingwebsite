@@ -207,6 +207,8 @@
 
 <script src="js/site.js"></script>
 <script src="js/drivers.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
 <script>
 // Hover/tap easter egg: 360 flip + chrome flash on the U mark.
 // Uses WAAPI composite:'add' so the spin stacks on top of the running uFloat
@@ -275,19 +277,27 @@
     if (!ok) return;
     var btn = form.querySelector('button[type="submit"]');
     if (btn) btn.disabled = true;
-    var payload = {
+    var row = {
+      ref: (window.usrRef ? window.usrRef('USP') : 'USP-' + Math.floor(100000 + Math.random() * 899999)),
       company: form.querySelector('#p-co').value.trim(),
       name: form.querySelector('#p-name').value.trim(),
       email: email.value.trim(),
-      phone: form.querySelector('#p-phone').value.trim(),
-      equipment: form.querySelector('#p-eq').value,
-      count: form.querySelector('#p-count').value,
-      notes: form.querySelector('#p-notes').value.trim()
+      phone: form.querySelector('#p-phone').value.trim() || null,
+      equipment: form.querySelector('#p-eq').value || null,
+      hire_count: form.querySelector('#p-count').value || null,
+      notes: form.querySelector('#p-notes').value.trim() || null,
+      user_agent: (navigator && navigator.userAgent) || null
     };
-    // Post to the API; show confirmation regardless of backend availability.
-    fetch('/api/partner', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    }).then(showOk).catch(showOk);
+    var sb = window.usrSupabase;
+    if (!sb) {
+      console.warn('Supabase not configured — company lead not persisted.');
+      showOk();
+      return;
+    }
+    sb.from('company_leads').insert(row).then(function (res) {
+      if (res.error) console.warn('company_leads insert failed:', res.error.message);
+      showOk();
+    });
   });
   form.querySelectorAll('input,select,textarea').forEach(function (f) {
     f.addEventListener('input', function () { f.style.borderColor = ''; f.style.boxShadow = ''; });

@@ -129,21 +129,37 @@
   function submit() {
     collect();
     navNext.disabled = true;
-    // Post to the API; gracefully fall back to a local reference if the
-    // backend is unavailable (e.g. opened as a static file).
-    function done(ref) { showSuccess(ref); }
-    var payload = {
-      name: data.name, phone: val('phone'), email: val('email'),
-      cdlClass: data.cls, experience: data.years, equipment: data.equipment,
-      route: data.route, sap: data.sap, location: data.location, notes: val('notes')
+    var ref = localRef();
+    var row = {
+      ref: ref,
+      name: data.name,
+      phone: val('phone'),
+      email: val('email'),
+      cdl_class: data.cls || null,
+      years: data.years || null,
+      equipment: data.equipment && data.equipment !== '—'
+        ? data.equipment.split(', ').filter(Boolean)
+        : null,
+      route: data.route && data.route !== '—' ? data.route : null,
+      sap_status: data.sap && data.sap !== '—' ? data.sap : null,
+      location: data.location || null,
+      notes: val('notes') || null,
+      user_agent: (navigator && navigator.userAgent) || null
     };
-    fetch('/api/apply', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    }).then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (res) { done(res && res.ref ? res.ref : localRef()); })
-      .catch(function () { done(localRef()); });
+    var sb = window.usrSupabase;
+    if (!sb) {
+      // Supabase not configured (e.g. opened as a static file or keys missing).
+      // Still show the user a confirmation so the experience isn't broken.
+      console.warn('Supabase not configured — driver lead not persisted.');
+      showSuccess(ref);
+      return;
+    }
+    sb.from('driver_leads').insert(row).then(function (res) {
+      if (res.error) console.warn('driver_leads insert failed:', res.error.message);
+      showSuccess(ref);
+    });
   }
-  function localRef() { return 'USR-' + Math.floor(100000 + Math.random() * 899999); }
+  function localRef() { return (window.usrRef ? window.usrRef('USR') : 'USR-' + Math.floor(100000 + Math.random() * 899999)); }
   function showSuccess(ref) {
     document.getElementById('apply-shell').style.display = 'none';
     var sum = document.getElementById('summary');
