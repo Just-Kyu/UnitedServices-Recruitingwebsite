@@ -9,8 +9,8 @@
  *   Project → Settings → API → Project API keys → anon public
  */
 window.USR_CONFIG = {
-  SUPABASE_URL: 'REPLACE_ME_SUPABASE_URL',
-  SUPABASE_ANON_KEY: 'REPLACE_ME_SUPABASE_ANON_KEY'
+  SUPABASE_URL: 'https://murjqizyaphgizgbkhlm.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11cmpxaXp5YXBoZ2l6Z2JraGxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTAxNzgsImV4cCI6MjA5Nzg4NjE3OH0.a7E1T5xgTx5dPg3VqIMotdOPIdF4A-w1CxzkLM3y1Ow'
 };
 
 (function () {
