@@ -101,7 +101,15 @@
   scene.add(truckGroup);
 
   var loader = new THREE.GLTFLoader();
-  loader.load('models/tesla-semi-web.glb', function (gltf) {
+  // Use the Meshopt-compressed GLB (~348 KB) instead of the uncompressed
+  // 2.7 MB variant. Requires THREE.MeshoptDecoder to be loaded before
+  // hero3d.js — see <script> tags in index.html.
+  if (typeof MeshoptDecoder !== 'undefined') {
+    loader.setMeshoptDecoder(MeshoptDecoder);
+  } else if (typeof THREE.MeshoptDecoder !== 'undefined') {
+    loader.setMeshoptDecoder(THREE.MeshoptDecoder);
+  }
+  loader.load('models/tesla-semi.glb', function (gltf) {
     var truck = gltf.scene;
     truck.scale.setScalar(1.5);
     truck.position.set(0, -0.7, 0);
@@ -187,7 +195,7 @@
 
     truckGroup.add(truck);
   }, undefined, function (err) {
-    console.warn('Tesla Semi model failed to load — drop tesla-semi-web.glb into public/models/.', err);
+    console.warn('Tesla Semi model failed to load. Confirm tesla-semi.glb is in public/models/ and MeshoptDecoder is loaded.', err);
   });
 
   // Mouse parallax target (subtle, layered on top of the camera orbit)
