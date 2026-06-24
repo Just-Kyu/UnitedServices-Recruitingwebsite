@@ -1,0 +1,18 @@
+# Cloudflare Pages cache rules.
+# HTML changes often — never cache.
+# Static assets are content-addressable enough that a year is fine.
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/models/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
