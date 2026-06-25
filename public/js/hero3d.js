@@ -24,7 +24,11 @@
 
   var scene = new THREE.Scene();
 
-  var camera = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.1, 100);
+  // Wider FOV on mobile portrait so the truck fits in frame without
+  // cropping to the front grille. Desktop stays telephoto for cinematic
+  // compression.
+  var fov = isMobile ? 52 : 38;
+  var camera = new THREE.PerspectiveCamera(fov, mount.clientWidth / mount.clientHeight, 0.1, 100);
   camera.position.set(4.5, 1.6, 6);
   camera.lookAt(0, 0, 0);
 
@@ -244,6 +248,8 @@
   updateCameraProgress();
 
   function resize() {
+    isMobile = innerWidth < 760;
+    camera.fov = isMobile ? 52 : 38;
     camera.aspect = mount.clientWidth / mount.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(mount.clientWidth, mount.clientHeight);
@@ -263,13 +269,20 @@
     var floatBob = Math.sin(t * 0.8) * 0.02; // gentler than before; the truck reads as planted
 
     if (isMobile || reduce) {
-      // Mobile/reduced-motion: lock to the opening front-3/4 frame.
-      var f = keyframes[0];
-      camera.position.set(Math.cos(f.angle) * f.radius, f.height, Math.sin(f.angle) * f.radius);
-      camera.lookAt(0, f.look, 0);
+      // Mobile/reduced-motion: hold a pulled-back front-3/4 frame so the
+      // whole truck fits in portrait without cropping to the grille.
+      var mobileFrame = isMobile
+        ? { angle: keyframes[0].angle, radius: 10.5, height: 2.4, look: 0.2 }
+        : keyframes[0];
+      camera.position.set(
+        Math.cos(mobileFrame.angle) * mobileFrame.radius,
+        mobileFrame.height,
+        Math.sin(mobileFrame.angle) * mobileFrame.radius
+      );
+      camera.lookAt(0, mobileFrame.look, 0);
       truckGroup.rotation.y = -0.35;
       // Sun ahead-right of camera, shadow falls behind the truck from POV.
-      key.position.set(Math.cos(f.angle - 0.5) * 11, 9, Math.sin(f.angle - 0.5) * 11);
+      key.position.set(Math.cos(mobileFrame.angle - 0.5) * 11, 9, Math.sin(mobileFrame.angle - 0.5) * 11);
     } else {
       var target = sampleCamera(cameraProgress);
       var k = Math.min(1, delta * 6);
