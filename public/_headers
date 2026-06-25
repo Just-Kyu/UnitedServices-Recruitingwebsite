@@ -1,18 +1,21 @@
-# Cloudflare Pages cache rules.
-# HTML changes often — never cache.
-# Static assets are content-addressable enough that a year is fine.
+# Cloudflare cache rules.
+#
+# Lesson learned: NEVER put `immutable` on a file whose name doesn't change
+# when its contents change. `immutable` tells the browser to never revalidate
+# — so an edited home.css / hero3d.js keeps serving the stale cached copy
+# (you can't even hard-refresh it away on iOS Safari). Instead we revalidate:
+# the browser sends a conditional request, Cloudflare returns a tiny 304 when
+# nothing changed, and the moment a file changes the browser picks it up.
+# Bandwidth is unmetered on Cloudflare, so the revalidation round-trips are free.
 
-/*.html
-  Cache-Control: public, max-age=0, must-revalidate
+# Everything: revalidate every load (ETag → 304 when unchanged).
+/*
+  Cache-Control: no-cache
+
+# Images and the 3D model rarely change — let them sit briefly to cut
+# round-trips, but NO `immutable`, so they still self-heal within the hour.
+/assets/*
+  Cache-Control: public, max-age=3600
 
 /models/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.css
-  Cache-Control: public, max-age=31536000, immutable
-
-/js/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600
