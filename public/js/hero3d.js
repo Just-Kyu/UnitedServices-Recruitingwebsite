@@ -104,6 +104,14 @@
   var truckGroup = new THREE.Group();
   scene.add(truckGroup);
 
+  // Framing state, measured from the model once it loads. Used to center the
+  // truck deterministically on mobile (instead of hand-guessed camera numbers
+  // that left it floating in a corner).
+  var framed = false;
+  var fitCenter = new THREE.Vector3(); // truck's geometric center, truckGroup-local
+  var truckHeight = 1;                 // world-units tall, drives the mobile fit distance
+  var MOBILE_FILL = 0.62;              // truck height ≈ 62% of the portrait frame height
+
   var loader = new THREE.GLTFLoader();
   // Use the Meshopt-compressed GLB (~348 KB) instead of the uncompressed
   // 2.7 MB variant. Requires THREE.MeshoptDecoder to be loaded before
@@ -197,6 +205,15 @@
       });
     });
 
+    // Measure the truck BEFORE parenting it, so the box is in the truck's own
+    // local space — independent of truckGroup's animated y-bob. (If we measured
+    // after add(), the running y-bob would get baked in and then double-counted
+    // when tick() re-applies it.)
+    var box = new THREE.Box3().setFromObject(truck);
+    box.getCenter(fitCenter);
+    truckHeight = Math.max(0.001, box.max.y - box.min.y);
+    framed = true;
+
     truckGroup.add(truck);
   }, undefined, function (err) {
     console.warn('Tesla Semi model failed to load. Confirm tesla-semi.glb is in public/models/ and MeshoptDecoder is loaded.', err);
@@ -235,7 +252,8 @@
     };
   }
   function updateCameraProgress() {
-    if (!saga || isMobile || reduce) { cameraProgress = 0; return; }
+    // Mobile now orbits on scroll too (reduced-motion stays locked at 0).
+    if (!saga || reduce) { cameraProgress = 0; return; }
     var rect = saga.getBoundingClientRect();
     var vh = innerHeight;
     // Camera completes its orbit over the first ~2 viewport heights of scroll
@@ -268,21 +286,49 @@
 
     var floatBob = Math.sin(t * 0.8) * 0.02; // gentler than before; the truck reads as planted
 
-    if (isMobile || reduce) {
-      // Mobile/reduced-motion: hold a pulled-back front-3/4 frame so the
-      // whole truck fits in portrait without cropping to the grille.
-      var mobileFrame = isMobile
-        ? { angle: keyframes[0].angle, radius: 10.5, height: 2.4, look: 0.2 }
-        : keyframes[0];
+    if (isMobile && !reduce && framed) {
+      // Mobile: orbit the camera around the truck as the user scrolls — same
+      // front → side → rear sweep as desktop, but framed from the model's
+      // measured bounding box so the truck stays centered and fills ~62% of
+      // the portrait height at every angle (its length bleeds off the sides
+      // at the side-on keyframe, which reads as a dramatic full-bleed hero).
+      var mAngle = sampleCamera(cameraProgress).angle;
+      var groupY = -0.7 + floatBob;                 // matches the y-bob applied below
+      var cx = fitCenter.x, cz = fitCenter.z, cy = fitCenter.y + groupY;
+      var vHalf = (camera.fov * Math.PI / 180) / 2; // vertical half-FOV in radians
+      var dist = (truckHeight / 2) / (MOBILE_FILL * Math.tan(vHalf));
       camera.position.set(
-        Math.cos(mobileFrame.angle) * mobileFrame.radius,
-        mobileFrame.height,
-        Math.sin(mobileFrame.angle) * mobileFrame.radius
+        cx + Math.cos(mAngle) * dist,
+        cy + truckHeight * 0.20,                     // a touch above center for a planted 3/4 look
+        cz + Math.sin(mAngle) * dist
       );
-      camera.lookAt(0, mobileFrame.look, 0);
-      truckGroup.rotation.y = -0.35;
-      // Sun ahead-right of camera, shadow falls behind the truck from POV.
-      key.position.set(Math.cos(mobileFrame.angle - 0.5) * 11, 9, Math.sin(mobileFrame.angle - 0.5) * 11);
+      // Aim slightly below center so the truck rides in the upper-center of the
+      // frame, leaving the scrimmed lower band clear for the headline.
+      camera.lookAt(cx, cy - truckHeight * 0.12, cz);
+      truckGroup.rotation.y = 0;
+      var mLight = mAngle - 0.5;
+      key.position.set(Math.cos(mLight) * 11, 9, Math.sin(mLight) * 11);
+    } else if (isMobile || reduce) {
+      // Reduced-motion, or the brief window before the model is measured:
+      // hold a centered front-3/4 establishing frame (no orbit).
+      var sAngle = keyframes[0].angle;
+      if (framed) {
+        var gY = -0.7 + floatBob;
+        var sCy = fitCenter.y + gY;
+        var sHalf = (camera.fov * Math.PI / 180) / 2;
+        var sDist = (truckHeight / 2) / (MOBILE_FILL * Math.tan(sHalf));
+        camera.position.set(
+          fitCenter.x + Math.cos(sAngle) * sDist,
+          sCy + truckHeight * 0.20,
+          fitCenter.z + Math.sin(sAngle) * sDist
+        );
+        camera.lookAt(fitCenter.x, sCy - truckHeight * 0.12, fitCenter.z);
+      } else {
+        camera.position.set(Math.cos(sAngle) * 10.5, 2.4, Math.sin(sAngle) * 10.5);
+        camera.lookAt(0, 0.2, 0);
+      }
+      truckGroup.rotation.y = 0;
+      key.position.set(Math.cos(sAngle - 0.5) * 11, 9, Math.sin(sAngle - 0.5) * 11);
     } else {
       var target = sampleCamera(cameraProgress);
       var k = Math.min(1, delta * 6);
