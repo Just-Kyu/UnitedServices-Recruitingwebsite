@@ -108,9 +108,10 @@
   // truck deterministically on mobile (instead of hand-guessed camera numbers
   // that left it floating in a corner).
   var framed = false;
-  var fitCenter = new THREE.Vector3(); // truck's geometric center, truckGroup-local
-  var truckHeight = 1;                 // world-units tall, drives the mobile fit distance
-  var MOBILE_FILL = 0.62;              // truck height ≈ 62% of the portrait frame height
+  var fitCenter = new THREE.Vector3(); // truck's geometric center (local space)
+  var truckRadius = 1;                 // bounding-sphere radius — frames the WHOLE truck
+  var FIT_W = 0.80;                    // truck spans ~80% of the portrait width, fully visible
+  var TOP_BIAS = 0.30;                 // truck center rides ~30% down from the top, copy below
 
   var loader = new THREE.GLTFLoader();
   // Use the Meshopt-compressed GLB (~348 KB) instead of the uncompressed
@@ -211,7 +212,9 @@
     // when tick() re-applies it.)
     var box = new THREE.Box3().setFromObject(truck);
     box.getCenter(fitCenter);
-    truckHeight = Math.max(0.001, box.max.y - box.min.y);
+    var _sphere = new THREE.Sphere();
+    box.getBoundingSphere(_sphere);
+    truckRadius = Math.max(0.001, _sphere.radius);
     framed = true;
 
     truckGroup.add(truck);
@@ -288,23 +291,19 @@
 
     if (isMobile && !reduce && framed) {
       // Mobile: orbit the camera around the truck as the user scrolls — same
-      // front → side → rear sweep as desktop, but framed from the model's
-      // measured bounding box so the truck stays centered and fills ~62% of
-      // the portrait height at every angle (its length bleeds off the sides
-      // at the side-on keyframe, which reads as a dramatic full-bleed hero).
+      // front → side → rear sweep as desktop. Distance is set from the truck's
+      // bounding SPHERE so the WHOLE truck is always in frame (no slab-of-white
+      // close-ups), and we aim below center so it rides in the top ~30%, leaving
+      // a clear scrimmed band below for the copy.
       var mAngle = sampleCamera(cameraProgress).angle;
       var groupY = -0.7 + floatBob;                 // matches the y-bob applied below
       var cx = fitCenter.x, cz = fitCenter.z, cy = fitCenter.y + groupY;
-      var vHalf = (camera.fov * Math.PI / 180) / 2; // vertical half-FOV in radians
-      var dist = (truckHeight / 2) / (MOBILE_FILL * Math.tan(vHalf));
-      camera.position.set(
-        cx + Math.cos(mAngle) * dist,
-        cy + truckHeight * 0.20,                     // a touch above center for a planted 3/4 look
-        cz + Math.sin(mAngle) * dist
-      );
-      // Aim slightly below center so the truck rides in the upper-center of the
-      // frame, leaving the scrimmed lower band clear for the headline.
-      camera.lookAt(cx, cy - truckHeight * 0.12, cz);
+      var vHalf = (camera.fov * Math.PI / 180) / 2; // vertical half-FOV
+      var hHalf = Math.atan(Math.tan(vHalf) * camera.aspect); // horizontal half-FOV (portrait → narrower)
+      var dist = truckRadius / (FIT_W * Math.tan(hHalf));
+      var lift = (0.5 - TOP_BIAS) * 2 * (dist * Math.tan(vHalf)); // raise truck into the upper band
+      camera.position.set(cx + Math.cos(mAngle) * dist, cy, cz + Math.sin(mAngle) * dist);
+      camera.lookAt(cx, cy - lift, cz);
       truckGroup.rotation.y = 0;
       var mLight = mAngle - 0.5;
       key.position.set(Math.cos(mLight) * 11, 9, Math.sin(mLight) * 11);
@@ -315,17 +314,15 @@
       if (framed) {
         var gY = -0.7 + floatBob;
         var sCy = fitCenter.y + gY;
-        var sHalf = (camera.fov * Math.PI / 180) / 2;
-        var sDist = (truckHeight / 2) / (MOBILE_FILL * Math.tan(sHalf));
-        camera.position.set(
-          fitCenter.x + Math.cos(sAngle) * sDist,
-          sCy + truckHeight * 0.20,
-          fitCenter.z + Math.sin(sAngle) * sDist
-        );
-        camera.lookAt(fitCenter.x, sCy - truckHeight * 0.12, fitCenter.z);
+        var sVHalf = (camera.fov * Math.PI / 180) / 2;
+        var sHHalf = Math.atan(Math.tan(sVHalf) * camera.aspect);
+        var sDist = truckRadius / (FIT_W * Math.tan(sHHalf));
+        var sLift = (0.5 - TOP_BIAS) * 2 * (sDist * Math.tan(sVHalf));
+        camera.position.set(fitCenter.x + Math.cos(sAngle) * sDist, sCy, fitCenter.z + Math.sin(sAngle) * sDist);
+        camera.lookAt(fitCenter.x, sCy - sLift, fitCenter.z);
       } else {
-        camera.position.set(Math.cos(sAngle) * 10.5, 2.4, Math.sin(sAngle) * 10.5);
-        camera.lookAt(0, 0.2, 0);
+        camera.position.set(Math.cos(sAngle) * 12, 1.4, Math.sin(sAngle) * 12);
+        camera.lookAt(0, 0, 0);
       }
       truckGroup.rotation.y = 0;
       key.position.set(Math.cos(sAngle - 0.5) * 11, 9, Math.sin(sAngle - 0.5) * 11);
