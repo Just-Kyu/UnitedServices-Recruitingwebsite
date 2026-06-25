@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Available offers — United Services Recruiting</title>
+<meta name="description" content="Live CDL driving offers from US carriers — filter by equipment and fleet size to find the lane that fits. Contact the United Services admin to apply.">
+<meta name="theme-color" content="#080B12">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Available offers — United Services Recruiting">
+<meta property="og:description" content="Live CDL driving offers from US carriers. Filter, find, and request an intro.">
+<meta property="og:image" content="assets/logo-full.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/logo-chrome.png">
+<link rel="apple-touch-icon" href="assets/logo-chrome.png">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="companies.css">
+</head>
+<body class="loading">
+
+<div id="loader">
+  <div class="load-stage">
+    <img src="assets/logo-chrome.png" alt="United Services">
+    <div class="load-bar"><i></i></div>
+    <div class="load-cap">United Services · Recruiting</div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<div class="nav-shell">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-brand" href="index.html">
+      <img src="assets/logo-chrome.png" alt="">
+      <span><span class="bt">United Services</span><br><span class="bs">Recruiting</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="offers.html" aria-current="page">Available offers</a>
+      <a href="for-companies.html">For Companies</a>
+      <a href="index.html#why">Why Us</a>
+      <a href="index.html#how">How it works</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="for-companies.html#contact">Contact</a>
+      <a class="btn btn-chrome btn-sm" href="apply.html" data-magnetic="0.3">Apply</a>
+    </div>
+    <button class="nav-toggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </nav>
+</div>
+<div class="m-menu">
+  <button class="m-close" aria-label="Close menu">&times;</button>
+  <a href="offers.html">Available offers</a>
+  <a href="for-companies.html">For Companies</a>
+  <a href="index.html#why">Why Us</a>
+  <a href="index.html#how">How it works</a>
+  <div class="row"><a class="btn btn-ghost" href="for-companies.html#contact">Contact</a><a class="btn btn-chrome" href="apply.html">Apply</a></div>
+</div>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="wrap ph-grid">
+    <div>
+      <span class="eyebrow"><span class="num">01</span>&nbsp;/&nbsp;Available offers</span>
+      <h1><span class="chrome-text">Lanes</span><br>looking for you.</h1>
+      <p class="ph-sub">Live offers from US carriers right now. Filter by equipment, find the fit, and request an intro — United Services handles the rest.</p>
+      <div class="hero-cta">
+        <a href="apply.html" class="btn btn-chrome btn-lg" data-magnetic="0.3">Create your profile</a>
+        <a href="#board" class="btn btn-ghost btn-lg">Browse offers</a>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</section>
+
+<!-- OFFERS BOARD -->
+<section class="section board" id="board" data-screen-label="Offers board">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="num">02</span>&nbsp;/&nbsp;The board</span>
+      <h2>Live carrier offers.</h2>
+      <p>Posted directly by carriers actively hiring. Apply through United Services and we'll vet your fit before the intro.</p>
+    </div>
+    <div class="board-bar reveal" data-d="1">
+      <div class="live-count"><span class="n" id="board-count">0</span><span class="t">offers live</span></div>
+      <span class="pill live"><span class="dot"></span>Updated continuously</span>
+    </div>
+    <div class="filters reveal" data-d="1" id="filters"></div>
+    <div class="drivers-grid reveal" data-d="2" id="offers-grid"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="foot-brand">
+        <img src="assets/logo-chrome.png" alt="">
+        <span>United Services<br>Recruiting</span>
+      </div>
+      <p class="foot-tag">CDL driver placement done right. Vetted carriers, matched lanes, real callbacks.</p>
+    </div>
+    <div class="foot-col">
+      <span class="foot-h">For drivers</span>
+      <a href="apply.html">Apply</a>
+      <a href="offers.html">Available offers</a>
+      <a href="index.html#why">Why Us</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-h">For companies</span>
+      <a href="for-companies.html">Partner with us</a>
+      <a href="for-companies.html#board">Driver board</a>
+      <a href="for-companies.html#contact">Contact</a>
+    </div>
+    <div class="foot-col">
+      <span class="foot-h">About</span>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html">Home</a>
+    </div>
+  </div>
+  <div class="foot-bottom"><div class="wrap"><span>© <span id="yr"></span> United Services Recruiting</span><span class="mono">Built for drivers and carriers across the lower 48.</span></div></div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/site.js"></script>
+<script src="js/offers.js"></script>
+</body>
+</html>
