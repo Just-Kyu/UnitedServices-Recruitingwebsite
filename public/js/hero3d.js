@@ -32,10 +32,14 @@
   camera.position.set(4.5, 1.6, 6);
   camera.lookAt(0, 0, 0);
 
-  var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  // Mobile GPUs choke on MSAA + a 2048 shadow map + 2× DPR re-rendered every
+  // frame during a sticky scroll — that was the lag. On mobile we drop AA,
+  // drop shadows, render at a lower pixel ratio, and (further down) only render
+  // while the user is actually scrolling.
+  var renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(isMobile ? Math.min(devicePixelRatio, 1.5) : Math.min(devicePixelRatio, 2));
   renderer.setSize(mount.clientWidth, mount.clientHeight);
-  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = !isMobile;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   // Lower exposure for a more cinematic, less washed-out body.
@@ -51,7 +55,7 @@
   var key = new THREE.DirectionalLight(0xffe6c2, 1.6);
   key.position.set(5, 8, 5);
   key.target.position.set(0, -0.4, 0);
-  key.castShadow = true;
+  key.castShadow = !isMobile;
   key.shadow.mapSize.set(2048, 2048);
   key.shadow.camera.near = 1; key.shadow.camera.far = 36;
   key.shadow.camera.left = -10; key.shadow.camera.right = 10;
@@ -99,6 +103,7 @@
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -1.4;
   ground.receiveShadow = true;
+  ground.visible = !isMobile;   // shadows are off on mobile, so skip the shadow-catcher entirely
   scene.add(ground);
 
   var truckGroup = new THREE.Group();
@@ -165,8 +170,8 @@
 
     truck.traverse(function (o) {
       if (!o.isMesh || !o.material) return;
-      o.castShadow = true;
-      o.receiveShadow = true;
+      o.castShadow = !isMobile;
+      o.receiveShadow = !isMobile;
       var tag = nameTag(o.material, o.name);
       var mats = Array.isArray(o.material) ? o.material : [o.material];
       mats.forEach(function (m) {
@@ -218,6 +223,7 @@
     framed = true;
 
     truckGroup.add(truck);
+    dirty = true; // model is in — request a render (matters for the on-demand mobile path)
   }, undefined, function (err) {
     console.warn('Tesla Semi model failed to load. Confirm tesla-semi.glb is in public/models/ and MeshoptDecoder is loaded.', err);
   });
@@ -240,6 +246,7 @@
     { angle: Math.PI * 1.35,      radius: 7.5, height: 2.0, look: 0.4 }  // rear-3/4 (left-rear, slightly elevated)
   ];
   var cameraProgress = 0;
+  var dirty = true; // render-on-demand flag (mobile only renders when this is set)
   function sampleCamera(p) {
     p = Math.max(0, Math.min(1, p));
     var seg, t;
@@ -263,7 +270,8 @@
     // (one vh per scene transition); the remaining scroll holds at progress 1
     // so scene 3 reads cleanly before the matcher section.
     var orbitable = vh * 2;
-    cameraProgress = Math.max(0, Math.min(1, -rect.top / orbitable));
+    var next = Math.max(0, Math.min(1, -rect.top / orbitable));
+    if (next !== cameraProgress) { cameraProgress = next; dirty = true; }
   }
   window.addEventListener('scroll', updateCameraProgress, { passive: true });
   updateCameraProgress();
@@ -275,6 +283,7 @@
     camera.updateProjectionMatrix();
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     updateCameraProgress();
+    dirty = true;
   }
   window.addEventListener('resize', resize);
 
@@ -287,7 +296,9 @@
     prev = now;
     var t = (now - t0) / 1000;
 
-    var floatBob = Math.sin(t * 0.8) * 0.02; // gentler than before; the truck reads as planted
+    // No idle float on mobile — it would force a render every frame and defeat
+    // the render-on-demand path. The truck just tracks scroll there.
+    var floatBob = isMobile ? 0 : Math.sin(t * 0.8) * 0.02;
 
     if (isMobile && !reduce && framed) {
       // Mobile: orbit the camera around the truck as the user scrolls — same
@@ -350,7 +361,13 @@
     }
     truckGroup.position.y = -0.7 + floatBob;
 
-    renderer.render(scene, camera);
+    // Desktop renders continuously (parallax + float). Mobile renders only when
+    // something changed (scroll/resize/model-load) so the GPU isn't pegged
+    // during a sticky scroll — that was the lag.
+    if (!isMobile || dirty) {
+      renderer.render(scene, camera);
+      dirty = false;
+    }
     requestAnimationFrame(tick);
   }
 
