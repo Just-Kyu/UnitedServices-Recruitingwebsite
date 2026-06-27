@@ -61,38 +61,30 @@
 .saga-chips span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(199,208,219,0.18); color: var(--silver-txt); background: rgba(8,11,18,0.5); backdrop-filter: blur(8px); }
 
 @media (max-width: 760px) {
-  /* Mobile keeps the desktop sticky-saga so the truck orbits as you scroll —
-     just shorter, with the copy dropped into a scrimmed lower band so it stays
-     readable over the truck (a phone has no room to dodge it side-to-side). */
-  .hero-saga { height: 320svh; }
-  .hero-saga-stage { position: sticky; top: 0; height: 100svh; }
+  /* Mobile: NO sticky scroll-orbit (iOS can't composite a sticky WebGL canvas
+     smoothly). The truck is a single static render in a normal block at the
+     top that scrolls away like an image; the scenes stack as plain sections
+     below it. Zero per-frame WebGL during scroll = zero lag. */
+  .hero-saga { height: auto; }
+  .hero-saga-stage { position: relative; height: 46vh; min-height: 300px; }
   #truck-stage { opacity: 1; }
-
-  /* Copy lives in the lower band, left-aligned, over a strong scrim that goes
-     near-solid by ~45% down so text never fights the bright truck body. */
-  .saga-scene { align-items: flex-end; justify-content: flex-start; text-align: left; padding: 0 0 11svh; }
-  .saga-scene::before {
-    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: linear-gradient(180deg, transparent 20%, rgba(8,11,18,0.6) 38%, rgba(8,11,18,0.95) 52%, var(--ink) 66%);
-  }
-  .saga-scene[data-scene="2"], .saga-scene[data-scene="3"] { align-items: flex-end; justify-content: flex-start; text-align: left; }
-  .saga-scene[data-scene="2"] .wrap, .saga-scene[data-scene="3"] .wrap { display: block; }
-  .saga-scene[data-scene="2"] .hero-inner,
-  .saga-scene[data-scene="3"] .hero-inner,
-  .saga-scene[data-scene="2"] .hero-sub,
-  .saga-scene[data-scene="3"] .hero-sub,
-  .saga-scene[data-scene="2"] .hero-cta,
-  .saga-scene[data-scene="3"] .hero-cta,
-  .saga-scene[data-scene="2"] .saga-chips { max-width: 100%; margin-left: 0; margin-right: 0; justify-content: flex-start; text-align: left; }
-  .saga-scene h1, .saga-scene .saga-h { font-size: clamp(30px, 7.4vw, 44px); margin-top: 6px; }
-  .hero-sub { font-size: 14.5px; margin: 10px 0 16px; }
-  .hero-cta { gap: 10px; }
-  .hero-stats { gap: 18px; margin-top: 16px; }
-  .hero-stat .v { font-size: 22px; }
-  .hero-stat .k { font-size: 10px; margin-top: 4px; }
-  .saga-chips { justify-content: flex-start; max-width: 100%; margin-top: 16px; }
-  .hero-inner { max-width: 100%; }
+  .hero-fade { height: 90px; }
   .scroll-cue { display: none; }
+
+  .saga-scene { position: relative; height: auto; min-height: 0; top: auto !important; padding: 26px 0 22px; text-align: left !important; display: block; }
+  .saga-scene::before { display: none; }
+  .saga-scene[data-scene="1"] { padding-top: 14px; }
+  /* Scenes 2 and 3 are desktop scroll-story beats; on mobile the matcher
+     section right below covers the same ground, so hide them to keep the
+     hero tight and fast. */
+  .saga-scene[data-scene="2"], .saga-scene[data-scene="3"] { display: none; }
+
+  .saga-scene h1, .saga-scene .saga-h { font-size: clamp(34px, 8.6vw, 52px); margin-top: 12px; }
+  .hero-sub { font-size: 15px; margin: 16px 0 22px; }
+  .hero-cta { gap: 10px; }
+  .hero-stats { gap: 24px; margin-top: 28px; }
+  .hero-stat .v { font-size: 26px; }
+  .hero-inner { max-width: 100%; }
 }
 
 /* ─────────── Section heading block ─────────── */

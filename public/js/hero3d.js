@@ -115,8 +115,8 @@
   var framed = false;
   var fitCenter = new THREE.Vector3(); // truck's geometric center (local space)
   var truckRadius = 1;                 // bounding-sphere radius — frames the WHOLE truck
-  var FIT_W = 0.80;                    // truck spans ~80% of the portrait width, fully visible
-  var TOP_BIAS = 0.30;                 // truck center rides ~30% down from the top, copy below
+  var FIT_W = 0.86;                    // truck spans ~86% of the portrait width, fully visible
+  var STATIC_BIAS = 0.46;              // truck sits ~centered (a hair high) in its mobile block
 
   var loader = new THREE.GLTFLoader();
   // Use the Meshopt-compressed GLB (~348 KB) instead of the uncompressed
@@ -262,8 +262,9 @@
     };
   }
   function updateCameraProgress() {
-    // Mobile now orbits on scroll too (reduced-motion stays locked at 0).
-    if (!saga || reduce) { cameraProgress = 0; return; }
+    // Desktop only. Mobile holds a static framed shot (no scroll orbit) — a
+    // sticky, scroll-driven WebGL canvas just won't composite smoothly on iOS.
+    if (!saga || isMobile || reduce) { cameraProgress = 0; return; }
     var rect = saga.getBoundingClientRect();
     var vh = innerHeight;
     // Camera completes its orbit over the first ~2 viewport heights of scroll
@@ -300,35 +301,20 @@
     // the render-on-demand path. The truck just tracks scroll there.
     var floatBob = isMobile ? 0 : Math.sin(t * 0.8) * 0.02;
 
-    if (isMobile && !reduce && framed) {
-      // Mobile: orbit the camera around the truck as the user scrolls — same
-      // front → side → rear sweep as desktop. Distance is set from the truck's
-      // bounding SPHERE so the WHOLE truck is always in frame (no slab-of-white
-      // close-ups), and we aim below center so it rides in the top ~30%, leaving
-      // a clear scrimmed band below for the copy.
-      var mAngle = sampleCamera(cameraProgress).angle;
-      var groupY = -0.7 + floatBob;                 // matches the y-bob applied below
-      var cx = fitCenter.x, cz = fitCenter.z, cy = fitCenter.y + groupY;
-      var vHalf = (camera.fov * Math.PI / 180) / 2; // vertical half-FOV
-      var hHalf = Math.atan(Math.tan(vHalf) * camera.aspect); // horizontal half-FOV (portrait → narrower)
-      var dist = truckRadius / (FIT_W * Math.tan(hHalf));
-      var lift = (0.5 - TOP_BIAS) * 2 * (dist * Math.tan(vHalf)); // raise truck into the upper band
-      camera.position.set(cx + Math.cos(mAngle) * dist, cy, cz + Math.sin(mAngle) * dist);
-      camera.lookAt(cx, cy - lift, cz);
-      truckGroup.rotation.y = 0;
-      var mLight = mAngle - 0.5;
-      key.position.set(Math.cos(mLight) * 11, 9, Math.sin(mLight) * 11);
-    } else if (isMobile || reduce) {
-      // Reduced-motion, or the brief window before the model is measured:
-      // hold a centered front-3/4 establishing frame (no orbit).
+    if (isMobile || reduce) {
+      // Mobile: a single static, centered front-3/4 shot — NO orbit, NO scroll
+      // coupling. The canvas sits in a normal (non-sticky) block and scrolls
+      // away like an image, so there's no per-frame WebGL work during scroll
+      // and nothing to stutter. Framed from the bounding sphere so the whole
+      // truck is visible and centered in its block.
       var sAngle = keyframes[0].angle;
       if (framed) {
-        var gY = -0.7 + floatBob;
-        var sCy = fitCenter.y + gY;
+        var sCy = fitCenter.y + (-0.7);
         var sVHalf = (camera.fov * Math.PI / 180) / 2;
         var sHHalf = Math.atan(Math.tan(sVHalf) * camera.aspect);
-        var sDist = truckRadius / (FIT_W * Math.tan(sHHalf));
-        var sLift = (0.5 - TOP_BIAS) * 2 * (sDist * Math.tan(sVHalf));
+        var sMinHalf = Math.min(sVHalf, sHHalf); // fit the SMALLER dimension so the whole truck shows
+        var sDist = truckRadius / (FIT_W * Math.tan(sMinHalf));
+        var sLift = (0.5 - STATIC_BIAS) * 2 * (sDist * Math.tan(sVHalf)); // ~centered in block
         camera.position.set(fitCenter.x + Math.cos(sAngle) * sDist, sCy, fitCenter.z + Math.sin(sAngle) * sDist);
         camera.lookAt(fitCenter.x, sCy - sLift, fitCenter.z);
       } else {
