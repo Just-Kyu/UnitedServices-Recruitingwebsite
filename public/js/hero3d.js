@@ -22,6 +22,10 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isMobile = innerWidth < 760;
 
+  // Mobile gets the pure-CSS animated route map instead of the 3D truck — so
+  // don't spin up WebGL, load the GLB, or run a render loop here at all.
+  if (isMobile) return;
+
   var scene = new THREE.Scene();
 
   // Wider FOV on mobile portrait so the truck fits in frame without
