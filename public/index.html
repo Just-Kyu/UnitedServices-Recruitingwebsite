@@ -71,6 +71,55 @@
   <div class="hero-saga-stage">
     <div class="hero-glow"></div>
     <div id="truck-stage" aria-hidden="true"></div>
+    <!-- Mobile hero visual: animated US freight-lane network (pure SVG/CSS) -->
+    <div class="route-map" aria-hidden="true">
+      <svg class="rmap-svg" viewBox="0 0 360 240" preserveAspectRatio="xMidYMid meet" role="img" aria-label="United States freight lane network">
+        <!-- faint base lanes -->
+        <g class="rmap-lanes">
+          <path class="lane" d="M46 40 Q92 62 150 110"/>
+          <path class="lane" d="M150 110 Q192 80 226 88"/>
+          <path class="lane" d="M226 88 Q282 58 322 78"/>
+          <path class="lane" d="M150 110 Q156 148 178 175"/>
+          <path class="lane" d="M178 175 Q216 186 258 165"/>
+          <path class="lane" d="M258 165 Q306 120 322 78"/>
+          <path class="lane" d="M58 150 Q100 122 150 110"/>
+          <path class="lane" d="M30 120 Q26 78 46 40"/>
+          <path class="lane" d="M178 175 Q244 214 300 214"/>
+          <path class="lane" d="M226 88 Q236 128 258 165"/>
+        </g>
+        <!-- travelling light pulses -->
+        <g class="rmap-pulses">
+          <path class="pulse" pathLength="1" d="M46 40 Q92 62 150 110"  style="animation-duration:2.9s;animation-delay:0s"/>
+          <path class="pulse" pathLength="1" d="M150 110 Q192 80 226 88" style="animation-duration:2.4s;animation-delay:.5s"/>
+          <path class="pulse" pathLength="1" d="M226 88 Q282 58 322 78"  style="animation-duration:3.2s;animation-delay:1.1s"/>
+          <path class="pulse" pathLength="1" d="M150 110 Q156 148 178 175" style="animation-duration:2.7s;animation-delay:.3s"/>
+          <path class="pulse" pathLength="1" d="M178 175 Q216 186 258 165" style="animation-duration:3.0s;animation-delay:1.4s"/>
+          <path class="pulse" pathLength="1" d="M258 165 Q306 120 322 78" style="animation-duration:3.5s;animation-delay:.8s"/>
+          <path class="pulse" pathLength="1" d="M58 150 Q100 122 150 110" style="animation-duration:3.3s;animation-delay:1.7s"/>
+          <path class="pulse" pathLength="1" d="M178 175 Q244 214 300 214" style="animation-duration:3.8s;animation-delay:.2s"/>
+        </g>
+        <!-- hub labels -->
+        <g class="rmap-labels">
+          <text class="rmap-label" x="150" y="132" text-anchor="middle">Denver</text>
+          <text class="rmap-label" x="226" y="74"  text-anchor="middle">Chicago</text>
+          <text class="rmap-label" x="178" y="193" text-anchor="middle">Dallas</text>
+          <text class="rmap-label" x="322" y="64"  text-anchor="middle">New York</text>
+          <text class="rmap-label" x="258" y="182" text-anchor="middle">Atlanta</text>
+        </g>
+        <!-- nodes: pulsing ring + bright dot -->
+        <g class="rmap-nodes">
+          <g class="node" style="--nd:0s">   <circle class="ring" cx="46"  cy="40"  r="3.4"/><circle class="dot" cx="46"  cy="40"  r="2.6"/></g>
+          <g class="node" style="--nd:.6s">  <circle class="ring" cx="30"  cy="120" r="3.4"/><circle class="dot" cx="30"  cy="120" r="2.6"/></g>
+          <g class="node" style="--nd:1.2s"> <circle class="ring" cx="58"  cy="150" r="3.4"/><circle class="dot" cx="58"  cy="150" r="2.6"/></g>
+          <g class="node" style="--nd:.3s">  <circle class="ring" cx="150" cy="110" r="4"/>  <circle class="dot" cx="150" cy="110" r="3"/></g>
+          <g class="node" style="--nd:1.5s"> <circle class="ring" cx="178" cy="175" r="4"/>  <circle class="dot" cx="178" cy="175" r="3"/></g>
+          <g class="node" style="--nd:.9s">  <circle class="ring" cx="226" cy="88"  r="4"/>  <circle class="dot" cx="226" cy="88"  r="3"/></g>
+          <g class="node" style="--nd:1.8s"> <circle class="ring" cx="258" cy="165" r="3.6"/><circle class="dot" cx="258" cy="165" r="2.7"/></g>
+          <g class="node" style="--nd:.5s">  <circle class="ring" cx="322" cy="78"  r="4"/>  <circle class="dot" cx="322" cy="78"  r="3"/></g>
+          <g class="node" style="--nd:1.1s"> <circle class="ring" cx="300" cy="214" r="3.4"/><circle class="dot" cx="300" cy="214" r="2.6"/></g>
+        </g>
+      </svg>
+    </div>
     <div class="hero-fade"></div>
   </div>
 
