@@ -19,36 +19,50 @@
 .hero-glow { position: absolute; z-index: 0; width: 60vw; height: 60vw; right: -8vw; top: 8%; background: radial-gradient(circle, rgba(77,163,255,0.16), transparent 62%); filter: blur(20px); pointer-events: none; }
 .hero-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 180px; background: linear-gradient(180deg, transparent, var(--ink)); z-index: 2; pointer-events: none; }
 
-/* ── Animated freight-lane route map (mobile hero visual; hidden on desktop) ── */
-.route-map { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; z-index: 1; }
-.rmap-svg { width: 100%; height: 100%; max-width: 620px; overflow: visible; }
-.rmap-svg .lane { fill: none; stroke: rgba(120,165,225,0.20); stroke-width: 1.1; }
+/* ── Animated US freight-lane map (mobile only; fixed page-wide background) ──
+   Sits at z-index -1: above the body's ink background, below every section.
+   Two states: page top = big & bright hero visual; .is-bg (added by a scroll
+   listener) = dimmed ambient layer that stays behind the whole page. */
+.route-map {
+  position: fixed; inset: 0; z-index: -1; display: none;
+  align-items: flex-start; justify-content: center;
+  padding-top: 108px; pointer-events: none;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.route-map.is-bg { opacity: 0.3; transform: translateY(20vh) scale(1.45); }
+.rmap-svg { width: 100%; max-width: 660px; height: auto; overflow: visible; }
+.rmap-svg .rmap-us {
+  fill: rgba(110,155,215,0.05);
+  stroke: rgba(130,175,235,0.38); stroke-width: 1.4; stroke-linejoin: round;
+}
+.rmap-svg .lane { fill: none; stroke: rgba(120,165,225,0.22); stroke-width: 1.4; }
 .rmap-svg .pulse {
-  fill: none; stroke: #cfe6ff; stroke-width: 1.8; stroke-linecap: round;
-  stroke-dasharray: 0.06 1; stroke-dashoffset: 1;
-  filter: drop-shadow(0 0 4px rgba(130,185,255,0.95));
+  fill: none; stroke: #cfe6ff; stroke-width: 2.6; stroke-linecap: round;
+  stroke-dasharray: 0.07 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 5px rgba(130,185,255,0.95));
   animation: rmapFlow 3s linear infinite;
 }
 @keyframes rmapFlow { to { stroke-dashoffset: 0; } }
-.rmap-svg .node .dot { fill: #eaf3ff; filter: drop-shadow(0 0 5px rgba(150,195,255,0.95)); }
+.rmap-svg .node .dot { fill: #eaf3ff; filter: drop-shadow(0 0 6px rgba(150,195,255,0.95)); }
 .rmap-svg .node .ring {
-  fill: none; stroke: rgba(150,195,255,0.75); stroke-width: 1.2;
+  fill: none; stroke: rgba(150,195,255,0.75); stroke-width: 1.6;
   transform-box: fill-box; transform-origin: center;
   animation: rmapPing 3s ease-out infinite; animation-delay: var(--nd, 0s);
 }
 @keyframes rmapPing {
   0%   { transform: scale(0.5); opacity: 0.85; }
   70%  { opacity: 0; }
-  100% { transform: scale(2.6); opacity: 0; }
+  100% { transform: scale(2.8); opacity: 0; }
 }
 .rmap-svg .rmap-label {
-  fill: rgba(196,210,230,0.72);
+  fill: rgba(196,210,230,0.75);
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase;
 }
 @media (prefers-reduced-motion: reduce) {
-  .rmap-svg .pulse { animation: none; stroke-dasharray: none; opacity: 0.55; }
+  .rmap-svg .pulse { animation: none; stroke-dasharray: none; opacity: 0.5; }
   .rmap-svg .node .ring { animation: none; opacity: 0.4; }
+  .route-map { transition: none; }
 }
 
 /* Each scene sits absolutely on top of the sticky stage at its own scroll offset */
@@ -98,12 +112,23 @@
      top that scrolls away like an image; the scenes stack as plain sections
      below it. Zero per-frame WebGL during scroll = zero lag. */
   .hero-saga { height: auto; }
-  .hero-saga-stage { position: relative; height: 44vh; min-height: 300px; }
+  /* The stage is now just a spacer — the fixed route map shows through it,
+     giving the "big illustrated map" opening frame before the headline. */
+  .hero-saga-stage { position: relative; height: 46vh; min-height: 310px; }
   #truck-stage { display: none; }          /* no WebGL on mobile */
-  .route-map { display: flex; }            /* animated route map instead */
-  .hero-glow { top: 0; right: -20vw; width: 90vw; height: 90vw; }
-  .hero-fade { height: 80px; }
+  .route-map { display: flex; }            /* fixed animated route map instead */
+  .hero-glow { display: none; }
+  .hero-fade { display: none; }
   .scroll-cue { display: none; }
+
+  /* Let the fixed map read through the page: swap the opaque section
+     gradients for transparency on the home page. Cards/pills keep their own
+     backgrounds, and the map is at 16% opacity once scrolled, so text
+     contrast stays intact. */
+  /* section.matcher / section.equip (0,1,1) outrank the plain .matcher/.equip
+     gradient rules that appear later in this file. */
+  .hero-saga, section.matcher, section.equip { background: transparent; }
+  .footer { background: linear-gradient(180deg, rgba(5,7,12,0.0), rgba(5,7,12,0.72)); }
 
   .saga-scene { position: relative; height: auto; min-height: 0; top: auto !important; padding: 26px 0 22px; text-align: left !important; display: block; }
   .saga-scene::before { display: none; }

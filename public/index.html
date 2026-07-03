@@ -65,61 +65,84 @@
   </div>
 </div>
 
+<!-- ░░ Mobile background: animated US freight-lane map (fixed, page-wide) ░░
+     Big and bright at the top of the page; dims into an ambient background
+     layer once you start scrolling. Pure SVG/CSS. Hidden on desktop. -->
+<div class="route-map" id="route-map" aria-hidden="true">
+  <svg class="rmap-svg" viewBox="0 0 960 600" preserveAspectRatio="xMidYMid meet" role="img" aria-label="United States freight lane network">
+    <!-- continental US outline (low-poly) -->
+    <path class="rmap-us" d="M95 62 L170 48 L250 40 L330 42 L400 50 L455 55
+      L500 72 L540 92 L558 78 L588 98 L622 92 L655 112
+      L700 98 L742 74 L800 62 L838 44 L872 40 L886 66
+      L872 96 L862 118 L836 152 L830 172
+      L812 208 L802 238 L806 268 L792 312 L776 352
+      L754 388 L758 426 L772 468 L776 508 L766 540
+      L744 544 L726 512 L712 470 L692 452
+      L652 442 L610 446 L566 450 L540 468 L506 470
+      L478 480 L458 506 L444 542 L424 552
+      L402 512 L372 480 L340 456 L310 440 L296 434
+      L252 424 L204 410 L158 394 L112 376
+      L96 344 L66 302 L42 262 L46 216 L58 160 L68 108 L80 76 Z"/>
+    <!-- freight lanes -->
+    <g class="rmap-lanes">
+      <path class="lane" d="M112 74 Q200 150 302 252"/>
+      <path class="lane" d="M112 74 Q340 90 568 172"/>
+      <path class="lane" d="M52 254 Q170 230 302 252"/>
+      <path class="lane" d="M100 336 Q140 336 182 350"/>
+      <path class="lane" d="M182 350 Q310 390 448 412"/>
+      <path class="lane" d="M302 252 Q370 330 448 412"/>
+      <path class="lane" d="M302 252 Q430 190 568 172"/>
+      <path class="lane" d="M448 412 Q550 400 652 362"/>
+      <path class="lane" d="M568 172 Q700 140 830 170"/>
+      <path class="lane" d="M652 362 Q760 270 830 170"/>
+      <path class="lane" d="M652 362 Q710 440 752 520"/>
+    </g>
+    <!-- travelling light pulses -->
+    <g class="rmap-pulses">
+      <path class="pulse" pathLength="1" d="M112 74 Q200 150 302 252"  style="animation-duration:3.1s;animation-delay:0s"/>
+      <path class="pulse" pathLength="1" d="M112 74 Q340 90 568 172"   style="animation-duration:3.8s;animation-delay:1.3s"/>
+      <path class="pulse" pathLength="1" d="M52 254 Q170 230 302 252"  style="animation-duration:2.8s;animation-delay:.6s"/>
+      <path class="pulse" pathLength="1" d="M182 350 Q310 390 448 412" style="animation-duration:2.9s;animation-delay:1.8s"/>
+      <path class="pulse" pathLength="1" d="M302 252 Q370 330 448 412" style="animation-duration:2.5s;animation-delay:.3s"/>
+      <path class="pulse" pathLength="1" d="M302 252 Q430 190 568 172" style="animation-duration:2.7s;animation-delay:1.1s"/>
+      <path class="pulse" pathLength="1" d="M448 412 Q550 400 652 362" style="animation-duration:2.6s;animation-delay:2.1s"/>
+      <path class="pulse" pathLength="1" d="M568 172 Q700 140 830 170" style="animation-duration:3.0s;animation-delay:.9s"/>
+      <path class="pulse" pathLength="1" d="M652 362 Q760 270 830 170" style="animation-duration:3.3s;animation-delay:1.6s"/>
+      <path class="pulse" pathLength="1" d="M652 362 Q710 440 752 520" style="animation-duration:2.4s;animation-delay:.4s"/>
+    </g>
+    <!-- hub labels -->
+    <g class="rmap-labels">
+      <text class="rmap-label" x="112" y="58"  text-anchor="middle">Seattle</text>
+      <text class="rmap-label" x="112" y="322" text-anchor="start">Los Angeles</text>
+      <text class="rmap-label" x="302" y="276" text-anchor="middle">Denver</text>
+      <text class="rmap-label" x="448" y="436" text-anchor="middle">Dallas</text>
+      <text class="rmap-label" x="568" y="156" text-anchor="middle">Chicago</text>
+      <text class="rmap-label" x="652" y="386" text-anchor="middle">Atlanta</text>
+      <text class="rmap-label" x="846" y="158" text-anchor="start">New York</text>
+      <text class="rmap-label" x="768" y="534" text-anchor="start">Miami</text>
+    </g>
+    <!-- hub nodes: pulsing ring + bright dot -->
+    <g class="rmap-nodes">
+      <g class="node" style="--nd:0s">   <circle class="ring" cx="112" cy="74"  r="7"/><circle class="dot" cx="112" cy="74"  r="5"/></g>
+      <g class="node" style="--nd:1.4s"> <circle class="ring" cx="52"  cy="254" r="6"/><circle class="dot" cx="52"  cy="254" r="4.4"/></g>
+      <g class="node" style="--nd:.7s">  <circle class="ring" cx="100" cy="336" r="7"/><circle class="dot" cx="100" cy="336" r="5"/></g>
+      <g class="node" style="--nd:2s">   <circle class="ring" cx="182" cy="350" r="6"/><circle class="dot" cx="182" cy="350" r="4.4"/></g>
+      <g class="node" style="--nd:.4s">  <circle class="ring" cx="302" cy="252" r="7.5"/><circle class="dot" cx="302" cy="252" r="5.4"/></g>
+      <g class="node" style="--nd:1.7s"> <circle class="ring" cx="448" cy="412" r="7.5"/><circle class="dot" cx="448" cy="412" r="5.4"/></g>
+      <g class="node" style="--nd:1s">   <circle class="ring" cx="568" cy="172" r="7.5"/><circle class="dot" cx="568" cy="172" r="5.4"/></g>
+      <g class="node" style="--nd:.2s">  <circle class="ring" cx="652" cy="362" r="7"/><circle class="dot" cx="652" cy="362" r="5"/></g>
+      <g class="node" style="--nd:1.2s"> <circle class="ring" cx="830" cy="170" r="7.5"/><circle class="dot" cx="830" cy="170" r="5.4"/></g>
+      <g class="node" style="--nd:2.3s"> <circle class="ring" cx="752" cy="520" r="6"/><circle class="dot" cx="752" cy="520" r="4.4"/></g>
+    </g>
+  </svg>
+</div>
+
 <!-- ░░ HERO SAGA — sticky truck + 3 scroll-driven scenes ░░ -->
 <section class="hero-saga" id="hero-saga" data-screen-label="Hero">
   <!-- Sticky stage: holds the Tesla Semi, glow, fade -->
   <div class="hero-saga-stage">
     <div class="hero-glow"></div>
     <div id="truck-stage" aria-hidden="true"></div>
-    <!-- Mobile hero visual: animated US freight-lane network (pure SVG/CSS) -->
-    <div class="route-map" aria-hidden="true">
-      <svg class="rmap-svg" viewBox="0 0 360 240" preserveAspectRatio="xMidYMid meet" role="img" aria-label="United States freight lane network">
-        <!-- faint base lanes -->
-        <g class="rmap-lanes">
-          <path class="lane" d="M46 40 Q92 62 150 110"/>
-          <path class="lane" d="M150 110 Q192 80 226 88"/>
-          <path class="lane" d="M226 88 Q282 58 322 78"/>
-          <path class="lane" d="M150 110 Q156 148 178 175"/>
-          <path class="lane" d="M178 175 Q216 186 258 165"/>
-          <path class="lane" d="M258 165 Q306 120 322 78"/>
-          <path class="lane" d="M58 150 Q100 122 150 110"/>
-          <path class="lane" d="M30 120 Q26 78 46 40"/>
-          <path class="lane" d="M178 175 Q244 214 300 214"/>
-          <path class="lane" d="M226 88 Q236 128 258 165"/>
-        </g>
-        <!-- travelling light pulses -->
-        <g class="rmap-pulses">
-          <path class="pulse" pathLength="1" d="M46 40 Q92 62 150 110"  style="animation-duration:2.9s;animation-delay:0s"/>
-          <path class="pulse" pathLength="1" d="M150 110 Q192 80 226 88" style="animation-duration:2.4s;animation-delay:.5s"/>
-          <path class="pulse" pathLength="1" d="M226 88 Q282 58 322 78"  style="animation-duration:3.2s;animation-delay:1.1s"/>
-          <path class="pulse" pathLength="1" d="M150 110 Q156 148 178 175" style="animation-duration:2.7s;animation-delay:.3s"/>
-          <path class="pulse" pathLength="1" d="M178 175 Q216 186 258 165" style="animation-duration:3.0s;animation-delay:1.4s"/>
-          <path class="pulse" pathLength="1" d="M258 165 Q306 120 322 78" style="animation-duration:3.5s;animation-delay:.8s"/>
-          <path class="pulse" pathLength="1" d="M58 150 Q100 122 150 110" style="animation-duration:3.3s;animation-delay:1.7s"/>
-          <path class="pulse" pathLength="1" d="M178 175 Q244 214 300 214" style="animation-duration:3.8s;animation-delay:.2s"/>
-        </g>
-        <!-- hub labels -->
-        <g class="rmap-labels">
-          <text class="rmap-label" x="150" y="132" text-anchor="middle">Denver</text>
-          <text class="rmap-label" x="226" y="74"  text-anchor="middle">Chicago</text>
-          <text class="rmap-label" x="178" y="193" text-anchor="middle">Dallas</text>
-          <text class="rmap-label" x="322" y="64"  text-anchor="middle">New York</text>
-          <text class="rmap-label" x="258" y="182" text-anchor="middle">Atlanta</text>
-        </g>
-        <!-- nodes: pulsing ring + bright dot -->
-        <g class="rmap-nodes">
-          <g class="node" style="--nd:0s">   <circle class="ring" cx="46"  cy="40"  r="3.4"/><circle class="dot" cx="46"  cy="40"  r="2.6"/></g>
-          <g class="node" style="--nd:.6s">  <circle class="ring" cx="30"  cy="120" r="3.4"/><circle class="dot" cx="30"  cy="120" r="2.6"/></g>
-          <g class="node" style="--nd:1.2s"> <circle class="ring" cx="58"  cy="150" r="3.4"/><circle class="dot" cx="58"  cy="150" r="2.6"/></g>
-          <g class="node" style="--nd:.3s">  <circle class="ring" cx="150" cy="110" r="4"/>  <circle class="dot" cx="150" cy="110" r="3"/></g>
-          <g class="node" style="--nd:1.5s"> <circle class="ring" cx="178" cy="175" r="4"/>  <circle class="dot" cx="178" cy="175" r="3"/></g>
-          <g class="node" style="--nd:.9s">  <circle class="ring" cx="226" cy="88"  r="4"/>  <circle class="dot" cx="226" cy="88"  r="3"/></g>
-          <g class="node" style="--nd:1.8s"> <circle class="ring" cx="258" cy="165" r="3.6"/><circle class="dot" cx="258" cy="165" r="2.7"/></g>
-          <g class="node" style="--nd:.5s">  <circle class="ring" cx="322" cy="78"  r="4"/>  <circle class="dot" cx="322" cy="78"  r="3"/></g>
-          <g class="node" style="--nd:1.1s"> <circle class="ring" cx="300" cy="214" r="3.4"/><circle class="dot" cx="300" cy="214" r="2.6"/></g>
-        </g>
-      </svg>
-    </div>
     <div class="hero-fade"></div>
   </div>
 
@@ -815,5 +838,21 @@
 <script src="js/hero3d.js?v=2"></script>
 <script src="js/matcher.js?v=2"></script>
 <script src="js/equip.js?v=2"></script>
+<script>
+// Route map hero→background hand-off: bright and big at the top of the page,
+// dimmed ambient layer once you scroll. CSS transition does the easing; this
+// just flips a class at the threshold.
+(function () {
+  var map = document.getElementById('route-map');
+  if (!map) return;
+  var on = false;
+  function update() {
+    var next = window.scrollY > window.innerHeight * 0.28;
+    if (next !== on) { on = next; map.classList.toggle('is-bg', on); }
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
 </body>
 </html>
