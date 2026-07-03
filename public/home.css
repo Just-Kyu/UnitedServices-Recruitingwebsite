@@ -31,11 +31,12 @@
 }
 .route-map.is-bg { opacity: 0.3; transform: translateY(20vh) scale(1.45); }
 .rmap-svg { width: 100%; max-width: 660px; height: auto; overflow: visible; }
-.rmap-svg .rmap-us {
-  fill: rgba(110,155,215,0.05);
-  stroke: rgba(130,175,235,0.38); stroke-width: 1.4; stroke-linejoin: round;
+/* state shapes: faint glass panels with visible shared borders */
+.rmap-svg .st {
+  fill: rgba(110,155,215,0.10);
+  stroke: rgba(140,185,240,0.5); stroke-width: 1; stroke-linejoin: round;
 }
-.rmap-svg .lane { fill: none; stroke: rgba(120,165,225,0.22); stroke-width: 1.4; }
+.rmap-svg .lane { fill: none; stroke: rgba(150,190,240,0.3); stroke-width: 1.6; }
 .rmap-svg .pulse {
   fill: none; stroke: #cfe6ff; stroke-width: 2.6; stroke-linecap: round;
   stroke-dasharray: 0.07 1; stroke-dashoffset: 1;
@@ -44,6 +45,7 @@
 }
 @keyframes rmapFlow { to { stroke-dashoffset: 0; } }
 .rmap-svg .node .dot { fill: #eaf3ff; filter: drop-shadow(0 0 6px rgba(150,195,255,0.95)); }
+.rmap-svg .node .cdot { fill: rgba(190,215,245,0.75); }
 .rmap-svg .node .ring {
   fill: none; stroke: rgba(150,195,255,0.75); stroke-width: 1.6;
   transform-box: fill-box; transform-origin: center;
@@ -55,10 +57,11 @@
   100% { transform: scale(2.8); opacity: 0; }
 }
 .rmap-svg .rmap-label {
-  fill: rgba(196,210,230,0.75);
+  fill: rgba(196,210,230,0.68);
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
 }
+.rmap-svg .rmap-label.hub { font-size: 18px; fill: rgba(220,235,255,0.92); }
 @media (prefers-reduced-motion: reduce) {
   .rmap-svg .pulse { animation: none; stroke-dasharray: none; opacity: 0.5; }
   .rmap-svg .node .ring { animation: none; opacity: 0.4; }
