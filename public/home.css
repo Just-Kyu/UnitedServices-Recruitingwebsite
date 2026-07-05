@@ -43,6 +43,7 @@
   filter: drop-shadow(0 0 5px rgba(130,185,255,0.95));
   animation: rmapFlow 3s linear infinite;
 }
+.rmap-svg .pulse.p2 { stroke-width: 1.7; opacity: 0.85; }   /* local lanes: thinner comet */
 @keyframes rmapFlow { to { stroke-dashoffset: 0; } }
 .rmap-svg .node .dot { fill: #eaf3ff; filter: drop-shadow(0 0 6px rgba(150,195,255,0.95)); }
 .rmap-svg .node .cdot { fill: rgba(190,215,245,0.75); }

@@ -176,18 +176,41 @@ for fips, city, dx, dy in (("02", "Anchorage", 20, -6), ("15", "Honolulu", 26, -
     x0, yy0, x1, yy1 = bbox(fips)
     pts[fips] = (city, (x0 + x1) / 2 + dx, (yy0 + yy1) / 2 + dy)
 
-# ---------------- lanes ----------------
-LANES = [("53","08"),("53","17"),("06","04"),("04","48"),("08","48"),
-         ("08","17"),("48","13"),("17","36"),("13","36"),("13","12"),
-         ("06","08"),("29","17")]
+# ---------------- lanes: a network over EVERY city ----------------
+# MST over all lower-48 cities guarantees the whole map is connected, the
+# nearest-neighbor pass adds natural local loops, the hub arcs add the big
+# dramatic long-hauls, and AK/HI get sea links so the insets join the flow.
+HUB_LANES = [("53","08"),("53","17"),("06","04"),("04","48"),("08","48"),
+             ("08","17"),("48","13"),("17","36"),("13","36"),("13","12"),
+             ("06","08"),("29","17")]
+
+def dist(a, b):
+    _, x1, y1 = pts[a]; _, x2, y2 = pts[b]
+    return math.hypot(x2 - x1, y2 - y1)
+
+ids = [f for f in pts if f not in ("02", "15")]
+intree = {ids[0]}; edges = set()
+while len(intree) < len(ids):                      # Prim's MST
+    best = None
+    for a in intree:
+        for b in ids:
+            if b in intree: continue
+            d = dist(a, b)
+            if best is None or d < best[0]: best = (d, a, b)
+    edges.add(tuple(sorted((best[1], best[2])))); intree.add(best[2])
+for a in ids:                                      # nearest-neighbor loops
+    b = min((x for x in ids if x != a), key=lambda x: dist(a, x))
+    edges.add(tuple(sorted((a, b))))
+for a, b in HUB_LANES:                             # long-haul hub arcs
+    edges.add(tuple(sorted((a, b))))
+edges.add(("02", "53")); edges.add(("06", "15"))   # Anchorage / Honolulu sea links
+EDGES = sorted(edges, key=lambda e: -dist(*e))
+
 def lane_d(a, b):
     _, x1, y1 = pts[a]; _, x2, y2 = pts[b]
     mx, my = (x1 + x2) / 2, (y1 + y2) / 2
-    my -= math.hypot(x2 - x1, y2 - y1) * 0.13    # gentle upward bow
+    my -= math.hypot(x2 - x1, y2 - y1) * 0.12      # gentle upward bow
     return f"M{x1:.1f} {y1:.1f} Q{mx:.1f} {my:.1f} {x2:.1f} {y2:.1f}"
-
-durs   = [3.1, 3.8, 2.6, 2.9, 2.5, 2.7, 3.0, 3.2, 3.3, 2.4, 2.8, 2.6]
-delays = [0, 1.3, .6, 1.8, .3, 1.1, 2.1, .9, 1.6, .4, 2.4, 1.0]
 
 # ---------------- svg assembly ----------------
 out = []
@@ -198,12 +221,17 @@ for fips, st in sorted(states.items()):
     out.append(f'      <path class="st" d="{st["d"]}"/>')
 out.append('    </g>')
 out.append('    <g class="rmap-lanes">')
-for a, b in LANES:
+for a, b in EDGES:
     out.append(f'      <path class="lane" d="{lane_d(a,b)}"/>')
 out.append('    </g>')
 out.append('    <g class="rmap-pulses">')
-for (a, b), du, de in zip(LANES, durs, delays):
-    out.append(f'      <path class="pulse" pathLength="1" d="{lane_d(a,b)}" style="animation-duration:{du}s;animation-delay:{de}s"/>')
+for i, (a, b) in enumerate(EDGES):
+    # constant travel speed: duration scales with lane length; staggered starts
+    du = max(1.6, min(4.4, dist(a, b) / 62))
+    de = (i * 0.53) % 3.6
+    hub = a in HUBS and b in HUBS
+    cls = "pulse" if hub else "pulse p2"
+    out.append(f'      <path class="{cls}" pathLength="1" d="{lane_d(a,b)}" style="animation-duration:{du:.2f}s;animation-delay:{de:.2f}s"/>')
 out.append('    </g>')
 out.append('    <g class="rmap-cities">')
 for fips, (city, x, y) in sorted(pts.items()):
