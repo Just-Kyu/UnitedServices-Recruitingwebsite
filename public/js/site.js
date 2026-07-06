@@ -10,9 +10,13 @@
     if (!loader) return;
     var img = loader.querySelector('img');
     var bar = loader.querySelector('.load-bar i');
-    if (reduce) {
+    // Full intro only once per browsing session — replaying 1.75s of loader
+    // on every internal navigation made switching pages feel laggy.
+    var seen = false;
+    try { seen = sessionStorage.getItem('usr-seen') === '1'; sessionStorage.setItem('usr-seen', '1'); } catch (_) {}
+    if (reduce || seen) {
       if (img) { img.style.opacity = 1; }
-      setTimeout(finish, 300);
+      setTimeout(finish, seen ? 120 : 300);
       return;
     }
     // animate logo halves assembling via clip + transform using a wrapper trick:
@@ -127,7 +131,9 @@
       var vh = window.innerHeight;
       for (var i = nodes.length - 1; i >= 0; i--) {
         var r = nodes[i].getBoundingClientRect();
-        if (r.top < vh * 0.85 && r.bottom > 0) { fire(nodes[i]); nodes.splice(i, 1); }
+        // 0.98: hero stats sit low in the first viewport on shorter screens —
+        // at 0.85 they never fired without a scroll and stayed at "0+".
+        if (r.top < vh * 0.98 && r.bottom > 0) { fire(nodes[i]); nodes.splice(i, 1); }
       }
       ticking = false;
     }

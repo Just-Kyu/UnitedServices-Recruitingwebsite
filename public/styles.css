@@ -209,11 +209,15 @@ body.cursor-on a, body.cursor-on button { cursor: none; }
   .nav-toggle { display: inline-flex; }
 }
 
-/* mobile menu */
-.m-menu { position: fixed; inset: 0; z-index: 790; background: rgba(8,11,18,0.96); backdrop-filter: blur(12px); display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: var(--gutter); transform: translateY(-100%); transition: transform .5s var(--ease-io); }
+/* mobile menu — above .nav-shell (800) so the navbar can't cover the open
+   menu or its close button. No backdrop-filter: blurring a full-screen fixed
+   layer is what made the menu stutter on phones; a near-opaque background
+   reads the same and composites for free. */
+.m-menu { position: fixed; inset: 0; z-index: 900; background: rgba(8,11,18,0.985); display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: var(--gutter); transform: translateY(-100%); transition: transform .38s var(--ease-io); }
 .m-menu.open { transform: none; }
-.m-menu a { font-family: var(--font-display); font-weight: 700; font-size: 30px; color: #fff; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+.m-menu > a { font-family: var(--font-display); font-weight: 700; font-size: 30px; color: #fff; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
 .m-menu .row { display: flex; gap: 12px; margin-top: 24px; }
+.m-menu .row .btn { flex: 1 1 0; justify-content: center; text-align: center; }
 .m-close { position: absolute; top: 24px; right: var(--gutter); background: none; border: 1px solid rgba(255,255,255,.2); color: #fff; border-radius: 999px; width: 44px; height: 44px; font-size: 20px; }
 
 /* ─────────── Cards ─────────── */

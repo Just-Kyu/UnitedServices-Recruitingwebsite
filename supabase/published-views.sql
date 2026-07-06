@@ -27,7 +27,7 @@ create index if not exists driver_leads_published_idx  on public.driver_leads  (
 -- =====================================================================
 drop view if exists public.published_offers;
 create view public.published_offers
-with (security_invoker = true)
+with (security_invoker = false)
 as
 select
   id,
@@ -44,7 +44,7 @@ where is_published = true;
 -- =====================================================================
 drop view if exists public.published_drivers;
 create view public.published_drivers
-with (security_invoker = true)
+with (security_invoker = false)
 as
 select
   id,
@@ -60,34 +60,15 @@ from public.driver_leads
 where is_published = true;
 
 -- =====================================================================
--- Grant SELECT on the views to anon (the views are PII-free)
+-- Grants: anon reads the PII-free views ONLY — never the base tables
 -- =====================================================================
--- We also need anon to be able to SELECT from the underlying tables for
--- the security_invoker view — but only the columns the view exposes.
--- The cleanest way: add a SELECT policy on the base tables that's gated
--- to is_published = true. Anon can technically query the base table, but
--- they'll only ever see published rows, and the views give them a
--- PII-free shape for the front-end to consume.
+-- The views run with definer semantics (security_invoker = false), so the
+-- view owner bypasses RLS and anon sees exactly the columns projected above.
+-- Do NOT add SELECT policies on the base tables for anon: that would let a
+-- direct PostgREST query (e.g. ?select=name,phone,email) read contact info.
 
-drop policy if exists "anon_select_published_company_leads" on public.company_leads;
-create policy "anon_select_published_company_leads"
-  on public.company_leads
-  for select
-  to anon
-  using (is_published = true);
+grant select on public.published_offers  to anon, authenticated;
+grant select on public.published_drivers to anon, authenticated;
 
-drop policy if exists "anon_select_published_driver_leads" on public.driver_leads;
-create policy "anon_select_published_driver_leads"
-  on public.driver_leads
-  for select
-  to anon
-  using (is_published = true);
-
-grant select on public.published_offers  to anon;
-grant select on public.published_drivers to anon;
-
--- Note on column-level safety: even though anon can technically SELECT
--- from the base tables, the front-end ONLY queries the views — and the
--- views project a safe column set. If we ever need to fully lock anon
--- out of the base tables, we can revoke their table-level SELECT and
--- recreate the views with security_definer instead.
+revoke select, update, delete on public.driver_leads  from anon;
+revoke select, update, delete on public.company_leads from anon;

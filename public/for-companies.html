@@ -147,6 +147,8 @@
       </div>
       <div class="card partner-form reveal" data-d="1" id="partner-card">
         <form id="partner-form" novalidate>
+          <!-- honeypot: hidden from humans; bots that fill it are discarded -->
+          <input id="p-website" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
           <div class="form-row">
             <div class="field"><label for="p-co">Company</label><input id="p-co" name="company" type="text" placeholder="Acme Logistics" required></div>
             <div class="field"><label for="p-name">Your name</label><input id="p-name" name="name" type="text" placeholder="Jordan Reed" required></div>
@@ -289,6 +291,8 @@
       notes: form.querySelector('#p-notes').value.trim() || null,
       user_agent: (navigator && navigator.userAgent) || null
     };
+    var hp = document.getElementById('p-website');
+    if (hp && hp.value) { showOk(); return; }   // honeypot: silently drop bots
     var sb = window.usrSupabase;
     if (!sb) {
       console.warn('Supabase not configured — company lead not persisted.');

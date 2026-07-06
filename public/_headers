@@ -8,9 +8,13 @@
 # nothing changed, and the moment a file changes the browser picks it up.
 # Bandwidth is unmetered on Cloudflare, so the revalidation round-trips are free.
 
-# Everything: revalidate every load (ETag → 304 when unchanged).
+# Everything: revalidate every load (ETag → 304 when unchanged) + security headers.
 /*
   Cache-Control: no-cache
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 # Images and the 3D model rarely change — let them sit briefly to cut
 # round-trips, but NO `immutable`, so they still self-heal within the hour.
