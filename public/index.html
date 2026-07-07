@@ -1028,11 +1028,27 @@
   </div>
 </footer>
 
-<script src="https://unpkg.com/three@0.147.0/build/three.min.js"></script>
-<script src="https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://unpkg.com/three@0.147.0/examples/js/libs/meshopt_decoder.js"></script>
 <script src="js/site.js?v=2"></script>
-<script src="js/hero3d.js?v=2"></script>
+<script>
+// Desktop gets the 3D truck; mobile gets the route map and skips ~750 KB of
+// three.js + GLB entirely. Scripts load in sequence (each depends on the last).
+(function () {
+  if (window.innerWidth < 760) return;
+  var files = [
+    'https://unpkg.com/three@0.147.0/build/three.min.js',
+    'https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js',
+    'https://unpkg.com/three@0.147.0/examples/js/libs/meshopt_decoder.js',
+    'js/hero3d.js?v=2'
+  ];
+  (function next(i) {
+    if (i >= files.length) return;
+    var s = document.createElement('script');
+    s.src = files[i];
+    s.onload = function () { next(i + 1); };
+    document.head.appendChild(s);
+  })(0);
+})();
+</script>
 <script src="js/matcher.js?v=2"></script>
 <script src="js/equip.js?v=2"></script>
 <script>

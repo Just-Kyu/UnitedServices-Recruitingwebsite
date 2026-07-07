@@ -146,6 +146,10 @@
       notes: val('notes') || null,
       user_agent: (navigator && navigator.userAgent) || null
     };
+    // Honeypot: the visually-hidden "website" field is only ever filled by
+    // bots. Show them the success screen but never store the row.
+    var hp = document.getElementById('website');
+    if (hp && hp.value) { showSuccess(ref); return; }
     var sb = window.usrSupabase;
     if (!sb) {
       // Supabase not configured (e.g. opened as a static file or keys missing).
@@ -172,7 +176,12 @@
     document.getElementById('apply-success').classList.add('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  function line(k, v) { return '<div class="s-line"><span class="k">' + k + '</span><span class="v">' + (v || '—') + '</span></div>'; }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function line(k, v) { return '<div class="s-line"><span class="k">' + esc(k) + '</span><span class="v">' + esc(v || '—') + '</span></div>'; }
 
   goTo(0);
 })();

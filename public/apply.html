@@ -78,6 +78,8 @@
 
       <div class="card apply-card">
         <form id="apply-form" novalidate>
+          <!-- honeypot: hidden from humans; bots that fill it are discarded -->
+          <input id="website" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
           <!-- STEP 1 -->
           <div class="apply-step active">
             <h2>How do we reach you?</h2>
