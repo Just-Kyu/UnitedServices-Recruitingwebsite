@@ -172,13 +172,26 @@
       return tag.indexOf('light') !== -1 || tag.indexOf('lamp') !== -1 || tag.indexOf('headlamp') !== -1;
     }
 
+    // One shared glass material for every pane. MeshPhysicalMaterial's
+    // clearcoat gives real fresnel — bright reflections at grazing angles,
+    // deep tint face-on — so the glass reads as curved glass instead of the
+    // flat black decal the old forced-black override produced.
+    var glassMat = new THREE.MeshPhysicalMaterial({
+      color: 0x10161f,
+      metalness: 0.25,
+      roughness: 0.12,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.06,
+      envMapIntensity: 1.9
+    });
+
     truck.traverse(function (o) {
       if (!o.isMesh || !o.material) return;
       o.castShadow = !isMobile;
       o.receiveShadow = !isMobile;
       var tag = nameTag(o.material, o.name);
       var mats = Array.isArray(o.material) ? o.material : [o.material];
-      mats.forEach(function (m) {
+      mats.forEach(function (m, mi) {
         m.envMapIntensity = 1.45;
         var mtag = nameTag(m, o.name);
 
@@ -200,13 +213,9 @@
             m.envMapIntensity = 0.8;
           }
         } else if (isGlassish(mtag, m)) {
-          // Dark mirror windshield (matches the reference: nearly black,
-          // only the env-map highlight reads through as a sky reflection).
-          m.transparent = false;
-          if (m.color) m.color.setHex(0x080a10);
-          if (typeof m.roughness === 'number') m.roughness = 0.04;
-          if (typeof m.metalness === 'number') m.metalness = 0.85;
-          m.envMapIntensity = 2.8;
+          // Swap the pane to the shared physical glass material.
+          if (Array.isArray(o.material)) o.material[mi] = glassMat;
+          else o.material = glassMat;
         } else if (isLightish(mtag)) {
           if (!m.emissive) m.emissive = new THREE.Color();
           m.emissive.setHex(0xfff6e0);
@@ -265,18 +274,21 @@
       look:   a.look   + (b.look   - a.look)   * e
     };
   }
+  var driveProgress = 0;
   function updateCameraProgress() {
     // Desktop only. Mobile holds a static framed shot (no scroll orbit) — a
     // sticky, scroll-driven WebGL canvas just won't composite smoothly on iOS.
-    if (!saga || isMobile || reduce) { cameraProgress = 0; return; }
+    if (!saga || isMobile || reduce) { cameraProgress = 0; driveProgress = 0; return; }
     var rect = saga.getBoundingClientRect();
     var vh = innerHeight;
     // Camera completes its orbit over the first ~2 viewport heights of scroll
-    // (one vh per scene transition); the remaining scroll holds at progress 1
-    // so scene 3 reads cleanly before the matcher section.
+    // (one vh per scene transition). The scroll after that (scene 3's hold)
+    // drives the truck out of frame so the closing copy gets a clean stage.
     var orbitable = vh * 2;
     var next = Math.max(0, Math.min(1, -rect.top / orbitable));
     if (next !== cameraProgress) { cameraProgress = next; dirty = true; }
+    var drive = Math.max(0, Math.min(1, (-rect.top - orbitable) / (vh * 0.85)));
+    if (drive !== driveProgress) { driveProgress = drive; dirty = true; }
   }
   window.addEventListener('scroll', updateCameraProgress, { passive: true });
   updateCameraProgress();
@@ -341,8 +353,17 @@
         camHeight + py,
         Math.sin(camAngle) * camRadius
       );
-      camera.lookAt(0, camLook, 0);
-      truckGroup.rotation.y = 0;
+      // Finale: after the orbit, the remaining hero scroll drives the truck
+      // straight off down the road (nose +z) while the camera pans to follow
+      // it toward the horizon. Following keeps it centered as it shrinks —
+      // with a fixed look-at it drifted to the frame top and showed its roof.
+      var de = driveProgress * driveProgress * (3 - 2 * driveProgress);
+      var tx = 1.2 * de, tz = 55 * de;   // recede fast — small truck reads as "on the horizon"
+      truckGroup.position.x = tx;
+      truckGroup.position.z = tz;
+      truckGroup.rotation.y = -0.32 * de;   // veer enough to show the flank, not the dead-rear
+      camera.position.y -= (camHeight - 1.15) * de;  // level out so we don't look down on the deck
+      camera.lookAt(tx * de, camLook + 0.5 * de, tz * de);
       // Key light orbits with the camera at a fixed -0.5 rad offset
       // (the "sun" is just to the left of camera POV). The shadow under
       // the truck rotates as you scroll instead of pointing the same way.
