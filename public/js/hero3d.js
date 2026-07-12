@@ -122,6 +122,12 @@
   var FIT_W = 0.86;                    // truck spans ~86% of the portrait width, fully visible
   var STATIC_BIAS = 0.46;              // truck sits ~centered (a hair high) in its mobile block
 
+  // Drive-off finale state
+  var fadeMats = [];                   // every truck material, for the exit fade
+  var truckTransparent = false;        // tracks the transparent flip (needs material recompile)
+  var _vRight = new THREE.Vector3();
+  var _vFwd = new THREE.Vector3();
+
   var loader = new THREE.GLTFLoader();
   // Use the Meshopt-compressed GLB (~348 KB) instead of the uncompressed
   // 2.7 MB variant. Requires THREE.MeshoptDecoder to be loaded before
@@ -172,17 +178,18 @@
       return tag.indexOf('light') !== -1 || tag.indexOf('lamp') !== -1 || tag.indexOf('headlamp') !== -1;
     }
 
-    // One shared glass material for every pane. MeshPhysicalMaterial's
-    // clearcoat gives real fresnel — bright reflections at grazing angles,
-    // deep tint face-on — so the glass reads as curved glass instead of the
-    // flat black decal the old forced-black override produced.
+    // One shared glass material for every pane. A clearcoat layer over a dark,
+    // near-non-metal base gives real fresnel — bright environment reflections
+    // at grazing angles, deep tint face-on — so the glass reads as smooth
+    // curved glass instead of the flat faceted black the old override gave.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x10161f,
-      metalness: 0.25,
-      roughness: 0.12,
+      color: 0x0e131c,
+      metalness: 0.1,
+      roughness: 0.05,
       clearcoat: 1.0,
-      clearcoatRoughness: 0.06,
-      envMapIntensity: 1.9
+      clearcoatRoughness: 0.04,
+      reflectivity: 0.85,
+      envMapIntensity: 2.6
     });
 
     truck.traverse(function (o) {
@@ -213,14 +220,27 @@
             m.envMapIntensity = 0.8;
           }
         } else if (isGlassish(mtag, m)) {
-          // Swap the pane to the shared physical glass material.
+          // Swap the pane to the shared physical glass material, and smooth its
+          // normals — the GLB windshield ships with hard per-face normals, which
+          // is what made it look like faceted black panels.
           if (Array.isArray(o.material)) o.material[mi] = glassMat;
           else o.material = glassMat;
+          if (o.geometry && o.geometry.attributes && o.geometry.attributes.position) {
+            o.geometry.computeVertexNormals();
+          }
         } else if (isLightish(mtag)) {
           if (!m.emissive) m.emissive = new THREE.Color();
           m.emissive.setHex(0xfff6e0);
           m.emissiveIntensity = 0.9;
         }
+      });
+    });
+
+    // Collect every unique material for the exit fade.
+    truck.traverse(function (o) {
+      if (!o.isMesh || !o.material) return;
+      (Array.isArray(o.material) ? o.material : [o.material]).forEach(function (m) {
+        if (fadeMats.indexOf(m) === -1) fadeMats.push(m);
       });
     });
 
@@ -293,6 +313,45 @@
   window.addEventListener('scroll', updateCameraProgress, { passive: true });
   updateCameraProgress();
 
+  // Finale: after the orbit finishes, the last stretch of hero scroll rolls the
+  // truck OUT OF FRAME to the right and fades it — so it drives off as scene 3's
+  // copy lands instead of parking on top of it. The camera keeps its scene-3
+  // frame (no follow), so the truck genuinely exits screen-right.
+  function driveOff() {
+    var p = driveProgress;
+    // ease-in: sits still, then accelerates away (a truck pulling out)
+    var e = p * p * (1.8 - 0.8 * p);
+    // Level the camera down toward eye height as the truck leaves, so the
+    // departing rig reads side-on instead of showing its bare deck from above.
+    // (The scene-3 copy is DOM-overlaid, so moving the 3D camera doesn't move it.)
+    if (e > 0) { camera.position.y = camHeight + (1.15 - camHeight) * e; camera.lookAt(0, camLook, 0); }
+    // Move along the camera's own right + forward axes so "right" is always
+    // screen-right regardless of the scene-3 camera angle. Right takes it off
+    // the right edge; forward (into the scene) makes it recede as it goes.
+    camera.updateMatrixWorld();
+    _vRight.setFromMatrixColumn(camera.matrixWorld, 0); _vRight.y = 0; _vRight.normalize();
+    camera.getWorldDirection(_vFwd); _vFwd.y = 0; _vFwd.normalize();
+    var RIGHT = 32, FWD = 11;
+    truckGroup.position.x = (_vRight.x * RIGHT + _vFwd.x * FWD) * e;
+    truckGroup.position.z = (_vRight.z * RIGHT + _vFwd.z * FWD) * e;
+    truckGroup.rotation.y = -0.34 * e;   // slight steer — keeps it mostly side-on as it pulls out
+
+    // Fade the last third so it's fully gone by the end even if a sliver is
+    // still on screen. Flip `transparent` only on the edges (needs a recompile).
+    var fade = Math.max(0, (p - 0.6) / 0.4);
+    fade = fade * fade * (3 - 2 * fade);
+    var wantT = fade > 0.001;
+    if (wantT !== truckTransparent) {
+      truckTransparent = wantT;
+      for (var i = 0; i < fadeMats.length; i++) {
+        fadeMats[i].transparent = wantT;
+        fadeMats[i].depthWrite = !wantT;
+        fadeMats[i].needsUpdate = true;
+      }
+    }
+    if (wantT) for (var j = 0; j < fadeMats.length; j++) fadeMats[j].opacity = 1 - fade;
+  }
+
   function resize() {
     isMobile = innerWidth < 760;
     camera.fov = isMobile ? 52 : 38;
@@ -353,22 +412,13 @@
         camHeight + py,
         Math.sin(camAngle) * camRadius
       );
-      // Finale: after the orbit, the remaining hero scroll drives the truck
-      // straight off down the road (nose +z) while the camera pans to follow
-      // it toward the horizon. Following keeps it centered as it shrinks —
-      // with a fixed look-at it drifted to the frame top and showed its roof.
-      var de = driveProgress * driveProgress * (3 - 2 * driveProgress);
-      var tx = 1.2 * de, tz = 55 * de;   // recede fast — small truck reads as "on the horizon"
-      truckGroup.position.x = tx;
-      truckGroup.position.z = tz;
-      truckGroup.rotation.y = -0.32 * de;   // veer enough to show the flank, not the dead-rear
-      camera.position.y -= (camHeight - 1.15) * de;  // level out so we don't look down on the deck
-      camera.lookAt(tx * de, camLook + 0.5 * de, tz * de);
+      camera.lookAt(0, camLook, 0);
       // Key light orbits with the camera at a fixed -0.5 rad offset
       // (the "sun" is just to the left of camera POV). The shadow under
       // the truck rotates as you scroll instead of pointing the same way.
       var lightAngle = camAngle - 0.5;
       key.position.set(Math.cos(lightAngle) * 11, 9, Math.sin(lightAngle) * 11);
+      driveOff();   // camera holds its scene-3 frame; the truck rolls out of it
     }
     truckGroup.position.y = -0.7 + floatBob;
 
