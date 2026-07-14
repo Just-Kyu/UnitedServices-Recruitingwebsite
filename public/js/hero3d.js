@@ -125,8 +125,8 @@
   // Drive-off finale state
   var fadeMats = [];                   // every truck material, for the exit fade
   var truckTransparent = false;        // tracks the transparent flip (needs material recompile)
-  var _vRight = new THREE.Vector3();
-  var _vFwd = new THREE.Vector3();
+  var NOSE_DIR = -1;                   // +1 / -1 : which way along its length the truck drives
+  var NOSE_ADJ = 0;                    // radians: fine-tune the heading to the true nose axis
 
   var loader = new THREE.GLTFLoader();
   // Use the Meshopt-compressed GLB (~348 KB) instead of the uncompressed
@@ -270,13 +270,14 @@
     });
   }
 
-  // Scroll-coupled camera orbit — the truck stays put while the camera
-  // travels from front-3/4 → side → rear-3/4 across the .hero-saga section.
+  // Scroll-coupled camera orbit — the truck stays put while the camera travels
+  // front-3/4 → driver 3/4 → SIDE across the .hero-saga section, ending on a
+  // clean side profile so the finale can drive the truck off screen-length.
   var saga = document.getElementById('hero-saga');
   var keyframes = [
-    { angle: Math.atan2(6, 4.5),  radius: 7.5, height: 1.6, look: 0.4 }, // front-3/4 (right-front)
-    { angle: Math.PI,             radius: 7.0, height: 1.5, look: 0.4 }, // side (driver door)
-    { angle: Math.PI * 1.35,      radius: 7.5, height: 2.0, look: 0.4 }  // rear-3/4 (left-rear, slightly elevated)
+    { angle: Math.atan2(6, 4.5),  radius: 7.5, height: 1.6,  look: 0.4 },  // front-3/4 (right-front)
+    { angle: 1.75,                radius: 7.2, height: 1.5,  look: 0.35 }, // driver 3/4
+    { angle: 2.55,                radius: 6.9, height: 1.3,  look: 0.22 }  // side profile (≈⊥ to the truck's length)
   ];
   var cameraProgress = 0;
   var dirty = true; // render-on-demand flag (mobile only renders when this is set)
@@ -319,24 +320,37 @@
   // frame (no follow), so the truck genuinely exits screen-right.
   function driveOff() {
     var p = driveProgress;
-    // ease-in: sits still, then accelerates away (a truck pulling out)
-    var e = p * p * (1.8 - 0.8 * p);
-    // Level the camera down toward eye height as the truck leaves, so the
-    // departing rig reads side-on instead of showing its bare deck from above.
-    // (The scene-3 copy is DOM-overlaid, so moving the 3D camera doesn't move it.)
-    if (e > 0) { camera.position.y = camHeight + (1.15 - camHeight) * e; camera.lookAt(0, camLook, 0); }
-    // Move along the camera's own right + forward axes so "right" is always
-    // screen-right regardless of the scene-3 camera angle. Right takes it off
-    // the right edge; forward (into the scene) makes it recede as it goes.
-    camera.updateMatrixWorld();
-    _vRight.setFromMatrixColumn(camera.matrixWorld, 0); _vRight.y = 0; _vRight.normalize();
-    camera.getWorldDirection(_vFwd); _vFwd.y = 0; _vFwd.normalize();
-    var RIGHT = 32, FWD = 11;
-    truckGroup.position.x = (_vRight.x * RIGHT + _vFwd.x * FWD) * e;
-    truckGroup.position.z = (_vRight.z * RIGHT + _vFwd.z * FWD) * e;
-    truckGroup.rotation.y = -0.34 * e;   // slight steer — keeps it mostly side-on as it pulls out
+    if (p <= 0) {
+      // Parked (top of the drive zone / scrolled back up): HARD-reset every
+      // drive-state so nothing can get stuck small/off-center or half-faded.
+      if (truckTransparent) {
+        truckTransparent = false;
+        for (var r = 0; r < fadeMats.length; r++) {
+          fadeMats[r].transparent = false; fadeMats[r].opacity = 1;
+          fadeMats[r].depthWrite = true; fadeMats[r].needsUpdate = true;
+        }
+      }
+      truckGroup.position.x = 0; truckGroup.position.z = 0; truckGroup.rotation.y = 0;
+      return;
+    }
+    // Cubic ease-in = acceleration: the truck sits, then LAUNCHES and blasts
+    // off screen — that hard pull-away is what reads as "driving", not sliding.
+    var e = p * p * p;
+    // Drive NOSE-FIRST along the truck's own length. Its nose points toward the
+    // front-3/4 azimuth; scene-3's camera sits ~perpendicular to that, so this
+    // motion carries the truck straight across frame showing its full side.
+    var na = keyframes[0].angle + NOSE_ADJ;
+    var nx = Math.cos(na), nz = Math.sin(na);
+    var SPEED = 90;
+    truckGroup.position.x = nx * SPEED * e * NOSE_DIR;
+    truckGroup.position.z = nz * SPEED * e * NOSE_DIR;
+    truckGroup.rotation.y = 0;
+    // Camera whip: snap to briefly track the launch, then let the truck outrun
+    // the gaze and blow past — sells the speed like a real drive-by.
+    var follow = Math.sin(Math.min(1, p * 1.5) * Math.PI) * 0.32;
+    camera.lookAt(nx * SPEED * e * NOSE_DIR * follow, camLook, nz * SPEED * e * NOSE_DIR * follow);
 
-    // Fade the last third so it's fully gone by the end even if a sliver is
+    // Fade the last stretch so it's fully gone by the end even if a sliver is
     // still on screen. Flip `transparent` only on the edges (needs a recompile).
     var fade = Math.max(0, (p - 0.6) / 0.4);
     fade = fade * fade * (3 - 2 * fade);
