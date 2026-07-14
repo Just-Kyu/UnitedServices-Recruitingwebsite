@@ -305,10 +305,14 @@
     // Camera completes its orbit over the first ~2 viewport heights of scroll
     // (one vh per scene transition). The scroll after that (scene 3's hold)
     // drives the truck out of frame so the closing copy gets a clean stage.
-    var orbitable = vh * 2;
+    // Saga is 300svh (pinned stage = 200svh of scroll). Orbit fills the first
+    // 1.4vh (front → side, arriving side as scene 3 lands); the truck then
+    // drives off over the last 0.6vh, exiting exactly as the stage unpins and
+    // the matcher scrolls up — no empty tail.
+    var orbitable = vh * 1.3;
     var next = Math.max(0, Math.min(1, -rect.top / orbitable));
     if (next !== cameraProgress) { cameraProgress = next; dirty = true; }
-    var drive = Math.max(0, Math.min(1, (-rect.top - orbitable) / (vh * 0.85)));
+    var drive = Math.max(0, Math.min(1, (-rect.top - orbitable) / (vh * 0.5)));
     if (drive !== driveProgress) { driveProgress = drive; dirty = true; }
   }
   window.addEventListener('scroll', updateCameraProgress, { passive: true });
@@ -333,26 +337,28 @@
       truckGroup.position.x = 0; truckGroup.position.z = 0; truckGroup.rotation.y = 0;
       return;
     }
-    // Cubic ease-in = acceleration: the truck sits, then LAUNCHES and blasts
-    // off screen — that hard pull-away is what reads as "driving", not sliding.
-    var e = p * p * p;
+    // Quadratic ease-in = constant acceleration, exactly how a truck pulls away
+    // from a stop: it starts slow and smoothly gathers speed, crossing the frame
+    // over the whole scene-3 scroll and clearing the edge right at the end. (The
+    // old cubic launch blasted it off in the first 40% and left an empty stage.)
+    var e = p * p;
     // Drive NOSE-FIRST along the truck's own length. Its nose points toward the
     // front-3/4 azimuth; scene-3's camera sits ~perpendicular to that, so this
     // motion carries the truck straight across frame showing its full side.
     var na = keyframes[0].angle + NOSE_ADJ;
     var nx = Math.cos(na), nz = Math.sin(na);
-    var SPEED = 90;
+    var SPEED = 6;   // tuned so it's still clearing the edge at the very end of the scroll
     truckGroup.position.x = nx * SPEED * e * NOSE_DIR;
     truckGroup.position.z = nz * SPEED * e * NOSE_DIR;
     truckGroup.rotation.y = 0;
-    // Camera whip: snap to briefly track the launch, then let the truck outrun
-    // the gaze and blow past — sells the speed like a real drive-by.
-    var follow = Math.sin(Math.min(1, p * 1.5) * Math.PI) * 0.32;
+    // Gentle camera lead: the gaze drifts a touch after the departing truck then
+    // eases back — adds life without yanking the frame.
+    var follow = Math.sin(Math.min(1, p * 1.25) * Math.PI) * 0.18;
     camera.lookAt(nx * SPEED * e * NOSE_DIR * follow, camLook, nz * SPEED * e * NOSE_DIR * follow);
 
-    // Fade the last stretch so it's fully gone by the end even if a sliver is
-    // still on screen. Flip `transparent` only on the edges (needs a recompile).
-    var fade = Math.max(0, (p - 0.6) / 0.4);
+    // Fade only the very last stretch, as it clears the frame edge — insurance
+    // so no sliver lingers. Flip `transparent` only on the edges (recompile).
+    var fade = Math.max(0, (p - 0.88) / 0.12);
     fade = fade * fade * (3 - 2 * fade);
     var wantT = fade > 0.001;
     if (wantT !== truckTransparent) {
