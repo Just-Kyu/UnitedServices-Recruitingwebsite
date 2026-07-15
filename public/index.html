@@ -43,6 +43,7 @@
       <a href="index.html#how">How it works</a>
     </div>
     <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm nav-admin" href="admin.html">Admin</a>
       <a class="btn btn-ghost btn-sm" href="for-companies.html#contact">Contact</a>
       <a class="btn btn-chrome btn-sm" href="apply.html" data-magnetic="0.3">Apply</a>
     </div>
@@ -59,7 +60,7 @@
   <a href="offers.html">Available offers</a>
   <a href="for-companies.html">For Companies</a>
   <a href="index.html#how">How it works</a>
-  <div class="row">
+  <div class="row"><a class="btn btn-ghost" href="admin.html">Admin</a>
     <a class="btn btn-ghost" href="for-companies.html#contact">Contact</a>
     <a class="btn btn-chrome" href="apply.html">Apply</a>
   </div>
@@ -877,7 +878,7 @@
       <h2>A few of the offers<br>on the board today.</h2>
       <p>Sample openings filtered by equipment, route, pay and experience level. New roles are added daily.</p>
     </div>
-    <div class="offers-grid">
+    <div class="offers-grid" id="home-offers-grid">
       <div class="card offer-card edge-top reveal" data-d="1">
         <div class="oc-top"><div><div class="oc-co">Cardinal Freightways</div><div class="oc-loc">Columbus, OH · OTR</div></div><div class="oc-pay">$0.62<span style="font-size:13px">/mi</span></div></div>
         <div class="oc-meta"><span>Dry Van</span><span>CDL-A</span><span>2+ yrs</span></div>
@@ -1065,6 +1066,33 @@
   }
   window.addEventListener('scroll', update, { passive: true });
   update();
+})();
+</script>
+<!-- Live offers: replace the sample cards with real admin-published offers if any exist -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js?v=4"></script>
+<script>
+(function () {
+  var sb = window.usrSupabase, grid = document.getElementById('home-offers-grid');
+  if (!sb || !grid) return;
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  var arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  sb.from('offers').select('company,location,route,equipment,pay,tags,badge')
+    .order('created_at', { ascending: false }).limit(6)
+    .then(function (res) {
+      if (res.error || !res.data || !res.data.length) return;   // keep the static sample
+      grid.innerHTML = res.data.map(function (o, i) {
+        var loc = [o.location, o.route].filter(Boolean).map(esc).join(' · ');
+        var tags = (o.tags && o.tags.length ? o.tags : [o.equipment].filter(Boolean)).slice(0, 3)
+          .map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
+        return '<div class="card offer-card edge-top reveal in" data-d="' + ((i % 3) + 1) + '">' +
+          '<div class="oc-top"><div><div class="oc-co">' + esc(o.company) + '</div><div class="oc-loc">' + loc + '</div></div>' +
+          '<div class="oc-pay">' + esc(o.pay || '') + '</div></div>' +
+          '<div class="oc-meta">' + tags + '</div>' +
+          '<div class="oc-foot"><span class="pill live"><span class="dot"></span>' + esc(o.badge || 'Hiring now') + '</span>' +
+          '<a href="apply.html">Apply' + arrow + '</a></div></div>';
+      }).join('');
+    });
 })();
 </script>
 </body>

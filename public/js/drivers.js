@@ -136,14 +136,15 @@
       return;
     }
     grid.innerHTML = list.map(function (d) {
-      var eqLabel = firstEquipment(d.equipment) || 'Open';
+      var eqLabel = d.equipment || 'Open';
       var clearTag = d._clear === 'sap'
         ? '<span class="clear">SAP-cleared</span>'
-        : '<span class="clear">Clean record</span>';
+        : '<span class="clear">' + escapeHtml(d.clearance || 'Clean record') + '</span>';
       var availPill = '<span class="pill live"><span class="dot"></span>Available</span>';
+      var name = d.handle || ('Driver #' + shortId(d.id));
       return '<div class="card driver-card edge-top">' +
         '<div class="dc-top"><div class="dc-avatar">' + driverIco + '</div>' +
-          '<div><div class="dc-id">Driver #' + escapeHtml(shortId(d.id)) + '</div>' +
+          '<div><div class="dc-id">' + escapeHtml(name) + '</div>' +
           '<div class="dc-loc">' + escapeHtml(shortLocation(d.location)) + '</div></div></div>' +
         '<div class="dc-meta">' +
           '<div class="dc-line"><span class="lab">License</span><span class="val">' + escapeHtml(d.cdl_class || '—') + '</span></div>' +
@@ -168,16 +169,16 @@
   function ready() { return window.usrSupabase; }
   function go() {
     var sb = window.usrSupabase;
-    sb.from('published_drivers')
-      .select('id, created_at, cdl_class, years, equipment, route, sap_status, location, notes')
+    sb.from('drivers')
+      .select('id, created_at, handle, cdl_class, years, exp_level, equipment, route, clearance, location')
       .order('created_at', { ascending: false })
       .limit(120)
       .then(function (res) {
-        if (res.error) { console.warn('published_drivers select failed:', res.error.message); failed(); return; }
+        if (res.error) { console.warn('drivers select failed:', res.error.message); failed(); return; }
         drivers = (res.data || []).map(function (d) {
-          d._eq    = firstEquipmentSlug(d.equipment);
-          d._exp   = expBucket(d.years);
-          d._clear = clearBucket(d.sap_status);
+          d._eq    = EQ_SLUG[d.equipment] || 'dryvan';
+          d._exp   = d.exp_level || expBucket(d.years);
+          d._clear = (String(d.clearance || '').toLowerCase().indexOf('sap') !== -1) ? 'sap' : 'clean';
           return d;
         });
         render();
