@@ -159,10 +159,17 @@
 
 /* ─────────── MATCHER ─────────── */
 /* Pull the matcher up so it slides in right as the truck drives off — closes
-   the gap left by the sticky hero stage scrolling out. z-index keeps it above
-   the now-empty stage. (Desktop only; mobile has no sticky saga.) */
+   the gap left by the sticky hero stage scrolling out. Its top edge fades in
+   (::before) so the departing truck dissolves under it instead of being sliced
+   by a hard line. (Desktop only; mobile has no sticky saga.) */
 .matcher { background: linear-gradient(180deg, #080B12, #0C1828 50%, #080B12); position: relative; z-index: 3; }
-@media (min-width: 761px) { .matcher { margin-top: -35svh; } }
+@media (min-width: 761px) {
+  .matcher { margin-top: -24svh; }
+  .matcher::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -140px; height: 140px;
+    background: linear-gradient(to bottom, transparent, #080B12); pointer-events: none;
+  }
+}
 .matcher-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
 @media (max-width: 940px) { .matcher-grid { grid-template-columns: 1fr; gap: 28px; } }
 

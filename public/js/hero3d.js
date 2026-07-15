@@ -183,13 +183,13 @@
     // at grazing angles, deep tint face-on — so the glass reads as smooth
     // curved glass instead of the flat faceted black the old override gave.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x0e131c,
-      metalness: 0.1,
-      roughness: 0.05,
+      color: 0x05060a,          // near-black like the reference glass
+      metalness: 0.2,
+      roughness: 0.045,
       clearcoat: 1.0,
-      clearcoatRoughness: 0.04,
-      reflectivity: 0.85,
-      envMapIntensity: 2.6
+      clearcoatRoughness: 0.03,
+      reflectivity: 0.8,
+      envMapIntensity: 1.35      // dialed down so it reads as deep black glass, not a bright mirror
     });
 
     truck.traverse(function (o) {

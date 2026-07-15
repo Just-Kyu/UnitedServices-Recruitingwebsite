@@ -20,15 +20,15 @@
     ['Car Hauler', 'Car Hauler'],
     ['Mixed fleet', 'Mixed fleet']
   ];
-  var COUNT = [
-    ['all', 'Any'],
-    ['1–5', '1–5'],
-    ['6–15', '6–15'],
-    ['16–50', '16–50'],
-    ['50+', '50+']
+  var ROUTE = [
+    ['all', 'Any route'],
+    ['OTR', 'OTR'],
+    ['Regional', 'Regional'],
+    ['Local', 'Local'],
+    ['Dedicated', 'Dedicated']
   ];
 
-  var state = { eq: 'all', count: 'all' };
+  var state = { eq: 'all', route: 'all' };
   var offers = [];
 
   function buildRow(label, opts, key) {
@@ -53,7 +53,7 @@
   var filtersEl = document.getElementById('filters');
   if (filtersEl) {
     filtersEl.appendChild(buildRow('Equipment', EQ, 'eq'));
-    filtersEl.appendChild(buildRow('Hiring', COUNT, 'count'));
+    filtersEl.appendChild(buildRow('Route', ROUTE, 'route'));
   }
 
   var truckIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><polyline points="14 8 18 8 22 12 22 17 14 17"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>';
@@ -61,7 +61,7 @@
 
   function match(o) {
     return (state.eq === 'all' || o.equipment === state.eq) &&
-           (state.count === 'all' || o.hire_count === state.count);
+           (state.route === 'all' || o.route === state.route);
   }
 
   function postedAgo(iso) {
@@ -93,20 +93,20 @@
       return;
     }
     grid.innerHTML = list.map(function (o) {
-      var eq = o.equipment || '—';
-      var hc = o.hire_count ? 'Hiring ' + o.hire_count : '';
-      var notes = o.notes ? escapeHtml(o.notes) : 'Reach out for lane details and pay.';
+      var loc = [o.location, o.route].filter(Boolean).map(escapeHtml).join(' · ') || postedAgo(o.created_at);
+      var tags = (o.tags && o.tags.length ? o.tags : [o.equipment].filter(Boolean))
+        .map(function (t) { return '<span>' + escapeHtml(t) + '</span>'; }).join('');
+      var pay = o.pay ? '<div class="dc-line"><span class="lab">Pay</span><span class="val" style="color:var(--steel-hi)">' + escapeHtml(o.pay) + '</span></div>' : '';
+      var eqLine = o.equipment ? '<div class="dc-line"><span class="lab">Equipment</span><span class="val">' + escapeHtml(o.equipment) + '</span></div>' : '';
+      var badge = o.badge ? '<span class="pill live"><span class="dot"></span>' + escapeHtml(o.badge) + '</span>' : '<span class="pill"><span class="dot"></span>Verified</span>';
       return '<div class="card driver-card edge-top">' +
         '<div class="dc-top"><div class="dc-avatar">' + truckIco + '</div>' +
           '<div><div class="dc-id">' + escapeHtml(o.company || 'Verified carrier') + '</div>' +
-          '<div class="dc-loc">' + postedAgo(o.created_at) + '</div></div></div>' +
-        '<div class="dc-meta">' +
-          '<div class="dc-line"><span class="lab">Equipment</span><span class="val">' + escapeHtml(eq) + '</span></div>' +
-          (hc ? '<div class="dc-line"><span class="lab">Fleet need</span><span class="val">' + escapeHtml(o.hire_count) + '</span></div>' : '') +
-        '</div>' +
-        '<div class="dc-tags"><span>' + escapeHtml(eq) + '</span></div>' +
-        '<div class="dc-notes" style="font-size:13px;line-height:1.55;color:var(--silver-txt);margin-bottom:16px;">' + notes + '</div>' +
-        '<div class="dc-foot"><span class="pill"><span class="dot"></span>Verified</span>' +
+          '<div class="dc-loc">' + loc + '</div></div></div>' +
+        '<div class="dc-meta">' + pay + eqLine + '</div>' +
+        (tags ? '<div class="dc-tags">' + tags + '</div>' : '') +
+        (o.notes ? '<div class="dc-notes" style="font-size:13px;line-height:1.55;color:var(--silver-txt);margin-bottom:16px;">' + escapeHtml(o.notes) + '</div>' : '') +
+        '<div class="dc-foot">' + badge +
           '<a href="apply.html">Apply via US' + arrowIco + '</a></div>' +
       '</div>';
     }).join('');
@@ -127,12 +127,12 @@
   function ready() { return window.usrSupabase; }
   function go() {
     var sb = window.usrSupabase;
-    sb.from('published_offers')
-      .select('id, created_at, company, equipment, hire_count, notes')
+    sb.from('offers')
+      .select('id, created_at, company, location, route, equipment, pay, tags, badge, notes')
       .order('created_at', { ascending: false })
       .limit(120)
       .then(function (res) {
-        if (res.error) { console.warn('published_offers select failed:', res.error.message); failed(); return; }
+        if (res.error) { console.warn('offers select failed:', res.error.message); failed(); return; }
         offers = res.data || [];
         render();
       });
