@@ -166,7 +166,7 @@
 @media (min-width: 761px) {
   .matcher { margin-top: -24svh; }
   .matcher::before {
-    content: ""; position: absolute; left: 0; right: 0; top: -140px; height: 140px;
+    content: ""; position: absolute; left: 0; right: 0; top: -220px; height: 220px;
     background: linear-gradient(to bottom, transparent, #080B12); pointer-events: none;
   }
 }
