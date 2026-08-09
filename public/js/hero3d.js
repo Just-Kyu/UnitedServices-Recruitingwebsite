@@ -163,6 +163,12 @@
              tag.indexOf('spoke') !== -1;
     }
     function isGlassish(tag, m) {
+      // The Meshopt build palette-bakes material names away: the whole
+      // glasshouse (windshield + door panes + quarter windows — the original
+      // "Glass" mesh) arrives as node Truck_1 with material
+      // "PaletteMaterial002", opaque, nothing called "glass" anywhere. Match it
+      // explicitly or NO pane in this build ever gets the glass treatment.
+      if (tag.indexOf('palettematerial002') !== -1) return true;
       if (tag.indexOf('glass') !== -1) return true;
       if (tag.indexOf('window') !== -1) return true;
       if (tag.indexOf('windshield') !== -1) return true;
@@ -183,13 +189,14 @@
     // at grazing angles, deep tint face-on — so the glass reads as smooth
     // curved glass instead of the flat faceted black the old override gave.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x05060a,          // near-black like the reference glass
-      metalness: 0.2,
-      roughness: 0.045,
+      color: 0x04060b,          // near-black like the reference glass
+      metalness: 0.25,
+      roughness: 0.035,
       clearcoat: 1.0,
       clearcoatRoughness: 0.03,
-      reflectivity: 0.8,
-      envMapIntensity: 1.35      // dialed down so it reads as deep black glass, not a bright mirror
+      reflectivity: 0.9,
+      envMapIntensity: 1.15,     // deep black glass with one crisp highlight, not a bright mirror
+      side: THREE.DoubleSide     // the GLB panes are doubleSided; FrontSide would open holes
     });
 
     truck.traverse(function (o) {
@@ -220,12 +227,14 @@
             m.envMapIntensity = 0.8;
           }
         } else if (isGlassish(mtag, m)) {
-          // Swap the pane to the shared physical glass material, and smooth its
-          // normals — the GLB windshield ships with hard per-face normals, which
-          // is what made it look like faceted black panels.
+          // Swap the pane to the shared physical glass material. Keep the GLB's
+          // own smooth vertex normals — recomputing them from the
+          // meshopt-simplified triangles (long, skinny) makes the reflections
+          // wobble into angular streaks across the windshield. Only derive
+          // normals if the file genuinely shipped without them.
           if (Array.isArray(o.material)) o.material[mi] = glassMat;
           else o.material = glassMat;
-          if (o.geometry && o.geometry.attributes && o.geometry.attributes.position) {
+          if (o.geometry && o.geometry.attributes && !o.geometry.attributes.normal) {
             o.geometry.computeVertexNormals();
           }
         } else if (isLightish(mtag)) {
@@ -302,17 +311,17 @@
     if (!saga || isMobile || reduce) { cameraProgress = 0; driveProgress = 0; return; }
     var rect = saga.getBoundingClientRect();
     var vh = innerHeight;
-    // Camera completes its orbit over the first ~2 viewport heights of scroll
-    // (one vh per scene transition). The scroll after that (scene 3's hold)
-    // drives the truck out of frame so the closing copy gets a clean stage.
-    // Saga is 300svh (pinned stage = 200svh of scroll). Orbit fills the first
-    // 1.4vh (front → side, arriving side as scene 3 lands); the truck then
-    // drives off over the last 0.6vh, exiting exactly as the stage unpins and
-    // the matcher scrolls up — no empty tail.
-    var orbitable = vh * 1.3;
+    // Timing (saga = 280svh, so the stage unpins at -rect.top = 1.8vh; the
+    // matcher is pulled up -24svh, so its SOLID top edge starts rising over
+    // the stage at -rect.top = 1.56vh). The orbit fills the first 1.12vh
+    // (front → side, arriving as scene 3 lands); the truck then drives off
+    // over 0.42vh and is FULLY faded by 1.54vh — just before the matcher's
+    // edge reaches it. That ordering is what prevents the ugly horizontal
+    // slice across the truck during the hand-off.
+    var orbitable = vh * 1.12;
     var next = Math.max(0, Math.min(1, -rect.top / orbitable));
     if (next !== cameraProgress) { cameraProgress = next; dirty = true; }
-    var drive = Math.max(0, Math.min(1, (-rect.top - orbitable) / (vh * 0.5)));
+    var drive = Math.max(0, Math.min(1, (-rect.top - orbitable) / (vh * 0.42)));
     if (drive !== driveProgress) { driveProgress = drive; dirty = true; }
   }
   window.addEventListener('scroll', updateCameraProgress, { passive: true });
@@ -347,7 +356,7 @@
     // motion carries the truck straight across frame showing its full side.
     var na = keyframes[0].angle + NOSE_ADJ;
     var nx = Math.cos(na), nz = Math.sin(na);
-    var SPEED = 6;   // tuned so it's still clearing the edge at the very end of the scroll
+    var SPEED = 7;   // tuned so it's still clearing the edge at the very end of the scroll
     truckGroup.position.x = nx * SPEED * e * NOSE_DIR;
     truckGroup.position.z = nz * SPEED * e * NOSE_DIR;
     truckGroup.rotation.y = 0;
@@ -356,9 +365,11 @@
     var follow = Math.sin(Math.min(1, p * 1.25) * Math.PI) * 0.18;
     camera.lookAt(nx * SPEED * e * NOSE_DIR * follow, camLook, nz * SPEED * e * NOSE_DIR * follow);
 
-    // Fade only the very last stretch, as it clears the frame edge — insurance
-    // so no sliver lingers. Flip `transparent` only on the edges (recompile).
-    var fade = Math.max(0, (p - 0.88) / 0.12);
+    // Dissolve over the last stretch as it clears the frame edge, finishing at
+    // p=1 — i.e. BEFORE the matcher section rises over the stage (see the
+    // timing note in updateCameraProgress). Flip `transparent` only on the
+    // edges (it forces a material recompile).
+    var fade = Math.max(0, (p - 0.72) / 0.28);
     fade = fade * fade * (3 - 2 * fade);
     var wantT = fade > 0.001;
     if (wantT !== truckTransparent) {
