@@ -186,18 +186,18 @@
       return tag.indexOf('light') !== -1 || tag.indexOf('lamp') !== -1 || tag.indexOf('headlamp') !== -1;
     }
 
-    // One shared glass material for every pane. A clearcoat layer over a dark,
-    // near-non-metal base gives real fresnel — bright environment reflections
-    // at grazing angles, deep tint face-on — so the glass reads as smooth
-    // curved glass instead of the flat faceted black the old override gave.
+    // One shared glass material for every pane: SOLID dark charcoal, per the
+    // reference. No clearcoat and near-zero env pickup — and, critically,
+    // specularIntensity suppressed: the key light is a strong directional
+    // that orbits with the camera, and its specular lobe alone was enough to
+    // wash a bright smear across the pane even with the env map fully off.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x03050a,          // near-black like the reference glass
-      metalness: 0.0,            // dielectric: env reflections only via fresnel, so the pane
-      roughness: 0.05,           // stays DEEP BLACK face-on instead of a bright milky smear
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
-      reflectivity: 0.9,
-      envMapIntensity: 0.4,      // just enough sheen that it reads as glass, not a hole
+      color: 0x06080c,
+      metalness: 0.0,
+      roughness: 0.55,
+      clearcoat: 0.0,
+      specularIntensity: 0.18,   // just enough sheen to read as tinted glass, not paint
+      envMapIntensity: 0.06,
       side: THREE.DoubleSide     // the GLB panes are doubleSided; FrontSide would open holes
     });
 
