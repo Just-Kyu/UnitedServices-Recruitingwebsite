@@ -1034,12 +1034,12 @@
 // Desktop gets the 3D truck; mobile gets the route map and skips ~750 KB of
 // three.js + GLB entirely. Scripts load in sequence (each depends on the last).
 (function () {
-  if (window.innerWidth < 760) return;
+  if (window.innerWidth < 761) return; // match the CSS breakpoint: ≤760px is the mobile route map
   var files = [
     'https://unpkg.com/three@0.147.0/build/three.min.js',
     'https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js',
     'https://unpkg.com/three@0.147.0/examples/js/libs/meshopt_decoder.js',
-    'js/hero3d.js?v=5'
+    'js/hero3d.js?v=6'
   ];
   (function next(i) {
     if (i >= files.length) return;
