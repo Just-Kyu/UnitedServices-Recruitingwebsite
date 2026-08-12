@@ -20,7 +20,10 @@
   if (!mount) return;
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var isMobile = innerWidth < 760;
+  // MUST match the CSS breakpoint pair (max-width:760 hides #truck-stage,
+  // min-width:761 is desktop) — `< 760` left exactly-760px windows running the
+  // full WebGL loop into a display:none canvas with a 0-width (NaN) aspect.
+  var isMobile = innerWidth < 761;
 
   // Mobile gets the pure-CSS animated route map instead of the 3D truck — so
   // don't spin up WebGL, load the GLB, or run a render loop here at all.
@@ -123,8 +126,7 @@
   var STATIC_BIAS = 0.46;              // truck sits ~centered (a hair high) in its mobile block
 
   // Drive-off finale state
-  var fadeMats = [];                   // every truck material, for the exit fade
-  var truckTransparent = false;        // tracks the transparent flip (needs material recompile)
+  var lastCanvasFade = 0;              // last dissolve written to the canvas (0 = fully visible)
   var NOSE_DIR = -1;                   // +1 / -1 : which way along its length the truck drives
   var NOSE_ADJ = 0;                    // radians: fine-tune the heading to the true nose axis
 
@@ -189,13 +191,13 @@
     // at grazing angles, deep tint face-on — so the glass reads as smooth
     // curved glass instead of the flat faceted black the old override gave.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x04060b,          // near-black like the reference glass
-      metalness: 0.25,
-      roughness: 0.035,
+      color: 0x03050a,          // near-black like the reference glass
+      metalness: 0.0,            // dielectric: env reflections only via fresnel, so the pane
+      roughness: 0.05,           // stays DEEP BLACK face-on instead of a bright milky smear
       clearcoat: 1.0,
-      clearcoatRoughness: 0.03,
+      clearcoatRoughness: 0.05,
       reflectivity: 0.9,
-      envMapIntensity: 1.15,     // deep black glass with one crisp highlight, not a bright mirror
+      envMapIntensity: 0.4,      // just enough sheen that it reads as glass, not a hole
       side: THREE.DoubleSide     // the GLB panes are doubleSided; FrontSide would open holes
     });
 
@@ -245,14 +247,6 @@
       });
     });
 
-    // Collect every unique material for the exit fade.
-    truck.traverse(function (o) {
-      if (!o.isMesh || !o.material) return;
-      (Array.isArray(o.material) ? o.material : [o.material]).forEach(function (m) {
-        if (fadeMats.indexOf(m) === -1) fadeMats.push(m);
-      });
-    });
-
     // Measure the truck BEFORE parenting it, so the box is in the truck's own
     // local space — independent of truckGroup's animated y-bob. (If we measured
     // after add(), the running y-bob would get baked in and then double-counted
@@ -290,12 +284,13 @@
   ];
   var cameraProgress = 0;
   var dirty = true; // render-on-demand flag (mobile only renders when this is set)
+  function smoothstep(t) { return t * t * (3 - 2 * t); }
   function sampleCamera(p) {
     p = Math.max(0, Math.min(1, p));
     var seg, t;
     if (p < 0.5) { seg = 0; t = p / 0.5; }
     else         { seg = 1; t = (p - 0.5) / 0.5; }
-    var e = t * t * (3 - 2 * t); // smoothstep
+    var e = smoothstep(t);
     var a = keyframes[seg], b = keyframes[seg + 1];
     return {
       angle:  a.angle  + (b.angle  - a.angle)  * e,
@@ -308,7 +303,7 @@
   function updateCameraProgress() {
     // Desktop only. Mobile holds a static framed shot (no scroll orbit) — a
     // sticky, scroll-driven WebGL canvas just won't composite smoothly on iOS.
-    if (!saga || isMobile || reduce) { cameraProgress = 0; driveProgress = 0; return; }
+    if (!saga || isMobile) { cameraProgress = 0; driveProgress = 0; return; }
     var rect = saga.getBoundingClientRect();
     var vh = innerHeight;
     // Timing (saga = 280svh, so the stage unpins at -rect.top = 1.8vh; the
@@ -319,7 +314,11 @@
     // edge reaches it. That ordering is what prevents the ugly horizontal
     // slice across the truck during the hand-off.
     var orbitable = vh * 1.12;
-    var next = Math.max(0, Math.min(1, -rect.top / orbitable));
+    // Reduced motion holds the static opening shot (no orbit, no drive-off
+    // motion) but KEEPS the dissolve schedule below — otherwise the matcher
+    // would rise over a parked, fully-opaque truck and slice it, the exact
+    // artifact the dissolve exists to prevent.
+    var next = reduce ? 0 : Math.max(0, Math.min(1, -rect.top / orbitable));
     if (next !== cameraProgress) { cameraProgress = next; dirty = true; }
     var drive = Math.max(0, Math.min(1, (-rect.top - orbitable) / (vh * 0.42)));
     if (drive !== driveProgress) { driveProgress = drive; dirty = true; }
@@ -331,18 +330,26 @@
   // truck OUT OF FRAME to the right and fades it — so it drives off as scene 3's
   // copy lands instead of parking on top of it. The camera keeps its scene-3
   // frame (no follow), so the truck genuinely exits screen-right.
+  // Dissolve the canvas over the drive's last stretch (p 0.72 → 1), finishing
+  // at p=1 — i.e. BEFORE the matcher section rises over the stage (see the
+  // timing note in updateCameraProgress). Fade the CANVAS, not the materials:
+  // per-material transparency made the doubleSided glass bleed through the
+  // half-faded body as a gray wedge, and left the ground shadow at full
+  // strength after the truck vanished (shadow maps ignore material opacity).
+  // CSS opacity dissolves truck + glass + shadow as one image. Runs on every
+  // desktop path — including reduced-motion, where it's the only exit effect.
+  function updateCanvasDissolve() {
+    var fade = smoothstep(Math.max(0, Math.min(1, (driveProgress - 0.72) / 0.28)));
+    if (fade !== lastCanvasFade) applyCanvasFade(fade);
+  }
+
   function driveOff() {
+    updateCanvasDissolve();
     var p = driveProgress;
     if (p <= 0) {
-      // Parked (top of the drive zone / scrolled back up): HARD-reset every
-      // drive-state so nothing can get stuck small/off-center or half-faded.
-      if (truckTransparent) {
-        truckTransparent = false;
-        for (var r = 0; r < fadeMats.length; r++) {
-          fadeMats[r].transparent = false; fadeMats[r].opacity = 1;
-          fadeMats[r].depthWrite = true; fadeMats[r].needsUpdate = true;
-        }
-      }
+      // Parked (top of the drive zone / scrolled back up): HARD-reset the
+      // drive pose so nothing can get stuck small/off-center. (The dissolve
+      // above already restored full opacity — fade is 0 here.)
       truckGroup.position.x = 0; truckGroup.position.z = 0; truckGroup.rotation.y = 0;
       return;
     }
@@ -365,26 +372,10 @@
     var follow = Math.sin(Math.min(1, p * 1.25) * Math.PI) * 0.18;
     camera.lookAt(nx * SPEED * e * NOSE_DIR * follow, camLook, nz * SPEED * e * NOSE_DIR * follow);
 
-    // Dissolve over the last stretch as it clears the frame edge, finishing at
-    // p=1 — i.e. BEFORE the matcher section rises over the stage (see the
-    // timing note in updateCameraProgress). Flip `transparent` only on the
-    // edges (it forces a material recompile).
-    var fade = Math.max(0, (p - 0.72) / 0.28);
-    fade = fade * fade * (3 - 2 * fade);
-    var wantT = fade > 0.001;
-    if (wantT !== truckTransparent) {
-      truckTransparent = wantT;
-      for (var i = 0; i < fadeMats.length; i++) {
-        fadeMats[i].transparent = wantT;
-        fadeMats[i].depthWrite = !wantT;
-        fadeMats[i].needsUpdate = true;
-      }
-    }
-    if (wantT) for (var j = 0; j < fadeMats.length; j++) fadeMats[j].opacity = 1 - fade;
   }
 
   function resize() {
-    isMobile = innerWidth < 760;
+    isMobile = innerWidth < 761;   // keep in sync with the CSS 760/761 breakpoint pair
     camera.fov = isMobile ? 52 : 38;
     camera.aspect = mount.clientWidth / mount.clientHeight;
     camera.updateProjectionMatrix();
@@ -429,6 +420,10 @@
       }
       truckGroup.rotation.y = 0;
       key.position.set(Math.cos(sAngle - 0.5) * 11, 9, Math.sin(sAngle - 0.5) * 11);
+      // Reduced-motion desktop still dissolves before the matcher hand-off;
+      // and if a resize flipped us to mobile mid-fade, driveProgress is 0 now
+      // so this same call restores full opacity instead of leaving it stale.
+      updateCanvasDissolve();
     } else {
       var target = sampleCamera(cameraProgress);
       var k = Math.min(1, delta * 6);
@@ -463,10 +458,28 @@
     requestAnimationFrame(tick);
   }
 
-  // Fade in once loaded (loader event from site.js)
+  // Single owner of the canvas' inline opacity. Pre-reveal, dissolve state is
+  // only RECORDED (lastCanvasFade) and the canvas stays hidden — so a page
+  // restored deep in the saga can't unhide an unloaded stage or kill the
+  // reveal's ease. Post-reveal, writes land directly; the first one drops the
+  // reveal transition since scroll-driven opacity must track instantly.
+  var revealed = false;
+  function applyCanvasFade(fade) {
+    lastCanvasFade = fade;
+    if (!revealed) return;
+    renderer.domElement.style.transition = 'none';
+    renderer.domElement.style.opacity = 1 - fade;
+  }
+
+  // Fade in once loaded (loader event from site.js). Reveals to
+  // 1 - lastCanvasFade, not a blind 1, so the 2s fallback can't flash a
+  // dissolved truck back over the matcher section.
   renderer.domElement.style.opacity = 0;
   renderer.domElement.style.transition = 'opacity 1.2s ease';
-  function reveal() { renderer.domElement.style.opacity = 1; }
+  function reveal() {
+    revealed = true;
+    renderer.domElement.style.opacity = 1 - lastCanvasFade;
+  }
   window.addEventListener('loader:done', reveal);
   setTimeout(reveal, 2000);
 
