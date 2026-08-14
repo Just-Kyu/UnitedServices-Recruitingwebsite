@@ -360,6 +360,81 @@ input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border-radius
   .hdr__brand b { font-size: 14px; }
 }
 
+/* ─────────────── split-flap board (For Carriers hero) ─────────────── */
+.flapwrap {
+  background: var(--ink); color: var(--paper);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: 22px; padding: clamp(32px, 4vw, 56px); min-height: 44svh; position: relative;
+}
+.flap {
+  display: flex; gap: clamp(3px, 0.5vw, 6px); cursor: pointer;
+  max-width: 100%; overflow: hidden; padding: 4px;
+}
+.flap__cell {
+  position: relative;
+  width: clamp(26px, 3.4vw, 52px); height: clamp(40px, 5vw, 76px);
+  display: grid; place-items: center;
+  background: #0B0B0B; border: 1px solid var(--rule-ink);
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(20px, 2.6vw, 40px); line-height: 1; color: var(--paper);
+  backface-visibility: hidden;
+}
+/* the horizontal split every real Solari cell has */
+.flap__cell::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+  background: rgba(0, 0, 0, 0.85);
+}
+.flap__cell.is-flipping { animation: flapflip 0.07s var(--ease); }
+@keyframes flapflip {
+  0% { transform: scaleY(1); }
+  50% { transform: scaleY(0.08); }
+  100% { transform: scaleY(1); }
+}
+.flap__label {
+  font-family: var(--font-mono); font-size: var(--fs-mono-sm);
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--dust);
+}
+@media (prefers-reduced-motion: reduce) { .flap__cell.is-flipping { animation: none; } }
+
+/* ─────────────── driver pool cards (For Carriers) ─────────────── */
+.pool {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(18px, 2.2vw, 30px); margin-top: clamp(28px, 3.4vw, 44px);
+}
+.dcard { border: 1px solid var(--ink); padding: clamp(22px, 2.4vw, 32px); display: flex; flex-direction: column; }
+.dcard__top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 16px; border-bottom: 1px solid var(--ink); margin-bottom: 6px; }
+.dcard__top h3 { font-size: 18px; }
+.dcard__loc { font-family: var(--font-mono); font-size: var(--fs-mono-sm); letter-spacing: 0.1em; color: var(--ash); white-space: nowrap; }
+.dcard__row { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--rule); }
+.dcard__row .k { font-family: var(--font-mono); font-size: var(--fs-mono-sm); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ash); }
+.dcard__row .v { font-family: var(--font-mono); font-size: 14px; text-align: right; }
+.dcard .btn { margin-top: auto; }
+
+/* ─────────────── request form (For Carriers, on ink) ─────────────── */
+.reqform { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; margin-top: clamp(26px, 3vw, 40px); }
+.reqform .field { display: flex; flex-direction: column; gap: 8px; }
+.reqform .field--full { grid-column: 1 / -1; }
+.reqform label {
+  font-family: var(--font-mono); font-size: var(--fs-mono-sm);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--dust);
+}
+.reqform input, .reqform select, .reqform textarea {
+  min-height: var(--tap); padding: 0 16px;
+  background: transparent; border: 1px solid var(--paper); color: var(--paper);
+  font: inherit; font-family: var(--font-mono); font-size: 15px; border-radius: 0;
+  width: 100%;
+}
+.reqform textarea { padding: 14px 16px; min-height: 120px; resize: vertical; }
+.reqform select { appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%; background-size: 6px 6px; background-repeat: no-repeat; }
+.reqform select option { color: var(--ink); background: var(--paper); }
+.reqform input::placeholder, .reqform textarea::placeholder { color: var(--dust); opacity: 1; }
+.reqform .is-bad { border-width: 3px; }
+.form-status { min-height: 24px; margin-top: 14px; font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em; color: var(--dust); }
+.form-ok { border: 1px solid var(--paper); padding: clamp(28px, 3.4vw, 48px); margin-top: clamp(26px, 3vw, 40px); }
+.form-ok h3 { font-size: clamp(22px, 2.6vw, 34px); }
+.form-ok p { color: var(--dust); margin-top: 12px; max-width: 52ch; }
+@media (max-width: 720px) { .reqform { grid-template-columns: 1fr; } }
+
 /* ─────────────────── scroll reveal (progressive) ─────────────────── */
 .rv { opacity: 0; transform: translateY(18px); transition: opacity var(--t-med) var(--ease), transform var(--t-med) var(--ease); }
 .rv.in { opacity: 1; transform: none; }
