@@ -85,86 +85,59 @@
   color: var(--paper); font-size: 24px; cursor: pointer;
 }
 
-/* ─────────────────────────── hero stage ─────────────────────────── */
-/* The truck is the mark. It gets the centre of the screen at full height and
-   every piece of copy is small and pinned to a corner around it. */
-.stage {
-  position: relative;
-  height: calc(100svh - 68px);
-  min-height: 560px;
-  background: var(--paper);
-  border-bottom: 1px solid var(--rule);
-  overflow: hidden;
+/* ─────────────────────────── hero ─────────────────────────── */
+.hero {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--rule); background: var(--paper);
+  min-height: calc(100svh - 68px);
 }
-.stage__tl, .stage__bl, .stage__br {
-  position: absolute; z-index: 3; pointer-events: none;
+.hero__copy {
+  padding: clamp(36px, 5vw, 88px) var(--pad-x);
+  display: flex; flex-direction: column; justify-content: center;
 }
-.stage__tl > *, .stage__bl > *, .stage__br > * { pointer-events: auto; }
+.hero h1 { margin: 14px 0 0; }
+.hero__lede { margin-top: clamp(20px, 2.4vw, 32px); color: var(--ash); max-width: 42ch; }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: clamp(26px, 3vw, 40px); }
+.hero__note {
+  font-family: var(--font-mono); font-size: var(--fs-mono-sm); letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ash); margin-top: 22px;
+}
+.hero__stats {
+  display: flex; flex-wrap: wrap; gap: clamp(26px, 4vw, 64px);
+  margin-top: clamp(28px, 3.4vw, 46px); padding-top: 26px; border-top: 1px solid var(--ink);
+}
+.hero__stat b { display: block; font-size: clamp(30px, 3.2vw, 46px); font-weight: 900; letter-spacing: -0.04em; line-height: 1; }
+.hero__stat span {
+  display: block; margin-top: 8px; font-family: var(--font-mono);
+  font-size: var(--fs-mono-sm); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ash);
+}
 
-.stage__tl { top: clamp(22px, 3.4vw, 46px); left: var(--pad-x); max-width: min(46ch, 42vw); }
-.stage__tl .eyebrow { margin-bottom: 10px; }
-.stage h1 {
-  font-size: clamp(22px, 2.5vw, 40px);
-  line-height: 1.02; letter-spacing: -0.03em;
+/* media panel — black field, truck lives here */
+.hero__media {
+  position: relative; background: var(--ink); overflow: hidden;
+  min-height: 44svh;
 }
-.stage__cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: clamp(16px, 1.8vw, 24px); }
-.btn--sm { min-height: 46px; padding: 0 20px; font-size: 12.5px; }
-
-.stage__bl {
-  bottom: clamp(20px, 2.6vw, 34px); left: var(--pad-x);
-  display: flex; flex-wrap: wrap; gap: clamp(14px, 2vw, 32px);
-  font-family: var(--font-mono); font-size: var(--fs-mono-sm);
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ash);
+#truck-stage { position: absolute; inset: 0; }
+#truck-stage canvas { width: 100% !important; height: 100% !important; display: block; }
+/* Static fallback silhouette shown until (or instead of) WebGL. */
+.hero__fallback {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: 8%; color: var(--paper);
 }
-.stage__bl b {
-  font-family: var(--font-display); font-weight: 900; font-size: 17px;
-  letter-spacing: -0.02em; color: var(--ink); margin-right: 5px;
+.hero__fallback svg { width: 100%; height: auto; opacity: 0.9; }
+.hero__media[data-webgl="on"] .hero__fallback { display: none; }
+.hero__hint {
+  position: absolute; left: 0; right: 0; bottom: 18px; text-align: center;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--dust); pointer-events: none;
+  opacity: 0; transition: opacity var(--t-med) var(--ease);
 }
-.stage__br {
-  bottom: clamp(20px, 2.6vw, 34px); right: var(--pad-x);
-  display: flex; flex-direction: column; align-items: flex-end; gap: 7px;
-  text-align: right;
-  font-family: var(--font-mono); font-size: var(--fs-mono-sm);
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--ash);
-}
-.stage__hint { opacity: 0; transition: opacity var(--t-med) var(--ease); }
-.stage[data-webgl="on"] .stage__hint { opacity: 1; }
-.stage[data-touched="true"] .stage__hint { opacity: 0; }
-
-/* the mark itself */
-.stage__truck {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  height: min(88%, 140vw);
-  aspect-ratio: 908 / 1264;
-  z-index: 1;
-}
-.stage__truck img {
-  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
-  object-fit: contain;
-}
-/* The liquid blob roams the WHOLE hero, not just the truck's box — so the
-   canvas covers the stage and the shader maps the image into it. */
-.stage > #hero-canvas {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  display: block; z-index: 2; pointer-events: none;
-}
+.hero__media[data-webgl="on"] .hero__hint { opacity: 0.85; }
+.hero__media[data-touched="true"] .hero__hint { opacity: 0; }
 
 @media (max-width: 900px) {
-  .stage { height: auto; min-height: 0; padding: clamp(20px, 5vw, 32px) 0 clamp(18px, 4vw, 28px); }
-  /* `position: static` would make the z-index above inert and let the opaque
-     canvas paint straight over the copy — keep them positioned, but clear the
-     corner offsets or `left`/`right` would now nudge them out of the column. */
-  .stage__tl, .stage__bl, .stage__br {
-    position: relative; z-index: 3; max-width: none; inset: auto;
-  }
-  .stage__tl { padding: 0 var(--pad-x); }
-  .stage h1 { font-size: clamp(28px, 8vw, 40px); }
-  .stage__truck {
-    position: relative; left: auto; top: auto; transform: none;
-    height: auto; width: min(88vw, 420px); margin: clamp(18px, 5vw, 34px) auto;
-  }
-  .stage__bl, .stage__br { padding: 0 var(--pad-x); margin-top: 14px; }
-  .stage__br { align-items: flex-start; text-align: left; }
+  .hero { grid-template-columns: 1fr; min-height: 0; }
+  .hero__media { order: -1; min-height: 42svh; }
 }
 
 /* ─────────────────── equipment marquee (trailers) ─────────────────── */

@@ -1,22 +1,20 @@
 /* Hero reveal — raw WebGL1, no library.
  *
- * A liquid-metal blob follows the pointer across the truck mark. Where it
- * crosses white paper it reads as solid ink; where it crosses the black truck
- * it inverts to bright chrome — so the same blob is black on white and white
- * on black, exactly like the reference. On a strictly two-colour site the
- * "reveal" layer is just the inverse of the cover, so one image does the work
- * of two and the layers can never fall out of register.
+ * The brief called for two photographic layers (dark truck on white, white
+ * truck on black) cross-faded through a gooey cursor mask. We ship ONE image
+ * and derive the second: on a strictly black-and-white site the reveal layer
+ * is just the inverse of the cover, so `mix(c, 1.0 - c, mask)` gives the same
+ * effect with half the bytes and no risk of the two layers drifting out of
+ * register — the failure mode the brief warns about in its asset note.
  *
- * Pass 1 — trail. Ping-ponged FBOs at a fixed 320x320. The previous frame is
+ * Pass 1 — trail. Ping-ponged FBOs at a fixed 320×320. The previous frame is
  * multiplied by DECAY and a capsule brush is stamped along the segment from
  * the last pointer position to the current one, so fast movement leaves no
- * dotted gaps. The brush radius is modulated by noise so the edge is organic
- * rather than a perfect sausage.
+ * dotted gaps.
  *
- * Pass 2 — composite. The mask is domain-warped by value noise, then a fake
- * surface normal is derived from its gradient and lit with a banded greyscale
- * environment. That normal is what sells it as liquid metal instead of a flat
- * cut-out: highlights bend around the blob's curvature and pool at the rim.
+ * Pass 2 — composite. Value-noise domain warp on the mask lookup for an
+ * organic edge, smoothstep threshold for the gooey falloff, a thin inverted
+ * rim at the boundary for surface tension, then the mix.
  *
  * D13: every framebuffer is cleared at creation AND on every resize. An
  * uninitialised texture can read back filled, which saturates the mask and
@@ -25,8 +23,8 @@
  */
 
 const TRAIL = 320;
-const DECAY = 0.986;   // long liquid tail
-const BRUSH = 0.082;   // capsule radius in trail-UV space
+const DECAY = 0.955;
+const BRUSH = 0.085;   // capsule radius in trail-UV space
 
 const VERT = `
 attribute vec2 aPos;
@@ -44,16 +42,7 @@ uniform vec2 uB;
 uniform float uDecay;
 uniform float uRadius;
 uniform float uActive;
-uniform float uTime;
 varying vec2 vUv;
-
-float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-float noise(vec2 p) {
-  vec2 i = floor(p), f = fract(p);
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
-             mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
-}
 float segDist(vec2 p, vec2 a, vec2 b) {
   vec2 pa = p - a, ba = b - a;
   float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-6), 0.0, 1.0);
@@ -61,11 +50,8 @@ float segDist(vec2 p, vec2 a, vec2 b) {
 }
 void main() {
   float prev = texture2D(uPrev, vUv).r * uDecay;
-  // Organic radius: the blob bulges and pinches instead of being a sausage.
-  float wob = noise(vUv * 5.0 + uTime * 0.25) * 0.45 + 0.78;
   float d = segDist(vUv, uA, uB);
-  float r = uRadius * wob;
-  float brush = uActive * (1.0 - smoothstep(r * 0.25, r, d));
+  float brush = uActive * (1.0 - smoothstep(uRadius * 0.35, uRadius, d));
   float v = clamp(max(prev, brush), 0.0, 1.0);
   gl_FragColor = vec4(v, v, v, 1.0);
 }`;
@@ -79,7 +65,6 @@ uniform vec2 uOffset;
 uniform float uTime;
 uniform float uDebug;
 varying vec2 vUv;
-
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
   vec2 i = floor(p), f = fract(p);
@@ -87,51 +72,24 @@ float noise(vec2 p) {
   return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
              mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
 }
-float fbm(vec2 p) { return noise(p) * 0.62 + noise(p * 2.03 + 5.1) * 0.38; }
-
-float maskAt(vec2 uv) {
-  vec2 warp = vec2(fbm(uv * 5.0 + uTime * 0.05),
-                   fbm(uv * 5.0 + 17.3 - uTime * 0.04)) - 0.5;
-  return texture2D(uTrail, clamp(uv + warp * 0.045, 0.0, 1.0)).r;
-}
-
 void main() {
-  float raw = maskAt(vUv);
+  vec2 warp = vec2(noise(vUv * 6.0 + uTime * 0.05),
+                   noise(vUv * 6.0 + 17.3 - uTime * 0.04)) - 0.5;
+  float raw = texture2D(uTrail, clamp(vUv + warp * 0.035, 0.0, 1.0)).r;
+
   if (uDebug > 0.5) { gl_FragColor = vec4(vec3(raw), 1.0); return; }
 
-  float mask = smoothstep(0.33, 0.42, raw);
-
-  // Fake surface normal from the mask gradient — this is what makes the blob
-  // read as a liquid volume rather than a flat stencil.
-  float e = 0.004;
-  float gx = maskAt(vUv + vec2(e, 0.0)) - maskAt(vUv - vec2(e, 0.0));
-  float gy = maskAt(vUv + vec2(0.0, e)) - maskAt(vUv - vec2(0.0, e));
-  vec3 n = normalize(vec3(-gx * 7.0, -gy * 7.0, 0.55));
-
-  // Banded greyscale environment: chrome reflections, no colour on this site.
-  float bands = 0.5 + 0.5 * sin(n.x * 16.0 + n.y * 11.0 + uTime * 0.6);
-  float sheen = 0.5 + 0.5 * n.y;
-  float chrome = clamp(bands * 0.55 + sheen * 0.55, 0.0, 1.0);
-  chrome = smoothstep(0.12, 0.88, chrome);
+  float mask = smoothstep(0.26, 0.50, raw);
+  float rim = smoothstep(0.26, 0.34, raw) * (1.0 - smoothstep(0.40, 0.52, raw));
 
   // object-fit: contain, matching the <img> underneath
   vec2 iuv = (vUv - uOffset) / uScale;
-  vec3 base = vec3(1.0);   // outside the image is paper, not void
+  vec3 base = vec3(0.0);
   if (iuv.x >= 0.0 && iuv.x <= 1.0 && iuv.y >= 0.0 && iuv.y <= 1.0) {
     base = texture2D(uImage, vec2(iuv.x, 1.0 - iuv.y)).rgb;
   }
-
-  vec3 inv = vec3(1.0) - base;
-  vec3 col = mix(base, inv, mask);
-
-  // Chrome belongs to the MARK, not the paper. Over white the blob stays solid
-  // ink; only where it crosses the black truck does it turn to liquid metal.
-  // Without this the trail reads as a silver snake floating over the page.
-  float onMark = 1.0 - dot(base, vec3(0.2126, 0.7152, 0.0722));
-  float curve = clamp(length(vec2(gx, gy)) * 12.0, 0.0, 1.0);
-  float metal = mask * onMark * mix(0.25, 1.0, curve);
-  col = mix(col, vec3(chrome), metal);
-
+  vec3 col = mix(base, vec3(1.0) - base, mask);
+  col = mix(col, vec3(1.0) - col, rim * 0.5);   // surface tension at the edge
   gl_FragColor = vec4(col, 1.0);
 }`;
 
@@ -178,14 +136,14 @@ function makeTarget(gl, size) {
 }
 
 export function initHeroReveal() {
-  const stage = document.querySelector('[data-hero-stage]');
+  const stage = document.getElementById('hero-media');
   const canvas = document.getElementById('hero-canvas');
   const img = document.getElementById('hero-img');
   if (!stage || !canvas || !img) return;
 
   const debug = new URLSearchParams(location.search).get('maskdebug') === '1';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // Reduced motion: the still mark is the whole hero. No canvas, no loop.
+  // Reduced motion: the still image is the whole hero. No canvas, no loop.
   if (reduce) return;
 
   const start = () => {
@@ -223,33 +181,21 @@ export function initHeroReveal() {
     stage.dataset.webgl = 'on';
 
     let w = 0, h = 0, scale = [1, 1], offset = [0, 0];
-
-    // Map the <img>'s painted rect into stage space, so the shader draws the
-    // truck exactly where the DOM put it however the layout moves.
-    function measure() {
-      const sr = stage.getBoundingClientRect();
-      const ir = img.getBoundingClientRect();
-      if (!sr.width || !sr.height) return;
-      // The img is object-fit:contain inside its own box — find the real
-      // painted area, which may be letterboxed inside that box.
-      const ia = img.naturalWidth / img.naturalHeight;
-      const ba = ir.width / ir.height;
-      let pw = ir.width, ph = ir.height;
-      if (ba > ia) pw = ir.height * ia; else ph = ir.width / ia;
-      const px0 = ir.left + (ir.width - pw) / 2 - sr.left;
-      const py0 = ir.top + (ir.height - ph) / 2 - sr.top;
-      scale = [pw / sr.width, ph / sr.height];
-      offset = [px0 / sr.width, 1 - (py0 + ph) / sr.height];
-    }
-
     function resize() {
       const dpr = Math.min(devicePixelRatio || 1, 2);
       const cw = Math.round(stage.clientWidth * dpr);
       const ch = Math.round(stage.clientHeight * dpr);
-      measure();
       if (cw === w && ch === h) return;   // only reallocate on a real change
       w = cw; h = ch;
       canvas.width = w; canvas.height = h;
+
+      // object-fit: contain — match the <img> exactly.
+      const ia = img.naturalWidth / img.naturalHeight;
+      const ca = w / h;
+      let sx = 1, sy = 1;
+      if (ca > ia) sx = ia / ca; else sy = ca / ia;
+      scale = [sx, sy];
+      offset = [(1 - sx) / 2, (1 - sy) / 2];
 
       // D13: clear both buffers on resize too.
       for (const t of [a, b]) {
@@ -263,9 +209,6 @@ export function initHeroReveal() {
     let rt = null;
     addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 120); });
     resize();
-    // The canvas paints the truck itself from here on; leaving the <img>
-    // visible underneath would double-draw it.
-    img.style.visibility = 'hidden';
 
     // pointer state, in trail-UV space
     let px = 0.5, py = 0.5, qx = 0.5, qy = 0.5;
@@ -279,8 +222,6 @@ export function initHeroReveal() {
       active = 1;
       if (!everMoved) { everMoved = true; qx = px; qy = py; stage.dataset.touched = 'true'; }
     }
-    // The blob should follow the cursor anywhere on the hero, not only over
-    // the truck — the pointer box is the whole stage.
     stage.addEventListener('pointermove', setFromEvent);
     stage.addEventListener('pointerdown', setFromEvent);
     stage.addEventListener('pointerleave', () => { active = 0; });
@@ -289,8 +230,8 @@ export function initHeroReveal() {
     // touch users see the effect instead of a dead image.
     function drift(t) {
       qx = px; qy = py;
-      px = 0.5 + Math.sin(t * 0.38) * 0.22;
-      py = 0.5 + Math.sin(t * 0.27 + 1.2) * 0.18;
+      px = 0.5 + Math.sin(t * 0.45) * 0.26;
+      py = 0.5 + Math.sin(t * 0.31 + 1.2) * 0.22;
       active = 1;
     }
 
@@ -322,7 +263,6 @@ export function initHeroReveal() {
       gl.uniform1f(gl.getUniformLocation(trailProg, 'uDecay'), DECAY);
       gl.uniform1f(gl.getUniformLocation(trailProg, 'uRadius'), BRUSH);
       gl.uniform1f(gl.getUniformLocation(trailProg, 'uActive'), active);
-      gl.uniform1f(gl.getUniformLocation(trailProg, 'uTime'), t);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       const tmp = a; a = b; b = tmp;
 
