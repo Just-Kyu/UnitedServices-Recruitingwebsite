@@ -16,9 +16,9 @@
 
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-latin-900-normal.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
-<link rel="stylesheet" href="css/tokens.css?v=8">
-<link rel="stylesheet" href="css/base.css?v=8">
-<link rel="stylesheet" href="css/components.css?v=8">
+<link rel="stylesheet" href="css/tokens.css?v=9">
+<link rel="stylesheet" href="css/base.css?v=9">
+<link rel="stylesheet" href="css/components.css?v=9">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -53,29 +53,34 @@
 <main id="main">
 
   <!-- ─────────────── hero ─────────────── -->
-  <section class="hero" id="top">
-    <div class="hero__copy">
+  <!-- Reference-style stage: the truck IS the mark. It owns the middle of the
+       screen at full height; every piece of copy is small and pinned to a
+       corner so nothing competes with it. -->
+  <section class="stage" id="top" data-hero-stage>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="stage__tl">
       <span class="eyebrow">CDL-A driver placement · Nationwide</span>
-      <h1>We find<br>the job.<br>You drive.</h1>
-      <p class="hero__lede sub">We match CDL-A drivers with US carriers hiring right now — every equipment type, every route, including SAP-cleared and no-experience drivers.</p>
-      <div class="hero__cta">
-        <a class="btn" href="#matcher">Find my job</a>
-        <a class="btn btn--ghost" data-phone href="tel:+14402968338">Call a recruiter</a>
-      </div>
-      <p class="hero__note">Free for drivers, always — carriers pay us</p>
-      <div class="hero__stats">
-        <div class="hero__stat"><b data-count="50" data-suffix="+">50+</b><span>Carrier partners</span></div>
-        <div class="hero__stat"><b data-count="48">48</b><span>States covered</span></div>
-        <div class="hero__stat"><b data-count="90" data-suffix="+">90+</b><span>Live openings</span></div>
+      <h1>We find the job.<br>You drive.</h1>
+      <div class="stage__cta">
+        <a class="btn btn--sm" href="#matcher">Find my job</a>
+        <a class="btn btn--ghost btn--sm" data-phone href="tel:+14402968338">Call a recruiter</a>
       </div>
     </div>
 
-    <div class="hero__media" id="hero-media">
-      <img id="hero-img" src="assets/img/hero-truck.webp" width="1600" height="1600"
-           alt="CDL-A tractor, front three-quarter view" fetchpriority="high" decoding="async"
-           style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain">
-      <canvas id="hero-canvas" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas>
-      <p class="hero__hint">Move to reveal</p>
+    <div class="stage__truck">
+      <img id="hero-img" src="assets/img/hero-truck.webp" width="908" height="1264"
+           alt="CDL-A tractor, head-on" fetchpriority="high" decoding="async">
+    </div>
+
+    <div class="stage__bl">
+      <span><b data-count="50" data-suffix="+">50+</b> Carrier partners</span>
+      <span><b data-count="48">48</b> States covered</span>
+      <span><b data-count="90" data-suffix="+">90+</b> Live openings</span>
+    </div>
+
+    <div class="stage__br">
+      <span class="stage__hint">Move to reveal</span>
+      <span>Free for drivers, always — carriers pay us</span>
     </div>
   </section>
 
@@ -727,7 +732,7 @@
   <a href="apply.html">Apply</a>
 </nav>
 
-<script type="module" src="js/main.js?v=8"></script>
+<script type="module" src="js/main.js?v=9"></script>
 <script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
 </body>
 </html>
