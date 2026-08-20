@@ -1,241 +1,314 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>For Carriers — United Services Recruiting</title>
-<meta name="description" content="Tell us the seat you need to fill — equipment, lane, requirements — and we shortlist matched CDL-A drivers from our pool. You pay on placement, not for listings.">
-<meta name="theme-color" content="#000000">
-<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Companies — United Services Recruiting</title>
+<meta name="description" content="Hire pre-vetted, ready-to-drive CDL talent. We bring carriers verified drivers matched to their equipment, lanes and clearance requirements — placement in days.">
+<meta name="theme-color" content="#080B12">
+<meta name="color-scheme" content="dark">
 <meta property="og:type" content="website">
-<meta property="og:title" content="For Carriers — United Services Recruiting">
-<meta property="og:description" content="Matched CDL-A drivers, shortlisted for your lanes. You pay on placement.">
-<meta property="og:image" content="assets/img/hero-truck.webp">
+<meta property="og:title" content="For Companies — United Services Recruiting">
+<meta property="og:description" content="Hire pre-vetted, ready-to-drive talent. Verified CDL drivers, matched and ready to start.">
+<meta property="og:image" content="assets/logo-full.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=8">
-
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-latin-900-normal.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/jetbrains-mono-latin-400-normal.woff2" crossorigin>
-<link rel="stylesheet" href="css/tokens.css?v=8">
-<link rel="stylesheet" href="css/base.css?v=8">
-<link rel="stylesheet" href="css/components.css?v=8">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=4">
+<link rel="icon" type="image/png" sizes="any" href="assets/logo-chrome.png?v=4">
+<link rel="apple-touch-icon" href="assets/logo-chrome.png">
+<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="companies.css?v=4">
 </head>
-<body>
-<a class="skip" href="#main">Skip to content</a>
+<body class="loading">
 
-<!-- ─────────────── header ─────────────── -->
-<header class="hdr">
-  <a class="hdr__brand" href="index.html" aria-label="United Services Recruiting — home">
-    <b>United Services</b>
-    <span>Recruiting</span>
-  </a>
-  <nav class="hdr__nav" aria-label="Primary">
-    <a href="index.html">For drivers</a>
-    <a href="#pool-section">Driver pool</a>
-    <a href="#why">Why us</a>
-    <a href="#request">Request drivers</a>
-  </nav>
-  <a class="hdr__phone" data-phone="text" href="tel:+14402968338"><span class="dot" aria-hidden="true"></span>(440)&nbsp;296-8338</a>
-  <button class="hdr__burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-  </button>
-</header>
-
-<div class="menu" id="menu" data-open="false">
-  <button class="menu__close" id="menu-close" aria-label="Close menu">&times;</button>
-  <a href="index.html">For drivers</a>
-  <a href="#pool-section">Driver pool</a>
-  <a href="#why">Why us</a>
-  <a href="#request">Request drivers</a>
+<div id="loader">
+  <div class="load-stage">
+    <img src="assets/logo-chrome.png" alt="United Services">
+    <div class="load-bar"><i></i></div>
+    <div class="load-cap">United Services · Recruiting</div>
+  </div>
 </div>
 
-<main id="main">
-
-  <!-- ─────────────── hero ─────────────── -->
-  <section class="hero" id="top">
-    <div class="hero__copy">
-      <span class="eyebrow">For carriers · Driver placement</span>
-      <h1>Empty<br>trucks<br>don't earn.</h1>
-      <p class="hero__lede sub">Tell us the seat — equipment, lane, requirements. We shortlist matched CDL-A drivers from our pool and run the paperwork to orientation. You pay on placement, not for listings.</p>
-      <div class="hero__cta">
-        <a class="btn" href="#request">Request drivers</a>
-        <a class="btn btn--ghost" href="#pool-section">See the pool</a>
-      </div>
-      <p class="hero__note">No retainers · no fee unless a driver seats</p>
-      <div class="hero__stats">
-        <div class="hero__stat"><b data-count="50" data-suffix="+">50+</b><span>Carrier partners</span></div>
-        <div class="hero__stat"><b data-count="48">48</b><span>States covered</span></div>
-        <div class="hero__stat"><b data-count="90" data-suffix="+">90+</b><span>Roles in motion</span></div>
-      </div>
+<!-- Navbar -->
+<div class="nav-shell">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-brand" href="index.html">
+      <img src="assets/logo-chrome.png" alt="">
+      <span><span class="bt">United Services</span><br><span class="bs">Recruiting</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#matcher">For Drivers</a>
+      <a href="offers.html">Available offers</a>
+      <a href="for-companies.html" class="active">For Companies</a>
+      <a href="#contact">Partner</a>
     </div>
-
-    <!-- Split-flap departure board: this page's answer to the old flipping
-         chrome logo. Cycles the driver classes we place; tap to advance. -->
-    <div class="flapwrap">
-      <div class="flap__label" id="flap-label">Drivers on file</div>
-      <div class="flap" id="flap" role="button" tabindex="0"
-           aria-labelledby="flap-label" aria-live="off"
-           title="Tap to flip to the next driver class"></div>
-      <div class="flap__label" aria-hidden="true">Tap the board</div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm nav-admin" href="admin.html">Admin</a>
+      <a class="btn btn-ghost btn-sm" href="#contact">Contact</a>
+      <a class="btn btn-chrome btn-sm" href="#contact" data-magnetic="0.3">Request drivers</a>
     </div>
-  </section>
+    <button class="nav-toggle" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </nav>
+</div>
+<div class="m-menu">
+  <button class="m-close" aria-label="Close menu">&times;</button>
+  <a href="index.html#matcher">For Drivers</a>
+  <a href="offers.html">Available offers</a>
+  <a href="for-companies.html">For Companies</a>
+  <a href="#contact">Partner</a>
+  <div class="row"><a class="btn btn-ghost" href="admin.html">Admin</a>
+    <a class="btn btn-ghost" href="#contact">Contact</a>
+    <a class="btn btn-chrome" href="#contact">Request drivers</a>
+  </div>
+</div>
 
-  <!-- ─────────────── driver pool ─────────────── -->
-  <section class="section" id="pool-section">
-    <div class="wrap">
-      <div class="rv">
-        <span class="eyebrow">The pool</span>
-        <h2>Drivers,<br>ready to seat.</h2>
-        <p class="mono sub" id="pool-note" style="margin-top:16px">Loading the pool…</p>
-      </div>
-      <div class="pool" id="pool"></div>
-    </div>
-  </section>
-
-  <!-- ─────────────── why ─────────────── -->
-  <section class="section" id="why">
-    <div class="wrap">
-      <div class="rv">
-        <span class="eyebrow">Why United Services</span>
-        <h2>Fewer empty<br>seats.</h2>
-      </div>
-      <div class="steps rv">
-        <div class="step"><div class="step__n">01</div><h3>Vetted before you see them</h3><p>License class, experience, equipment history and clearance status are checked before a profile reaches you. You only meet drivers who fit the seat.</p></div>
-        <div class="step"><div class="step__n">02</div><h3>Shortlists, not stacks</h3><p>We do not forward every applicant. You get a handful of matched profiles for the lane you named, with the trade-offs stated plainly.</p></div>
-        <div class="step"><div class="step__n">03</div><h3>We run the paperwork</h3><p>Applications, verifications and orientation scheduling handled end to end — your ops team hears from us when there is a decision to make.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─────────────── how it works ─────────────── -->
-  <section class="section" id="how">
-    <div class="wrap">
-      <div class="rv">
-        <span class="eyebrow">How it works</span>
-        <h2>Three steps</h2>
-      </div>
-      <div class="steps rv">
-        <div class="step"><div class="step__n">01</div><h3>Tell us the seat</h3><p>Equipment, lane, home time, requirements, how many trucks. The form below takes two minutes — or call and we take it down over the phone.</p></div>
-        <div class="step"><div class="step__n">02</div><h3>We shortlist from the pool</h3><p>Matched, pre-screened drivers — usually within days, depending on the lane and requirements.</p></div>
-        <div class="step"><div class="step__n">03</div><h3>You choose, we close</h3><p>You interview and pick. We coordinate the application, verifications and orientation date. The fee is due when the driver seats — not before.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─────────────── request form ─────────────── -->
-  <section class="section ink" id="request">
-    <div class="wrap">
-      <div class="rv">
-        <span class="eyebrow">Request drivers</span>
-        <h2>Tell us who<br>you need.</h2>
-        <p class="lede sub" style="margin-top:26px">A recruiter replies within one business day with matched profiles from the pool — or the honest answer that we need a few days to source your lane.</p>
-      </div>
-
-      <form class="reqform rv" id="request-form" novalidate>
-        <!-- honeypot: hidden from humans; bots that fill it are dropped -->
-        <input id="f-website" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-        <div class="field">
-          <label for="f-co">Company *</label>
-          <input id="f-co" name="company" type="text" autocomplete="organization" required>
-        </div>
-        <div class="field">
-          <label for="f-name">Your name *</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required>
-        </div>
-        <div class="field">
-          <label for="f-email">Work email *</label>
-          <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required>
-        </div>
-        <div class="field">
-          <label for="f-phone">Phone</label>
-          <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel">
-        </div>
-        <div class="field">
-          <label for="f-eq">Equipment</label>
-          <select id="f-eq" name="equipment">
-            <option value="">Select…</option>
-            <option>Dry Van</option><option>Flatbed</option><option>Reefer</option>
-            <option>Step Deck</option><option>Tanker</option><option>Power Only</option>
-            <option>Car Hauler</option><option>Mixed fleet</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="f-count">Drivers needed</label>
-          <select id="f-count" name="hire_count">
-            <option value="">Select…</option>
-            <option>1–5</option><option>6–15</option><option>16–50</option><option>50+</option>
-          </select>
-        </div>
-        <div class="field field--full">
-          <label for="f-notes">Lanes, home time, pay range, requirements</label>
-          <textarea id="f-notes" name="notes" placeholder="e.g. Regional reefer out of Columbus OH, home weekly, 2 trucks, clean MVR required"></textarea>
-        </div>
-        <div class="field--full">
-          <button class="btn btn--inv btn--wide" type="submit">Send the request</button>
-          <p class="form-status" id="form-status" aria-live="polite"></p>
-        </div>
-      </form>
-
-      <div class="form-ok" id="form-ok" hidden tabindex="-1">
-        <h3>Request received.</h3>
-        <p>A recruiter will reach out within one business day with matched profiles from the pool. If it is urgent, call <a data-phone href="tel:+14402968338" style="text-decoration:underline;text-underline-offset:4px"><span data-phone-text>(440) 296-8338</span></a> now.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─────────────── closer ─────────────── -->
-  <section class="closer ink" id="contact">
-    <div class="wrap">
-      <span class="eyebrow">Ready when you are</span>
-      <h2>Seats<br>to fill?</h2>
-      <div class="closer__cta">
-        <a class="btn btn--inv" href="#request">Request drivers</a>
-        <a class="btn btn--ghost" data-phone href="tel:+14402968338">Call <span data-phone-text>(440) 296-8338</span></a>
-      </div>
-    </div>
-  </section>
-</main>
-
-<!-- ─────────────── footer ─────────────── -->
-<footer class="foot">
+<!-- HERO -->
+<header class="page-hero bp-grid">
+  <div class="hero-glow"></div>
   <div class="wrap">
-    <div class="foot__grid">
-      <div class="foot__brand">
-        <b>United Services<br>Recruiting</b>
-        <p>CDL-A driver placement across the lower 48. Carriers pay on placement — drivers never pay.</p>
+    <div class="ph-grid">
+      <div>
+        <span class="eyebrow reveal"><span class="num">01</span>&nbsp;/&nbsp;For Companies</span>
+        <h1 class="reveal" data-d="1"><span class="chrome-text">Hire pre-vetted,</span><br>ready-to-drive talent.</h1>
+        <p class="ph-sub reveal" data-d="2">Stop sifting through unqualified applicants. We bring you verified CDL drivers — matched to your equipment, lanes and clearance requirements — ready to start now.</p>
+        <div class="hero-cta reveal" data-d="3">
+          <a class="btn btn-chrome btn-lg" href="#board" data-magnetic="0.3">View available drivers<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn btn-ghost btn-lg" href="#contact">Partner with us</a>
+        </div>
+        <div class="ph-stats reveal" data-d="4">
+          <div class="ph-stat"><div class="v"><span data-count="312">0</span></div><div class="k">Drivers available</div></div>
+          <div class="ph-stat"><div class="v"><span data-count="6">0</span> days</div><div class="k">Avg. placement</div></div>
+          <div class="ph-stat"><div class="v"><span data-count="94">0</span>%</div><div class="k">90-day retention</div></div>
+        </div>
       </div>
-      <div class="foot__col">
-        <h4>Drivers</h4>
-        <a href="index.html#matcher">Find my job</a>
-        <a href="index.html#board-section">Open loads</a>
-        <a href="apply.html">Apply</a>
-      </div>
-      <div class="foot__col">
-        <h4>Carriers</h4>
-        <a href="#pool-section">Driver pool</a>
-        <a href="#request">Request drivers</a>
-        <a href="#why">Why us</a>
-      </div>
-      <div class="foot__col">
-        <h4>Contact</h4>
-        <a data-phone href="tel:+14402968338"><span data-phone-text>(440) 296-8338</span></a>
-        <a data-email href="mailto:recruiting@us-unitedservices.com">recruiting@us-unitedservices.com</a>
-        <a href="privacy.html">Privacy policy</a>
+      <div class="reveal" data-d="2">
+        <div class="u-stage"><div class="u-spin"><img src="assets/logo-chrome.png" alt="United Services mark"></div></div>
       </div>
     </div>
-    <div class="foot__bottom">
-      <span>© <span id="yr">2026</span> United Services Recruiting</span>
-      <span>Built for drivers and carriers across the lower 48</span>
+  </div>
+</header>
+
+<!-- DRIVERS BOARD -->
+<section class="section board" id="board" data-screen-label="Drivers board">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="num">02</span>&nbsp;/&nbsp;Available drivers</span>
+      <h2>The board, live.</h2>
+      <p>Anonymized profiles of drivers ready to work right now. Filter by equipment, experience and clearance, then request an intro.</p>
+    </div>
+    <div class="board-bar reveal" data-d="1">
+      <div class="live-count"><span class="n" id="board-count">0</span><span class="t">drivers matching</span></div>
+      <span class="pill live"><span class="dot"></span>Updated continuously</span>
+    </div>
+    <div class="filters reveal" data-d="1" id="filters"></div>
+    <div class="drivers-grid reveal" data-d="2" id="drivers-grid"></div>
+  </div>
+</section>
+
+<!-- VALUE PROPS -->
+<section class="section" id="why" data-screen-label="Value props">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><span class="num">03</span>&nbsp;/&nbsp;Why partner with us</span>
+      <h2>Fewer empty seats.<br>Lower turnover.</h2>
+    </div>
+    <div class="vprops">
+      <div class="card vprop edge-top reveal" data-d="1">
+        <div class="vp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg></div>
+        <h3>Vetted before you see them</h3>
+        <p>Every driver is screened for license class, MVR, experience and clearance. You only meet candidates who actually fit your role.</p>
+      </div>
+      <div class="card vprop edge-top reveal" data-d="2">
+        <div class="vp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Placement in days, not weeks</h3>
+        <p>Our active pool means we can present matched drivers fast — average time to a signed driver is under a week.</p>
+      </div>
+      <div class="card vprop edge-top reveal" data-d="3">
+        <div class="vp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Drivers who stay</h3>
+        <p>We match on lifestyle fit — home time, routes, equipment — not just pay. That's why our placements hit 94% retention at 90 days.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNER FORM -->
+<section class="section partner" id="contact" data-screen-label="Partner form">
+  <div class="wrap">
+    <div class="partner-grid">
+      <div class="reveal">
+        <span class="eyebrow"><span class="num">04</span>&nbsp;/&nbsp;Request drivers</span>
+        <h2 style="font-size:clamp(32px,5vw,52px);margin-top:18px;line-height:1.0">Tell us who<br>you need.</h2>
+        <p style="color:var(--silver-txt);font-size:17px;margin-top:20px;max-width:380px;line-height:1.6">Share your lanes and requirements. A recruiter will reach out within one business day with matched drivers from the board.</p>
+        <div style="margin-top:32px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:12px;color:var(--silver-txt);font-size:14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steel-hi)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(440) 296-8338</div>
+          <div style="display:flex;align-items:center;gap:12px;color:var(--silver-txt);font-size:14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steel-hi)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>partners@unitedservices.com</div>
+        </div>
+      </div>
+      <div class="card partner-form reveal" data-d="1" id="partner-card">
+        <form id="partner-form" novalidate>
+          <!-- honeypot: hidden from humans; bots that fill it are discarded -->
+          <input id="p-website" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <div class="form-row">
+            <div class="field"><label for="p-co">Company</label><input id="p-co" name="company" type="text" placeholder="Acme Logistics" required></div>
+            <div class="field"><label for="p-name">Your name</label><input id="p-name" name="name" type="text" placeholder="Jordan Reed" required></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="p-email">Work email</label><input id="p-email" name="email" type="email" placeholder="you@company.com" required></div>
+            <div class="field"><label for="p-phone">Phone</label><input id="p-phone" name="phone" type="tel" placeholder="(555) 000-0000"></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="p-eq">Equipment needed</label>
+              <select id="p-eq" name="equipment"><option value="">Select…</option><option>Dry Van</option><option>Flatbed</option><option>Reefer</option><option>Step Deck</option><option>Tanker</option><option>Power Only</option><option>Car Hauler</option><option>Mixed fleet</option></select>
+            </div>
+            <div class="field"><label for="p-count">How many drivers</label>
+              <select id="p-count" name="count"><option value="">Select…</option><option>1–5</option><option>6–15</option><option>16–50</option><option>50+</option></select>
+            </div>
+          </div>
+          <div class="field"><label for="p-notes">Lanes &amp; notes</label><textarea id="p-notes" name="notes" rows="3" placeholder="Routes, home-time, pay range, clearance requirements…"></textarea></div>
+          <button class="btn btn-chrome btn-lg" type="submit" data-magnetic="0.25">Request drivers<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer dot-matrix">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo-chrome.png" alt="United Services">
+        <p style="max-width:280px;color:var(--silver-dim);font-size:14px">United Services Recruiting connects reliable CDL drivers with carriers hiring across all 48 states. Part of the United Services family.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Drivers</h5>
+        <a href="index.html#matcher">Find my job</a>
+        <a href="apply.html">Apply now</a>
+        <a href="index.html#offers">Live openings</a>
+        <a href="index.html#how">How it works</a>
+      </div>
+      <div class="foot-col">
+        <h5>Companies</h5>
+        <a href="for-companies.html#board">Available drivers</a>
+        <a href="for-companies.html#contact">Request drivers</a>
+        <a href="for-companies.html#why">Why partner</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="tel:+14402968338">(440) 296-8338</a>
+        <a href="mailto:partners@unitedservices.com">partners@unitedservices.com</a>
+        <a href="#">Dallas, TX · Nationwide</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-fam">United Services&nbsp;&nbsp;<span class="sep">·</span>&nbsp;<b>ELD</b> <span class="sep">·</span> <b>Accounting</b> <span class="sep">·</span> <b>Fleet</b> <span class="sep">·</span> <span class="me">Recruiting</span></div>
+      <div style="font-family:var(--font-mono);font-size:12px;color:var(--silver-dim)">© 2026 United Services. All rights reserved. &nbsp;<span class="sep">·</span>&nbsp; <a href="privacy.html" style="color:var(--silver-txt);text-decoration:none">Privacy Policy</a></div>
     </div>
   </div>
 </footer>
 
-<nav class="dock" aria-label="Quick actions">
-  <a data-phone href="tel:+14402968338">Call</a>
-  <a href="#request">Request</a>
-</nav>
+<script src="js/site.js?v=4"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js?v=4"></script>
+<script src="js/drivers.js?v=4"></script>
+<script>
+// Hover/tap easter egg: 360 flip + chrome flash on the U mark.
+// Uses WAAPI composite:'add' so the spin stacks on top of the running uFloat
+// keyframe animation — the flip starts from whatever pose the float is at
+// rather than snapping to a fixed orientation.
+(function () {
+  var stage = document.querySelector('.u-stage');
+  var spin = stage && stage.querySelector('.u-spin');
+  var img = spin && spin.querySelector('img');
+  if (!stage || !spin || !img) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var flipping = false;
 
-<script type="module" src="js/companies.js?v=8"></script>
-<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  function flip() {
+    if (flipping || reduce) return;
+    flipping = true;
+
+    var spinAnim;
+    try {
+      spinAnim = spin.animate(
+        [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(360deg)' }],
+        { duration: 1100, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', composite: 'add' }
+      );
+    } catch (e) {
+      // Browser without composite:'add' (e.g. older Safari) — bail cleanly.
+      flipping = false;
+      return;
+    }
+
+    img.animate(
+      [
+        { filter: 'drop-shadow(0 0 0 transparent) brightness(1) contrast(1)', offset: 0 },
+        { filter: 'drop-shadow(0 0 30px rgba(124,192,255,0.55)) brightness(1.25) contrast(1.05)', offset: 0.35 },
+        { filter: 'drop-shadow(0 0 0 transparent) brightness(1) contrast(1)', offset: 1 }
+      ],
+      { duration: 1100, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' }
+    );
+
+    spinAnim.onfinish = function () { flipping = false; };
+  }
+
+  stage.addEventListener('mouseenter', flip);
+  stage.addEventListener('click', flip);
+  stage.setAttribute('role', 'button');
+  stage.setAttribute('tabindex', '0');
+  stage.setAttribute('aria-label', 'Animate United Services mark');
+  stage.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); flip(); }
+  });
+})();
+(function () {
+  var form = document.getElementById('partner-form');
+  if (!form) return;
+  function showOk() {
+    var card = document.getElementById('partner-card');
+    card.innerHTML = '<div class="form-ok"><div class="ok-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><h3>Request received.</h3><p>A recruiter will reach out within one business day with matched drivers from the board.</p></div>';
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var ok = true;
+    form.querySelectorAll('[required]').forEach(function (f) {
+      if (!f.value.trim()) { ok = false; f.style.borderColor = '#EF4444'; f.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.18)'; }
+    });
+    var email = document.getElementById('p-email');
+    if (email.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) { ok = false; email.style.borderColor = '#EF4444'; }
+    if (!ok) return;
+    var btn = form.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = true;
+    var row = {
+      ref: (window.usrRef ? window.usrRef('USP') : 'USP-' + Math.floor(100000 + Math.random() * 899999)),
+      company: form.querySelector('#p-co').value.trim(),
+      name: form.querySelector('#p-name').value.trim(),
+      email: email.value.trim(),
+      phone: form.querySelector('#p-phone').value.trim() || null,
+      equipment: form.querySelector('#p-eq').value || null,
+      hire_count: form.querySelector('#p-count').value || null,
+      notes: form.querySelector('#p-notes').value.trim() || null,
+      user_agent: (navigator && navigator.userAgent) || null
+    };
+    var hp = document.getElementById('p-website');
+    if (hp && hp.value) { showOk(); return; }   // honeypot: silently drop bots
+    var sb = window.usrSupabase;
+    if (!sb) {
+      console.warn('Supabase not configured — company lead not persisted.');
+      showOk();
+      return;
+    }
+    sb.from('company_leads').insert(row).then(function (res) {
+      if (res.error) console.warn('company_leads insert failed:', res.error.message);
+      showOk();
+    });
+  });
+  form.querySelectorAll('input,select,textarea').forEach(function (f) {
+    f.addEventListener('input', function () { f.style.borderColor = ''; f.style.boxShadow = ''; });
+  });
+})();
+</script>
 </body>
 </html>
