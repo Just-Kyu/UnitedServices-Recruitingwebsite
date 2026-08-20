@@ -12,11 +12,11 @@
 <meta property="og:description" content="We match reliable CDL drivers with top US carriers that are hiring right now.">
 <meta property="og:image" content="assets/logo-full.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=4">
-<link rel="icon" type="image/png" sizes="any" href="assets/logo-chrome.png?v=4">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=10">
+<link rel="icon" type="image/png" sizes="any" href="assets/logo-chrome.png?v=10">
 <link rel="apple-touch-icon" href="assets/logo-chrome.png">
-<link rel="stylesheet" href="styles.css?v=4">
-<link rel="stylesheet" href="home.css?v=5">
+<link rel="stylesheet" href="styles.css?v=10">
+<link rel="stylesheet" href="home.css?v=10">
 </head>
 <body class="loading">
 
@@ -66,7 +66,13 @@
   </div>
 </div>
 
-<!-- ░░ Mobile background: animated US freight-lane map (fixed, page-wide) ░░
+
+
+<!-- ░░ HERO SAGA — sticky truck + 3 scroll-driven scenes ░░ -->
+<section class="hero-saga" id="hero-saga" data-band="ink" data-screen-label="Hero">
+  <!-- Sticky stage: holds the Tesla Semi, glow, fade -->
+  <div class="hero-saga-stage">
+  <!-- ░░ Mobile background: animated US freight-lane map (fixed, page-wide) ░░
      Big and bright at the top of the page; dims into an ambient background
      layer once you start scrolling. Pure SVG/CSS. Hidden on desktop. -->
 <div class="route-map" id="route-map" aria-hidden="true">
@@ -335,10 +341,6 @@
   </svg>
 </div>
 
-<!-- ░░ HERO SAGA — sticky truck + 3 scroll-driven scenes ░░ -->
-<section class="hero-saga" id="hero-saga" data-screen-label="Hero">
-  <!-- Sticky stage: holds the Tesla Semi, glow, fade -->
-  <div class="hero-saga-stage">
     <div class="hero-glow"></div>
     <div id="truck-stage" aria-hidden="true"></div>
     <div class="hero-fade"></div>
@@ -356,9 +358,9 @@
           <a class="btn btn-ghost btn-lg" href="#how">How it works</a>
         </div>
         <div class="hero-stats reveal" data-d="4">
-          <div class="hero-stat"><div class="v"><span data-count="50">0</span>+</div><div class="k">Carrier partners</div></div>
-          <div class="hero-stat"><div class="v"><span data-count="48">0</span></div><div class="k">States covered</div></div>
-          <div class="hero-stat"><div class="v"><span data-count="90">0</span>+</div><div class="k">Live openings</div></div>
+          <div class="hero-stat"><div class="v"><span data-count="50">50</span>+</div><div class="k">Carrier partners</div></div>
+          <div class="hero-stat"><div class="v"><span data-count="48">48</span></div><div class="k">States covered</div></div>
+          <div class="hero-stat"><div class="v"><span data-count="90">90</span>+</div><div class="k">Live openings</div></div>
         </div>
       </div>
     </div>
@@ -395,7 +397,7 @@
 </section>
 
 <!-- ░░ MATCHER ░░ -->
-<section class="section matcher dot-matrix" id="matcher" data-screen-label="Matcher">
+<section class="section matcher dot-matrix" id="matcher" data-band="paper" data-screen-label="Matcher">
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="eyebrow"><span class="num">02</span>&nbsp;/&nbsp;The matcher</span>
@@ -414,7 +416,7 @@
 </section>
 
 <!-- ░░ WHY US ░░ -->
-<section class="section bp-grid" id="why" data-screen-label="Why us">
+<section class="section bp-grid" id="why" data-band="paper" data-screen-label="Why us">
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="eyebrow"><span class="num">03</span>&nbsp;/&nbsp;Why choose us</span>
@@ -450,7 +452,7 @@
 </section>
 
 <!-- ░░ EQUIPMENT 3D ░░ -->
-<section class="section equip" id="equipment" data-screen-label="Equipment">
+<section class="section equip" id="equipment" data-band="ink" data-screen-label="Equipment">
   <div class="wrap">
     <div class="sec-head center reveal">
       <span class="eyebrow"><span class="num">04</span>&nbsp;/&nbsp;Equipment &amp; routes</span>
@@ -468,7 +470,7 @@
           <!-- main trailer body with subtle aero front-top -->
           <path d="M20 78 L20 24 L34 14 L304 14 L304 78 Z"/>
           <!-- subtle interior fill so the body reads as a solid panel -->
-          <path d="M20 24 L20 78 L304 78 L304 14 L34 14 Z" fill="rgba(77,163,255,0.04)" stroke="none"/>
+          <path d="M20 24 L20 78 L304 78 L304 14 L34 14 Z" fill="currentColor" fill-opacity="0.04" stroke="none"/>
           <!-- top reflective markers -->
           <rect x="42" y="12" width="6" height="3" opacity="0.75"/>
           <rect x="160" y="12" width="6" height="3" opacity="0.75"/>
@@ -596,7 +598,7 @@
           <rect x="40" y="18" width="8" height="6" opacity="0.55"/>
           <!-- main reefer body -->
           <path d="M20 32 L304 32 L304 78 L20 78 Z"/>
-          <path d="M20 32 L304 32 L304 78 L20 78 Z" fill="rgba(77,163,255,0.05)" stroke="none"/>
+          <path d="M20 32 L304 32 L304 78 L20 78 Z" fill="currentColor" fill-opacity="0.05" stroke="none"/>
           <!-- side door for loading (signature reefer) -->
           <rect x="150" y="40" width="80" height="32" opacity="0.55"/>
           <line x1="190" y1="40" x2="190" y2="72" opacity="0.45"/>
@@ -636,83 +638,55 @@
 
       <article class="equip-rig" data-type="power-only">
         <svg class="equip-rig-svg" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <!-- Freightliner Cascadia profile: aero hood + tall sleeper -->
-          <!-- hood (aerodynamic slope) -->
-          <path d="M22 88 L22 72 L28 62 L74 48 L90 44 L90 88 Z"/>
-          <path d="M22 88 L22 72 L28 62 L74 48 L90 44 L90 88 Z" fill="rgba(77,163,255,0.05)" stroke="none"/>
-          <!-- hood ridge accents -->
-          <line x1="28" y1="68" x2="80" y2="56" opacity="0.4"/>
-          <line x1="32" y1="74" x2="86" y2="62" opacity="0.35"/>
-          <!-- headlight clusters -->
-          <ellipse cx="30" cy="74" rx="6" ry="3" opacity="0.75"/>
-          <ellipse cx="30" cy="80" rx="6" ry="2" opacity="0.5"/>
-          <!-- grille slats -->
-          <g opacity="0.55" stroke-width="0.9">
-            <line x1="46" y1="66" x2="46" y2="86"/><line x1="50" y1="66" x2="50" y2="86"/>
-            <line x1="54" y1="66" x2="54" y2="86"/><line x1="58" y1="66" x2="58" y2="86"/>
-            <line x1="62" y1="66" x2="62" y2="86"/><line x1="66" y1="66" x2="66" y2="86"/>
+          <!-- Long-hood tractor, no trailer: the fifth wheel is left bare,
+               which is the whole point of a power-only run. Proportions match
+               the trailers beside it — same baseline, same wheel size. -->
+          <!-- bumper + aero hood -->
+          <path d="M18 88 L18 70 L26 60 L104 50 L104 88 Z"/>
+          <path d="M18 70 L26 60 L104 50 L104 88 L18 88 Z" fill="currentColor" fill-opacity="0.05" stroke="none"/>
+          <line x1="28" y1="66" x2="100" y2="57" opacity="0.3"/>
+          <ellipse cx="27" cy="74" rx="6" ry="3" opacity="0.7"/>
+          <g opacity="0.45" stroke-width="0.9">
+            <line x1="44" y1="64" x2="44" y2="86"/><line x1="50" y1="63" x2="50" y2="86"/>
+            <line x1="56" y1="62" x2="56" y2="86"/><line x1="62" y1="62" x2="62" y2="86"/>
+            <line x1="68" y1="61" x2="68" y2="86"/><line x1="74" y1="60" x2="74" y2="86"/>
           </g>
-          <!-- bumper -->
-          <line x1="22" y1="86" x2="70" y2="86" opacity="0.7"/>
-          <line x1="22" y1="88" x2="70" y2="88" opacity="0.5"/>
-          <!-- cab body (sleeper) -->
-          <path d="M90 88 L90 30 L98 22 L168 22 L176 28 L188 28 L188 88 Z"/>
-          <!-- chrome sun visor -->
-          <line x1="98" y1="20" x2="170" y2="20" opacity="0.7"/>
-          <line x1="98" y1="20" x2="98" y2="24" opacity="0.6"/>
-          <line x1="170" y1="20" x2="170" y2="24" opacity="0.6"/>
-          <!-- windshield slant -->
-          <path d="M94 44 L102 28 L130 28 L130 44" opacity="0.6"/>
-          <line x1="130" y1="30" x2="130" y2="44" opacity="0.4"/>
-          <!-- side window pane -->
-          <rect x="106" y="32" width="20" height="12" opacity="0.5"/>
-          <!-- mirror with stalk -->
-          <line x1="96" y1="28" x2="92" y2="44" opacity="0.7"/>
-          <rect x="89" y="34" width="4" height="12" opacity="0.65"/>
-          <!-- sleeper berth window -->
-          <rect x="138" y="34" width="36" height="10" opacity="0.5"/>
-          <line x1="156" y1="34" x2="156" y2="44" opacity="0.45"/>
-          <!-- panel seam -->
-          <line x1="130" y1="44" x2="130" y2="88" opacity="0.35"/>
-          <line x1="176" y1="60" x2="188" y2="60" opacity="0.35"/>
-          <!-- aero exhaust pipe (Cascadia routes exhaust behind cab) -->
-          <path d="M186 50 L196 36 L196 22 L192 22" opacity="0.7"/>
-          <circle cx="194" cy="22" r="2" opacity="0.55"/>
-          <!-- side fairing / running board -->
-          <path d="M22 92 L22 96 L188 96 L188 92" opacity="0.5"/>
-          <!-- chrome fuel tank -->
-          <ellipse cx="130" cy="98" rx="26" ry="4" opacity="0.55"/>
-          <line x1="104" y1="98" x2="156" y2="98" opacity="0.4"/>
-          <!-- battery box -->
-          <rect x="92" y="92" width="10" height="6" opacity="0.4"/>
-          <!-- step -->
-          <line x1="84" y1="84" x2="92" y2="92" opacity="0.5"/>
-          <!-- exposed fifth-wheel hitch (no trailer) -->
-          <line x1="188" y1="68" x2="238" y2="68"/>
-          <line x1="188" y1="76" x2="238" y2="76" opacity="0.55"/>
-          <line x1="238" y1="64" x2="238" y2="80" opacity="0.7"/>
-          <circle cx="218" cy="72" r="4" opacity="0.55"/>
-          <!-- front steer wheel -->
-          <g>
-            <circle cx="50" cy="102" r="12"/>
-            <circle cx="50" cy="102" r="8" opacity="0.6"/>
-            <circle cx="50" cy="102" r="3" opacity="0.75"/>
-            <g opacity="0.4" stroke-width="0.8">
-              <line x1="50" y1="94" x2="50" y2="110"/>
-              <line x1="42" y1="102" x2="58" y2="102"/>
-              <line x1="44" y1="96" x2="56" y2="108"/>
-              <line x1="56" y1="96" x2="44" y2="108"/>
-            </g>
+          <line x1="18" y1="86" x2="86" y2="86" opacity="0.6"/>
+          <!-- cab + sleeper: roofline sits just under the trailer decks -->
+          <path d="M104 88 L104 34 L112 26 L186 26 L192 32 L192 88 Z"/>
+          <path d="M104 34 L112 26 L186 26 L192 32 L192 88 L104 88 Z" fill="currentColor" fill-opacity="0.05" stroke="none"/>
+          <line x1="112" y1="24" x2="188" y2="24" opacity="0.6"/>
+          <!-- windshield + door glass -->
+          <path d="M108 48 L116 32 L142 32 L142 48 Z" opacity="0.5"/>
+          <rect x="148" y="32" width="28" height="16" opacity="0.4"/>
+          <line x1="146" y1="32" x2="146" y2="82" opacity="0.3"/>
+          <line x1="152" y1="56" x2="162" y2="56" opacity="0.45"/>
+          <!-- mirror + stack -->
+          <line x1="110" y1="32" x2="106" y2="48" opacity="0.55"/>
+          <rect x="102" y="38" width="4" height="12" opacity="0.55"/>
+          <line x1="194" y1="28" x2="194" y2="64" opacity="0.5"/>
+          <line x1="198" y1="28" x2="198" y2="64" opacity="0.35"/>
+          <!-- frame rails back to the coupling -->
+          <line x1="192" y1="80" x2="292" y2="80"/>
+          <line x1="192" y1="86" x2="292" y2="86" opacity="0.55"/>
+          <g opacity="0.28" stroke-width="0.7">
+            <line x1="214" y1="86" x2="214" y2="92"/><line x1="244" y1="86" x2="244" y2="92"/>
+            <line x1="274" y1="86" x2="274" y2="92"/>
           </g>
-          <!-- drive axle tandem -->
-          <g>
-            <circle cx="150" cy="102" r="12"/><circle cx="150" cy="102" r="8" opacity="0.6"/><circle cx="150" cy="102" r="3" opacity="0.75"/>
-            <g opacity="0.4" stroke-width="0.8"><line x1="150" y1="94" x2="150" y2="110"/><line x1="142" y1="102" x2="158" y2="102"/><line x1="144" y1="96" x2="156" y2="108"/><line x1="156" y1="96" x2="144" y2="108"/></g>
-          </g>
-          <g>
-            <circle cx="178" cy="102" r="12"/><circle cx="178" cy="102" r="8" opacity="0.6"/><circle cx="178" cy="102" r="3" opacity="0.75"/>
-            <g opacity="0.4" stroke-width="0.8"><line x1="178" y1="94" x2="178" y2="110"/><line x1="170" y1="102" x2="186" y2="102"/><line x1="172" y1="96" x2="184" y2="108"/><line x1="184" y1="96" x2="172" y2="108"/></g>
-          </g>
+          <!-- bare fifth wheel -->
+          <path d="M206 80 L206 70 L266 70 L266 80" opacity="0.85"/>
+          <line x1="212" y1="70" x2="260" y2="70" opacity="0.45"/>
+          <path d="M228 70 L236 63 L244 70" opacity="0.65"/>
+          <circle cx="236" cy="75" r="3.2" opacity="0.7"/>
+          <path d="M286 88 L286 104 L298 104 L298 88" opacity="0.45"/>
+          <!-- steer axle -->
+          <g><circle cx="62" cy="100" r="13"/><circle cx="62" cy="100" r="9" opacity="0.6"/><circle cx="62" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="62" y1="91" x2="62" y2="109"/><line x1="53" y1="100" x2="71" y2="100"/><line x1="55" y1="93" x2="69" y2="107"/><line x1="69" y1="93" x2="55" y2="107"/></g></g>
+          <!-- drive tandem -->
+          <g><circle cx="214" cy="100" r="13"/><circle cx="214" cy="100" r="9" opacity="0.6"/><circle cx="214" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="214" y1="91" x2="214" y2="109"/><line x1="205" y1="100" x2="223" y2="100"/><line x1="207" y1="93" x2="221" y2="107"/><line x1="221" y1="93" x2="207" y2="107"/></g></g>
+          <g><circle cx="244" cy="100" r="13"/><circle cx="244" cy="100" r="9" opacity="0.6"/><circle cx="244" cy="100" r="3" opacity="0.75"/>
+            <g opacity="0.4" stroke-width="0.8"><line x1="244" y1="91" x2="244" y2="109"/><line x1="235" y1="100" x2="253" y2="100"/><line x1="237" y1="93" x2="251" y2="107"/><line x1="251" y1="93" x2="237" y2="107"/></g></g>
         </svg>
         <h4>Power Only</h4>
         <div class="ec-sub">Bring the tractor</div>
@@ -722,7 +696,7 @@
         <svg class="equip-rig-svg" viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
           <!-- cylindrical body with proper end caps -->
           <path d="M40 26 L290 26 L300 30 L304 44 L304 60 L300 74 L290 78 L40 78 L30 74 L26 60 L26 44 L30 30 Z"/>
-          <path d="M40 26 L290 26 L300 30 L304 44 L304 60 L300 74 L290 78 L40 78 L30 74 L26 60 L26 44 L30 30 Z" fill="rgba(77,163,255,0.05)" stroke="none"/>
+          <path d="M40 26 L290 26 L300 30 L304 44 L304 60 L300 74 L290 78 L40 78 L30 74 L26 60 L26 44 L30 30 Z" fill="currentColor" fill-opacity="0.05" stroke="none"/>
           <!-- horizontal seam down the middle (top half / bottom half) -->
           <line x1="30" y1="52" x2="300" y2="52" opacity="0.35"/>
           <!-- baffle ring divisions (vertical compartments) -->
@@ -871,7 +845,7 @@
 </section>
 
 <!-- ░░ LIVE OFFERS ░░ -->
-<section class="section bp-grid" id="offers" data-screen-label="Offers">
+<section class="section bp-grid" id="offers" data-band="paper" data-screen-label="Offers">
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="eyebrow"><span class="num">05</span>&nbsp;/&nbsp;Live openings</span>
@@ -914,7 +888,7 @@
 </section>
 
 <!-- ░░ HOW IT WORKS ░░ -->
-<section class="how-sticky" id="how" data-screen-label="How it works">
+<section class="how-sticky" id="how" data-band="ink" data-screen-label="How it works">
   <div class="wrap how-intro">
     <div class="sec-head center reveal">
       <span class="eyebrow"><span class="num">06</span>&nbsp;/&nbsp;How it works</span>
@@ -978,7 +952,7 @@
 </section>
 
 <!-- ░░ CTA BAND ░░ -->
-<section class="section cta-band" data-screen-label="CTA">
+<section class="section cta-band" data-band="ink" data-screen-label="CTA">
   <div class="glow"></div>
   <div class="wrap">
     <div class="cta-inner reveal">
@@ -993,7 +967,7 @@
 </section>
 
 <!-- ░░ FOOTER ░░ -->
-<footer class="footer dot-matrix">
+<footer class="footer dot-matrix" data-band="ink">
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
@@ -1029,7 +1003,7 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=4"></script>
+<script src="js/site.js?v=10"></script>
 <script>
 // Desktop gets the 3D truck; mobile gets the route map and skips ~750 KB of
 // three.js + GLB entirely. Scripts load in sequence (each depends on the last).
@@ -1039,7 +1013,7 @@
     'https://unpkg.com/three@0.147.0/build/three.min.js',
     'https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js',
     'https://unpkg.com/three@0.147.0/examples/js/libs/meshopt_decoder.js',
-    'js/hero3d.js?v=7'
+    'js/hero3d.js?v=10'
   ];
   (function next(i) {
     if (i >= files.length) return;
@@ -1050,8 +1024,8 @@
   })(0);
 })();
 </script>
-<script src="js/matcher.js?v=4"></script>
-<script src="js/equip.js?v=4"></script>
+<script src="js/matcher.js?v=10"></script>
+<script src="js/equip.js?v=10"></script>
 <script>
 // Route map hero→background hand-off: bright and big at the top of the page,
 // dimmed ambient layer once you scroll. CSS transition does the easing; this
@@ -1070,7 +1044,7 @@
 </script>
 <!-- Live offers: replace the sample cards with real admin-published offers if any exist -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/config.js?v=4"></script>
+<script src="js/config.js?v=10"></script>
 <script>
 (function () {
   var sb = window.usrSupabase, grid = document.getElementById('home-offers-grid');
