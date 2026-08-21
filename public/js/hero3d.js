@@ -55,11 +55,12 @@
   else renderer.outputEncoding = THREE.sRGBEncoding;
   mount.appendChild(renderer.domElement);
 
-  // Lights: dim ambient + a warm key that ORBITS WITH THE CAMERA (so the
-  // shadow direction rotates as you scroll) + a steel-blue rim + a soft
-  // warm pink fill (both fixed, so the body never goes flat).
+  // Lights: dim ambient + a key that ORBITS WITH THE CAMERA (so the shadow
+  // direction rotates as you scroll) + a rim and a fill, both fixed so the
+  // body never goes flat. All neutral white — the old warm key, steel-blue
+  // rim and pink fill were tinting a black-and-white page.
   scene.add(new THREE.AmbientLight(0xffffff, 0.18));
-  var key = new THREE.DirectionalLight(0xffe6c2, 1.6);
+  var key = new THREE.DirectionalLight(0xffffff, 1.6);
   key.position.set(5, 8, 5);
   key.target.position.set(0, -0.4, 0);
   key.castShadow = !isMobile;
@@ -70,10 +71,10 @@
   key.shadow.bias = -0.0001;
   scene.add(key);
   scene.add(key.target);
-  var rim = new THREE.DirectionalLight(0x4DA3FF, 0.85);
+  var rim = new THREE.DirectionalLight(0xffffff, 0.85);
   rim.position.set(-6, 3, -4);
   scene.add(rim);
-  var fill = new THREE.DirectionalLight(0xff7aa3, 0.35); // soft warm pink fill
+  var fill = new THREE.DirectionalLight(0xffffff, 0.35);
   fill.position.set(-4, 1.5, 5);
   scene.add(fill);
 
@@ -86,12 +87,20 @@
       var m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshBasicMaterial({ color: color }));
       m.position.set(x, y, z); envScene.add(m);
     }
-    block(0x222a36, 0,  -2, 0, 50, 0.1, 50);                    // floor (deep navy)
-    block(0x6e7a8a, 0,  10, 0, 50, 0.1, 50);                    // ceiling (silver-gray sky)
-    block(0x9aa6b8, -8,  4,  0, 0.1, 6, 14);                    // left soft fill
-    block(0x4e6280,  8,  4,  0, 0.1, 6, 14);                    // right cool fill
-    block(0xffe6b3,  3,  6,  4, 1, 0.4, 3);                     // warm strip (front-right)
-    block(0xc8d6ff, -4,  7, -3, 3, 0.4, 1);                     // cool strip (back-left)
+    // Neutral greyscale studio — the site is black and white, and the old
+    // navy floor + warm/cool strips were reflecting colour into the glass.
+    //
+    // Shape matters more than brightness here: a few NARROW bright strips
+    // read as crisp softbox reflections (glass), whereas broad glowing
+    // panels smear into a milky wash (paint). Keep the fills dark and let
+    // the strips do the work.
+    block(0x0a0a0a, 0,  -2,  0, 60, 0.1, 60);                   // floor — near black
+    block(0x2a2a2a, 0,  11,  0, 60, 0.1, 60);                   // ceiling — dim
+    block(0x161616, -9,  4,  0, 0.1, 8, 16);                    // left fill (dark)
+    block(0x161616,  9,  4,  0, 0.1, 8, 16);                    // right fill (dark)
+    block(0xffffff, -5,  8, -2, 0.5, 0.22, 12);                 // key strip — long + narrow
+    block(0xf2f2f2,  6,  7,  3, 0.4, 0.18, 9);                  // fill strip
+    block(0xffffff,  0,  9,  7, 7, 0.18, 0.4);                  // front rail (windshield catch)
 
     var pmrem = new THREE.PMREMGenerator(renderer);
     pmrem.compileEquirectangularShader();
@@ -186,18 +195,26 @@
       return tag.indexOf('light') !== -1 || tag.indexOf('lamp') !== -1 || tag.indexOf('headlamp') !== -1;
     }
 
-    // One shared glass material for every pane: SOLID dark charcoal, per the
-    // reference. No clearcoat and near-zero env pickup — and, critically,
-    // specularIntensity suppressed: the key light is a strong directional
-    // that orbits with the camera, and its specular lobe alone was enough to
-    // wash a bright smear across the pane even with the env map fully off.
+    // One shared glass material for every pane: dark tinted automotive glass.
+    //
+    // The earlier "solid" tuning killed roughness and specular to stop a milky
+    // wash — but matte IS paint, which is why it stopped reading as glass. The
+    // real fix is SHARP rather than absent: near-zero roughness plus a real
+    // specular response gives tight, curved highlights that track the body,
+    // while the near-black tint keeps the pane dark face-on. Broad soft
+    // reflections smear; narrow sharp ones read as glass. (The env map is
+    // built from narrow strips for exactly this reason.)
+    //
+    // Colour is a true neutral — any blue in the hex tints the whole pane on
+    // a black-and-white page.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x06080c,
-      metalness: 0.0,
-      roughness: 0.55,
-      clearcoat: 0.0,
-      specularIntensity: 0.18,   // just enough sheen to read as tinted glass, not paint
-      envMapIntensity: 0.06,
+      color: 0x050505,
+      metalness: 0.0,            // dielectric: reflections come via fresnel
+      roughness: 0.05,           // glass is smooth — this is what sells it
+      clearcoat: 1.0,            // second specular layer, like laminated glass
+      clearcoatRoughness: 0.04,
+      specularIntensity: 0.9,
+      envMapIntensity: 0.45,
       side: THREE.DoubleSide     // the GLB panes are doubleSided; FrontSide would open holes
     });
 

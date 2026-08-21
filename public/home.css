@@ -15,7 +15,13 @@
   z-index: 1;
 }
 #truck-stage { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
-#truck-stage canvas { display: block; width: 100% !important; height: 100% !important; }
+/* The GLB ships baked textures with a navy chassis and blue-ish trim. Rather
+   than chase every material, desaturate the whole render — the page is
+   black and white, and this guarantees the canvas can't leak colour. */
+#truck-stage canvas {
+  display: block; width: 100% !important; height: 100% !important;
+  filter: grayscale(1);
+}
 /* Glow was a dark-mode device; on an ink band a faint white bloom still
    gives the truck some air without reintroducing colour. */
 .hero-glow { position: absolute; z-index: 0; width: 60vw; height: 60vw; right: -8vw; top: 8%; background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 62%); filter: blur(20px); pointer-events: none; }
