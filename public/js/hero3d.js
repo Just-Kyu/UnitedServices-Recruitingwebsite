@@ -215,6 +215,13 @@
       clearcoatRoughness: 0.04,
       specularIntensity: 0.9,
       envMapIntensity: 0.45,
+      // You have to be able to SEE INTO a windshield or it reads as a painted
+      // panel with a gloss coat. This is what the cabin lining below exists
+      // for — without something dark behind it, letting light through would
+      // just expose the white inside of the far body shell.
+      transparent: true,
+      opacity: 0.80,
+      depthWrite: false,
       side: THREE.DoubleSide     // the GLB panes are doubleSided; FrontSide would open holes
     });
 
@@ -263,6 +270,36 @@
         }
       });
     });
+
+    // ── Cabin lining ────────────────────────────────────────────────────
+    // The GLB is a hollow shell: hide the glass and you see the white inside
+    // of the far body panel, no seats or dash. So the glass was left opaque,
+    // which is exactly why it read as paint rather than a windshield.
+    //
+    // Clone each pane, push it a hair inward and render its BACK faces in
+    // matte near-black. That gives the glass a dark cabin to sit in front of,
+    // so the tint has depth and the A-pillar reads as a real edge.
+    (function addCabinLining() {
+      var panes = [];
+      truck.traverse(function (o) {
+        if (o.isMesh && o.material === glassMat) panes.push(o);
+      });
+      panes.forEach(function (pane) {
+        var lining = new THREE.Mesh(pane.geometry, new THREE.MeshStandardMaterial({
+          color: 0x070707,
+          roughness: 0.95,
+          metalness: 0.0,
+          side: THREE.BackSide
+        }));
+        lining.position.copy(pane.position);
+        lining.rotation.copy(pane.rotation);
+        lining.scale.copy(pane.scale).multiplyScalar(0.992);
+        lining.renderOrder = -1;          // draw before the transparent glass
+        lining.castShadow = false;
+        lining.receiveShadow = false;
+        pane.parent.add(lining);
+      });
+    })();
 
     // Measure the truck BEFORE parenting it, so the box is in the truck's own
     // local space — independent of truckGroup's animated y-bob. (If we measured
