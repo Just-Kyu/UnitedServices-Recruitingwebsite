@@ -164,6 +164,7 @@ p { margin: 0; }
 
 /* ─────────── Buttons ─────────── */
 .btn {
+  max-width: 100%;
   position: relative;
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   font-family: var(--font-display); font-weight: 700; font-size: 15px;
@@ -270,11 +271,31 @@ body.cursor-on a, body.cursor-on button { cursor: none; }
 .nav-links a.active { color: #fff; }
 .nav-links a.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 1.5px; background: #fff; }
 .nav-cta { display: flex; align-items: center; gap: 8px; }
+.nav-cta .cta-short { display: none; }
 .nav-toggle { display: none; background: none; border: none; color: #fff; padding: 8px; }
 
 @media (max-width: 920px) {
   .nav-links, .nav-cta .btn-ghost { display: none; }
   .nav-toggle { display: inline-flex; }
+  /* Less glass area to blur through on a phone — deepen the fill so section
+     headings scrolling underneath don't read through the pill. A long CTA
+     ("Request drivers") also used to squeeze the wordmark until it broke
+     across two lines, so the bar tightens up and the button gives space back. */
+  .nav { background: rgba(0,0,0,0.88); gap: 10px; padding-left: 16px; }
+  .nav-brand { min-width: 0; flex: 0 1 auto; }
+  .nav-brand .bt, .nav-brand .bs { white-space: nowrap; }
+  .nav-cta .btn { padding: 10px 16px; font-size: 13px; }
+  /* Long CTA labels ship a short form for narrow bars (see .cta-short). */
+  .nav-cta .cta-full { display: none; }
+  .nav-cta .cta-short { display: inline; }
+}
+@media (max-width: 380px) {
+  /* Small phones (SE/mini): there isn't room for the wordmark, the CTA and
+     the menu button at once — the mark carries the brand on its own rather
+     than the text sliding under the button. */
+  .nav-brand span:last-child { display: none; }
+  .nav-brand img { width: 30px; }
+  .nav-cta .btn { padding: 10px 14px; font-size: 12.5px; }
 }
 
 /* mobile menu — above .nav-shell (800) so the navbar can't cover the open
@@ -285,8 +306,8 @@ body.cursor-on a, body.cursor-on button { cursor: none; }
 .m-menu.open { transform: none; }
 .m-menu > a { font-family: var(--font-display); font-weight: 700; font-size: 30px; color: #fff; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.14); }
 .m-menu { --fg:#fff; --fg-2:var(--dust); --btn-fill:#fff; --btn-fill-fg:#000; --glass-bg:rgba(255,255,255,0.05); --glass-line:rgba(255,255,255,0.18); --glass-top:rgba(255,255,255,0.2); }
-.m-menu .row { display: flex; gap: 12px; margin-top: 24px; }
-.m-menu .row .btn { flex: 1 1 0; justify-content: center; text-align: center; }
+.m-menu .row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.m-menu .row .btn { flex: 1 1 130px; min-width: 0; justify-content: center; text-align: center; }
 .m-close { position: absolute; top: 24px; right: var(--gutter); background: none; border: 1px solid rgba(255,255,255,.2); color: #fff; border-radius: 999px; width: 44px; height: 44px; font-size: 20px; }
 
 /* ─────────── Cards ─────────── */

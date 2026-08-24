@@ -1,0 +1,7 @@
+# United Services Recruiting — https://us-unitedservices.com
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+
+Sitemap: https://us-unitedservices.com/sitemap.xml
