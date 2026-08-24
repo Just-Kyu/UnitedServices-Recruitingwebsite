@@ -48,6 +48,12 @@
 .filters { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
 .filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .filter-row .fl-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-2); width: 96px; flex: none; }
+/* On a phone the fixed-width label ate a third of the first chip row and left
+   the group looking indented — give it its own line and let the chips fill. */
+@media (max-width: 560px) {
+  .filter-row { align-items: flex-start; }
+  .filter-row .fl-label { width: auto; flex: 1 0 100%; margin-bottom: 2px; }
+}
 .fchip { font-family: var(--font-body); font-weight: 500; font-size: 13px; color: var(--fg-2); padding: 8px 15px; border-radius: 999px; border: 1px solid var(--glass-line); background: rgba(255,255,255,0.02); transition: all .2s; }
 .fchip:hover { border-color: rgba(255,255,255,0.4); color: var(--fg); }
 .fchip.on { background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.65)); border-color: rgba(255,255,255,0.6); color: var(--fg); box-shadow: 0 0 0 1px rgba(255,255,255,0.2), 0 6px 20px -8px var(--line); }

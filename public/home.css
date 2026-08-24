@@ -132,18 +132,34 @@
   .hero-fade { display: none; }
   .scroll-cue { display: none; }
 
-  /* The old mobile trick made every section transparent so one fixed map
-     could show through the whole page. That only works when the page is a
-     single colour — with alternating ink/paper bands it put white type on
-     white. Sections now keep their own band background, and the map is
-     scoped to the ink hero it belongs to. */
-  .hero-saga { background: var(--bg); }
+  /* The map stays fixed for the whole page: full-brightness hero frame at the
+     top, then it hands off to an ambient layer that keeps drifting behind the
+     dark bands as you scroll. Only the INK bands go translucent to let it
+     through — paper bands stay solid white, so nothing is ever white-on-white.
+     Once it's a background layer the lane animation stops: a static map costs
+     nothing to repaint, which is what keeps scrolling smooth on iOS. */
+  .hero-saga { background: transparent; }
+  body { background: var(--ink); }
+  [data-band="ink"] { background-color: rgba(0, 0, 0, 0.82); }
+  .equip { background: rgba(0, 0, 0, 0.82); }
+  .footer { background: rgba(0, 0, 0, 0.88); }
+
   .route-map {
-    position: absolute; inset: 0 0 auto 0; height: 46vh; min-height: 310px;
-    z-index: 0; opacity: 1; transform: none;
+    position: fixed; inset: 0; height: 100svh;
+    z-index: -1; opacity: 1; overflow: hidden;
+    padding: 96px 12px 0;
+    will-change: opacity, transform;
   }
-  .route-map.is-bg { opacity: 1; transform: none; }
-  .hero-saga-stage { z-index: 1; }
+  /* Keep the opening frame inside the hero spacer on short viewports —
+     otherwise the map runs past it and collides with the eyebrow. */
+  .route-map .rmap-svg { max-height: calc(max(46vh, 310px) - 108px); }
+  .route-map.is-bg { opacity: 0.26; transform: translateY(14vh) scale(1.22); }
+  .route-map.is-bg .pulse { animation: none; stroke-dasharray: none; opacity: 0.45; }
+  .route-map.is-bg .node .ring { animation: none; opacity: 0.35; }
+  /* City names behind body copy read as noise — the state outlines and lanes
+     carry the texture on their own once the map is a background. */
+  .route-map.is-bg .rmap-label { display: none; }
+  .hero-saga-stage { z-index: 1; background: transparent; }
 
   .saga-scene { position: relative; height: auto; min-height: 0; top: auto !important; padding: 26px 0 22px; text-align: left !important; display: block; }
   .saga-scene::before { display: none; }
@@ -230,9 +246,9 @@
 @media (max-width: 480px) { .mr-offers { grid-template-columns: 1fr; } }
 .mr-offer { padding: 14px 16px; border-radius: 12px; background: var(--glass-bg); border: 1px solid var(--glass-line); animation: offerIn .45s var(--ease-out); }
 @keyframes offerIn { from { transform: translateY(8px) } to { transform: none } }
-.mr-offer-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.mr-offer-h b { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--fg); }
-.mr-pay { font-family: var(--font-mono); font-size: 12px; color: var(--fg); white-space: nowrap; }
+.mr-offer-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.mr-offer-h b { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--fg); min-width: 0; overflow-wrap: anywhere; }
+.mr-pay { font-family: var(--font-mono); font-size: 12px; color: var(--fg); min-width: 0; overflow-wrap: anywhere; }
 .mr-offer-tags { display: flex; gap: 6px; margin: 8px 0 6px; }
 .mr-offer-tags span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-2); padding: 3px 8px; border-radius: 999px; border: 1px solid var(--glass-line); }
 .mr-offer-note { font-size: 12px; color: var(--fg-2); }
@@ -395,17 +411,34 @@
 .offers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 @media (max-width: 900px) { .offers-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .offers-grid { grid-template-columns: 1fr; } }
-.offer-card { padding: 24px; }
+/* Grid items default to min-width:auto, so a long admin-entered pay string
+   ("90% – 11k avg gross") used to push the card wider than its column and
+   hang off the right edge of the phone. Every level of the card is allowed
+   to shrink, and the pay wraps instead of forcing the width. */
+.offers-grid > * { min-width: 0; }
+.offer-card { padding: 24px; min-width: 0; }
 .offer-card .oc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
-.offer-card .oc-co { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--fg); }
-.offer-card .oc-loc { font-family: var(--font-mono); font-size: 11px; color: var(--fg-2); margin-top: 4px; letter-spacing: 0.05em; }
-.offer-card .oc-pay { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--fg); white-space: nowrap; letter-spacing: -0.02em; }
+.offer-card .oc-top > div:first-child { min-width: 0; flex: 1 1 auto; }
+.offer-card .oc-co { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--fg); overflow-wrap: anywhere; }
+.offer-card .oc-loc { font-family: var(--font-mono); font-size: 11px; color: var(--fg-2); margin-top: 4px; letter-spacing: 0.05em; overflow-wrap: anywhere; }
+.offer-card .oc-pay {
+  font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--fg);
+  letter-spacing: -0.02em; line-height: 1.15; text-align: right;
+  flex: 0 1 auto; min-width: 0; max-width: 55%; overflow-wrap: anywhere;
+}
 .offer-card .oc-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
 .offer-card .oc-meta span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--glass-line); color: var(--fg-2); }
 .offer-card .oc-foot { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--glass-line); }
 .offer-card .oc-foot a { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--fg); display: inline-flex; align-items: center; gap: 6px; transition: gap .25s, color .25s; }
 .offer-card .oc-foot a svg { width: 16px; height: 16px; }
 .offer-card:hover .oc-foot a { gap: 10px; color: var(--fg); }
+
+/* One-column cards: the pay gets its own line under the carrier instead of
+   fighting the company name for the same row. */
+@media (max-width: 560px) {
+  .offer-card .oc-top { flex-wrap: wrap; }
+  .offer-card .oc-pay { flex: 1 0 100%; max-width: 100%; text-align: left; margin-top: 2px; }
+}
 
 /* ─────────── HOW IT WORKS — sticky stacking cards ─────────── */
 .how-sticky { position: relative; padding-block: 0; }
