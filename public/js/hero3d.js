@@ -90,17 +90,17 @@
     // Neutral greyscale studio — the site is black and white, and the old
     // navy floor + warm/cool strips were reflecting colour into the glass.
     //
-    // Shape matters more than brightness here: a few NARROW bright strips
-    // read as crisp softbox reflections (glass), whereas broad glowing
-    // panels smear into a milky wash (paint). Keep the fills dark and let
-    // the strips do the work.
+    // These sources are deliberately BROAD. A previous pass made them narrow
+    // to get crisp highlights, but a narrow source reflected in near-mirror
+    // glass is a hairline — and hairlines across a windshield read as cracks.
+    // Wide, soft softboxes give the pane a gradient to sit in instead.
     block(0x0a0a0a, 0,  -2,  0, 60, 0.1, 60);                   // floor — near black
     block(0x2a2a2a, 0,  11,  0, 60, 0.1, 60);                   // ceiling — dim
-    block(0x161616, -9,  4,  0, 0.1, 8, 16);                    // left fill (dark)
-    block(0x161616,  9,  4,  0, 0.1, 8, 16);                    // right fill (dark)
-    block(0xffffff, -5,  8, -2, 0.5, 0.22, 12);                 // key strip — long + narrow
-    block(0xf2f2f2,  6,  7,  3, 0.4, 0.18, 9);                  // fill strip
-    block(0xffffff,  0,  9,  7, 7, 0.18, 0.4);                  // front rail (windshield catch)
+    block(0x171717, -9,  4,  0, 0.1, 8, 16);                    // left fill (dark)
+    block(0x171717,  9,  4,  0, 0.1, 8, 16);                    // right fill (dark)
+    block(0xdedede, -5,  8, -1, 3.2, 2.2, 14);                  // key softbox — broad
+    block(0xc8c8c8,  6,  7,  3, 2.6, 1.8, 11);                  // fill softbox
+    block(0xd6d6d6,  0,  9,  7, 12,  2.0, 3.0);                 // front softbox (windshield)
 
     var pmrem = new THREE.PMREMGenerator(renderer);
     pmrem.compileEquirectangularShader();
@@ -210,11 +210,15 @@
     var glassMat = new THREE.MeshPhysicalMaterial({
       color: 0x050505,
       metalness: 0.0,            // dielectric: reflections come via fresnel
-      roughness: 0.05,           // glass is smooth — this is what sells it
+      // Roughness is a balance, not a race to zero. At 0.05 the pane is a
+      // near-perfect mirror, and against narrow light sources that produces
+      // hairline-thin highlights that read as CRACKS across the glass. Enough
+      // blur to spread them into soft bands, still glossy enough to be glass.
+      roughness: 0.16,
       clearcoat: 1.0,            // second specular layer, like laminated glass
-      clearcoatRoughness: 0.04,
-      specularIntensity: 0.9,
-      envMapIntensity: 0.45,
+      clearcoatRoughness: 0.12,
+      specularIntensity: 0.7,
+      envMapIntensity: 0.30,
       // You have to be able to SEE INTO a windshield or it reads as a painted
       // panel with a gloss coat. This is what the cabin lining below exists
       // for — without something dark behind it, letting light through would
@@ -271,33 +275,37 @@
       });
     });
 
-    // ── Cabin lining ────────────────────────────────────────────────────
-    // The GLB is a hollow shell: hide the glass and you see the white inside
-    // of the far body panel, no seats or dash. So the glass was left opaque,
-    // which is exactly why it read as paint rather than a windshield.
+    // ── Cabin interior ──────────────────────────────────────────────────
+    // The GLB is a hollow shell and every material ships doubleSided, so
+    // through the glass you were seeing the WHITE backfaces of the far body
+    // panel. Fix it at the source: render the body front-faces only, and add
+    // one dark back-face pass over the same geometry.
     //
-    // Clone each pane, push it a hair inward and render its BACK faces in
-    // matte near-black. That gives the glass a dark cabin to sit in front of,
-    // so the tint has depth and the A-pillar reads as a real edge.
-    (function addCabinLining() {
-      var panes = [];
+    // An earlier attempt cloned each glass pane and scaled it 0.8% inward,
+    // but scaling runs toward the mesh ORIGIN, not along the surface — so on
+    // panes whose origin sits off to one side the lining slid sideways and
+    // peeked out past the glass edge. Those mismatched slivers are what read
+    // as cracked panels. Sharing the body's exact geometry has no such gap.
+    (function addCabinInterior() {
+      var shells = [];
       truck.traverse(function (o) {
-        if (o.isMesh && o.material === glassMat) panes.push(o);
+        if (o.isMesh && o.material && o.material !== glassMat) {
+          var t = nameTag(o.material, o.name);
+          if (!isWheelish(t) && !isLightish(t)) shells.push(o);
+        }
       });
-      panes.forEach(function (pane) {
-        var lining = new THREE.Mesh(pane.geometry, new THREE.MeshStandardMaterial({
-          color: 0x070707,
-          roughness: 0.95,
+      shells.forEach(function (shell) {
+        var mats = Array.isArray(shell.material) ? shell.material : [shell.material];
+        mats.forEach(function (m) { m.side = THREE.FrontSide; });
+        var inner = new THREE.Mesh(shell.geometry, new THREE.MeshStandardMaterial({
+          color: 0x060606,
+          roughness: 1.0,
           metalness: 0.0,
           side: THREE.BackSide
         }));
-        lining.position.copy(pane.position);
-        lining.rotation.copy(pane.rotation);
-        lining.scale.copy(pane.scale).multiplyScalar(0.992);
-        lining.renderOrder = -1;          // draw before the transparent glass
-        lining.castShadow = false;
-        lining.receiveShadow = false;
-        pane.parent.add(lining);
+        inner.castShadow = false;
+        inner.receiveShadow = false;
+        shell.add(inner);          // same transform, so geometry matches exactly
       });
     })();
 
