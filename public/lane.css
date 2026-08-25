@@ -1,0 +1,98 @@
+/* United Services — lane / landing page layout
+   Built on the existing system (styles.css + companies.css): this file only
+   adds the article-page pieces those two don't already cover. */
+
+/* breadcrumb */
+.lane-crumb {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--fg-2); margin-bottom: 26px;
+}
+.lane-crumb a { color: var(--fg-2); transition: color .2s; }
+.lane-crumb a:hover { color: var(--fg); }
+.lane-crumb span[aria-current] { color: var(--fg); }
+
+.lane-hero { max-width: 780px; }
+/* The homepage h1 is a poster headline; a landing page's has to leave room for
+   the copy that does the actual ranking. */
+.lane-top { min-height: 0; padding-top: 132px; padding-bottom: 72px; }
+.page-hero .lane-hero h1 { margin-top: 0; font-size: clamp(34px, 4.4vw, 56px); line-height: 1.04; }
+.page-hero .lane-hero .ph-sub { max-width: 620px; margin: 22px 0 32px; }
+
+/* the three facts under the hero copy */
+.lane-facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; }
+.lane-fact {
+  display: flex; flex-direction: column; gap: 5px; padding: 12px 18px;
+  border-radius: 14px; border: 1px solid var(--glass-line); background: var(--glass-bg);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.lane-fact .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-2); }
+.lane-fact .v { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--fg); }
+
+/* article */
+.lane-wrap { max-width: 820px; }
+.lane-body h2 {
+  font-size: clamp(26px, 3.4vw, 38px); line-height: 1.08; margin: 56px 0 18px;
+  letter-spacing: -0.025em;
+}
+.lane-body h2:first-of-type { margin-top: 48px; }
+.lane-body p { font-size: 17px; line-height: 1.75; color: var(--fg-2); margin-bottom: 18px; }
+.lane-body p strong { color: var(--fg); font-weight: 600; }
+
+.lane-checks { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 10px; }
+.lane-checks li {
+  position: relative; padding: 14px 18px 14px 46px; border-radius: 12px;
+  border: 1px solid var(--glass-line); background: var(--glass-bg);
+  font-size: 15px; color: var(--fg);
+}
+.lane-checks li::before {
+  content: ""; position: absolute; left: 18px; top: 50%; width: 14px; height: 8px;
+  border-left: 2px solid var(--fg); border-bottom: 2px solid var(--fg);
+  transform: translateY(-70%) rotate(-45deg);
+}
+
+/* inline CTA */
+.lane-cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  flex-wrap: wrap; padding: 30px 32px; margin: 56px 0 0;
+}
+.lane-cta h3 { font-size: 24px; margin-bottom: 8px; }
+.lane-cta p { font-size: 15px; color: var(--fg-2); max-width: 460px; margin: 0; line-height: 1.6; }
+
+/* FAQ */
+.lane-faqs { display: grid; gap: 10px; margin-top: 24px; }
+.lane-faq {
+  border: 1px solid var(--glass-line); border-radius: 14px;
+  background: var(--glass-bg); overflow: hidden;
+}
+.lane-faq summary {
+  cursor: pointer; list-style: none; padding: 18px 52px 18px 22px; position: relative;
+  font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--fg);
+}
+.lane-faq summary::-webkit-details-marker { display: none; }
+.lane-faq summary::after {
+  content: ""; position: absolute; right: 24px; top: 50%; width: 9px; height: 9px;
+  border-right: 2px solid var(--fg-2); border-bottom: 2px solid var(--fg-2);
+  transform: translateY(-70%) rotate(45deg); transition: transform .25s var(--ease-out);
+}
+.lane-faq[open] summary::after { transform: translateY(-30%) rotate(-135deg); }
+.lane-faq p { padding: 0 22px 20px; margin: 0; font-size: 15.5px; line-height: 1.7; color: var(--fg-2); }
+
+/* related lanes */
+.lane-rels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 900px) { .lane-rels { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .lane-rels { grid-template-columns: 1fr; } }
+.lane-rel {
+  display: flex; flex-direction: column; gap: 4px; padding: 22px;
+  border-radius: 16px; border: 1px solid var(--glass-line); background: var(--glass-bg);
+  transition: border-color .25s, transform .25s var(--ease-out);
+}
+.lane-rel:hover { border-color: var(--fg); transform: translateY(-2px); }
+.lane-rel .t { font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--fg); }
+.lane-rel .s { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-2); }
+.lane-rel svg { width: 18px; height: 18px; color: var(--fg); margin-top: 12px; }
+
+@media (max-width: 560px) {
+  .lane-cta { padding: 24px; }
+  .lane-body p { font-size: 16px; }
+}
