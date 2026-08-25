@@ -110,6 +110,45 @@
   }
   scene.environment = buildEnvMap();
 
+  // Separate environment for the glass only.
+  //
+  // The studio env above is made of discrete blocks, and a glossy pane
+  // reflects their EDGES — that is what draws lines across the windshield.
+  // Real automotive glass mostly mirrors a smooth sky-to-ground gradient, so
+  // that is what the panes get: bright sky up top falling through a horizon
+  // into near-black ground. Reflecting a gradient can only ever produce a
+  // gradient, so the pane can be properly glossy without ever forming a
+  // streak.
+  function buildGlassEnvMap() {
+    var c = document.createElement('canvas');
+    c.width = 16; c.height = 256;
+    var g = c.getContext('2d');
+    var grad = g.createLinearGradient(0, 0, 0, 256);
+    // Deliberately dim at the top. The windshield folds sharply into the side
+    // glass, and at that crease the surface normal sweeps through the whole
+    // environment in the space of a few pixels — so a bright sky compresses
+    // into a hard white line right where a windscreen looks cracked. Cap the
+    // brightest reflection at mid grey and that crease becomes a soft sheen.
+    grad.addColorStop(0.00, '#8e8e8e');   // sky
+    grad.addColorStop(0.34, '#4c4c4c');
+    grad.addColorStop(0.49, '#242424');   // horizon
+    grad.addColorStop(0.52, '#101010');
+    grad.addColorStop(1.00, '#040404');   // ground
+    g.fillStyle = grad; g.fillRect(0, 0, 16, 256);
+
+    var tex = new THREE.CanvasTexture(c);
+    tex.mapping = THREE.EquirectangularReflectionMapping;
+    if ('colorSpace' in tex) tex.colorSpace = THREE.SRGBColorSpace;
+    else tex.encoding = THREE.sRGBEncoding;
+
+    var pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+    var env = pmrem.fromEquirectangular(tex).texture;
+    pmrem.dispose(); tex.dispose();
+    return env;
+  }
+  var glassEnv = buildGlassEnvMap();
+
   // Invisible ground plane that *only* catches the directional light's shadow.
   // ShadowMaterial means nothing is drawn except where the truck shadow falls,
   // so we don't see a floating dark disc when the camera orbits to the side.
@@ -306,21 +345,21 @@
     // behind it. Keep a little envMapIntensity and specular so it still reads
     // as glass under the key light rather than as a hole in the truck.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x030303,
-      metalness: 0.0,
-      // Roughness this high can't form a sharp highlight at ANY camera angle,
-      // on any GPU. Every softer setting kept a specular lobe alive, and a
-      // specular lobe on this geometry is a streak — the earlier passes only
-      // moved where it landed. The pane is a dark tinted sheet now: it takes
-      // the key light as a faint sheen and nothing else.
-      roughness: 0.70,
-      clearcoat: 0.0,            // no second specular layer at all
-      specularIntensity: 0.15,
-      envMapIntensity: 0.05,     // the studio softboxes stop showing up in it
-      transparent: false,
+      color: 0x050505,           // near-black tint: the cabin never shows through
+      metalness: 0.0,            // dielectric — reflections arrive via fresnel
+      // Gloss comes from the gradient reflection below, not from punctual
+      // highlights: the three scene lights hitting the sharp windshield/side
+      // fold at mirror sharpness is what drew a bright line down the corner.
+      // Softened here, that fold gets a broad sheen instead of a hairline.
+      roughness: 0.32,
+      clearcoat: 0.0,
+      specularIntensity: 0.08,
+      envMap: glassEnv,          // the smooth gradient, NOT the block studio
+      envMapIntensity: 1.35,
+      transparent: false,        // opaque: no white backfaces, no sort artifacts
       opacity: 1,
-      depthWrite: true,          // let the z-buffer sort the pane against itself
-      side: THREE.DoubleSide     // the GLB panes are doubleSided; FrontSide would open holes
+      depthWrite: true,
+      side: THREE.DoubleSide
     });
 
     truck.traverse(function (o) {
