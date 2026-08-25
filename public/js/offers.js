@@ -92,21 +92,21 @@
       grid.innerHTML = '<div class="board-empty"><div class="t">No offers match those filters</div><div>Try widening the equipment range — new offers post throughout the week.</div></div>';
       return;
     }
-    if (window.USROffers) {
-      grid.innerHTML = list.map(function (o, i) { return window.USROffers.card(o, i); }).join('');
-      window.USROffers.bind(grid);
-      return;
-    }
     grid.innerHTML = list.map(function (o) {
-      var loc = [o.location, o.route].filter(Boolean).map(escapeHtml).join(' \u00b7 ') || postedAgo(o.created_at);
+      var loc = [o.location, o.route].filter(Boolean).map(escapeHtml).join(' · ') || postedAgo(o.created_at);
       var tags = (o.tags && o.tags.length ? o.tags : [o.equipment].filter(Boolean))
         .map(function (t) { return '<span>' + escapeHtml(t) + '</span>'; }).join('');
+      var pay = o.pay ? '<div class="dc-line"><span class="lab">Pay</span><span class="val" style="color:var(--steel-hi)">' + escapeHtml(o.pay) + '</span></div>' : '';
+      var eqLine = o.equipment ? '<div class="dc-line"><span class="lab">Equipment</span><span class="val">' + escapeHtml(o.equipment) + '</span></div>' : '';
+      var badge = o.badge ? '<span class="pill live"><span class="dot"></span>' + escapeHtml(o.badge) + '</span>' : '<span class="pill"><span class="dot"></span>Verified</span>';
       return '<div class="card driver-card edge-top">' +
         '<div class="dc-top"><div class="dc-avatar">' + truckIco + '</div>' +
           '<div><div class="dc-id">' + escapeHtml(o.company || 'Verified carrier') + '</div>' +
           '<div class="dc-loc">' + loc + '</div></div></div>' +
+        '<div class="dc-meta">' + pay + eqLine + '</div>' +
         (tags ? '<div class="dc-tags">' + tags + '</div>' : '') +
-        '<div class="dc-foot"><span class="pill"><span class="dot"></span>Verified</span>' +
+        (o.notes ? '<div class="dc-notes" style="font-size:13px;line-height:1.55;color:var(--silver-txt);margin-bottom:16px;">' + escapeHtml(o.notes) + '</div>' : '') +
+        '<div class="dc-foot">' + badge +
           '<a href="apply.html">Apply via US' + arrowIco + '</a></div>' +
       '</div>';
     }).join('');
@@ -128,7 +128,7 @@
   function go() {
     var sb = window.usrSupabase;
     sb.from('offers')
-      .select('*')   // '*' so a not-yet-migrated column can't error the whole query out
+      .select('id, created_at, company, location, route, equipment, pay, tags, badge, notes')
       .order('created_at', { ascending: false })
       .limit(120)
       .then(function (res) {
