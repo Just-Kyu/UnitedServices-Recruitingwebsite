@@ -195,37 +195,127 @@
       return tag.indexOf('light') !== -1 || tag.indexOf('lamp') !== -1 || tag.indexOf('headlamp') !== -1;
     }
 
+    // ── Smooth a pane's normal field ────────────────────────────────────
+    // The GLB ships the glasshouse as unindexed triangles, so a corner shared
+    // by six triangles exists as six separate vertices, each carrying its own
+    // normal. Those normals disagree slightly, and the triangles the Meshopt
+    // pass left behind are long and skinny — so the shading breaks into the
+    // creases and folds that make the windshield look crumpled or cracked, no
+    // matter what the material does.
+    //
+    // Fix the geometry instead of chasing it with material settings: weld
+    // vertices by position, average the normals that meet there, then relax
+    // the field across triangle neighbours a few times. Curvature survives
+    // (it's low-frequency); the per-triangle shear doesn't. Runs once, on the
+    // glass panes only.
+    function smoothNormals(geo, iterations) {
+      var pos = geo.attributes && geo.attributes.position;
+      var nrm = geo.attributes && geo.attributes.normal;
+      if (!pos || !nrm || pos.count < 3) return;
+
+      var count = pos.count, Q = 1e4, i, g;
+      var groupOf = new Int32Array(count);
+      var byKey = Object.create(null);
+      var groups = [];                       // group index -> [vertex indices]
+      for (i = 0; i < count; i++) {
+        var key = Math.round(pos.getX(i) * Q) + ',' +
+                  Math.round(pos.getY(i) * Q) + ',' +
+                  Math.round(pos.getZ(i) * Q);
+        g = byKey[key];
+        if (g === undefined) { g = byKey[key] = groups.length; groups.push([]); }
+        groupOf[i] = g;
+        groups[g].push(i);
+      }
+
+      var n = groups.length;
+      var nx = new Float32Array(n), ny = new Float32Array(n), nz = new Float32Array(n);
+      for (i = 0; i < count; i++) {
+        g = groupOf[i];
+        nx[g] += nrm.getX(i); ny[g] += nrm.getY(i); nz[g] += nrm.getZ(i);
+      }
+
+      // Neighbours: the other two corners of every triangle this group touches.
+      var index = geo.index;
+      var triCount = (index ? index.count : count);
+      var adj = new Array(n);
+      for (i = 0; i < n; i++) adj[i] = [];
+      for (i = 0; i + 2 < triCount; i += 3) {
+        var a = groupOf[index ? index.getX(i)     : i];
+        var b = groupOf[index ? index.getX(i + 1) : i + 1];
+        var c = groupOf[index ? index.getX(i + 2) : i + 2];
+        if (a !== b) { adj[a].push(b); adj[b].push(a); }
+        if (b !== c) { adj[b].push(c); adj[c].push(b); }
+        if (c !== a) { adj[c].push(a); adj[a].push(c); }
+      }
+
+      function normalize() {
+        for (var k = 0; k < n; k++) {
+          var len = Math.sqrt(nx[k] * nx[k] + ny[k] * ny[k] + nz[k] * nz[k]) || 1;
+          nx[k] /= len; ny[k] /= len; nz[k] /= len;
+        }
+      }
+      normalize();
+
+      var ox = new Float32Array(n), oy = new Float32Array(n), oz = new Float32Array(n);
+      for (var pass = 0; pass < (iterations || 2); pass++) {
+        ox.set(nx); oy.set(ny); oz.set(nz);
+        for (var k = 0; k < n; k++) {
+          var neigh = adj[k], m = neigh.length;
+          if (!m) continue;
+          // Weight the vertex's own normal so genuine curvature isn't flattened.
+          var sx = ox[k] * 2, sy = oy[k] * 2, sz = oz[k] * 2;
+          for (var j = 0; j < m; j++) {
+            var q = neigh[j];
+            sx += ox[q]; sy += oy[q]; sz += oz[q];
+          }
+          nx[k] = sx; ny[k] = sy; nz[k] = sz;
+        }
+        normalize();
+      }
+
+      for (i = 0; i < count; i++) {
+        g = groupOf[i];
+        nrm.setXYZ(i, nx[g], ny[g], nz[g]);
+      }
+      nrm.needsUpdate = true;
+    }
+
     // One shared glass material for every pane: dark tinted automotive glass.
     //
-    // The earlier "solid" tuning killed roughness and specular to stop a milky
-    // wash — but matte IS paint, which is why it stopped reading as glass. The
-    // real fix is SHARP rather than absent: near-zero roughness plus a real
-    // specular response gives tight, curved highlights that track the body,
-    // while the near-black tint keeps the pane dark face-on. Broad soft
-    // reflections smear; narrow sharp ones read as glass. (The env map is
-    // built from narrow strips for exactly this reason.)
+    // History: every previous attempt kept the pane near-mirror (roughness
+    // ~0.05-0.16 PLUS clearcoat 1.0 at clearcoatRoughness 0.12) and tried to
+    // fix the cracks by reshaping the env map. That can't work. A mirror
+    // reflects whatever the env map is, and the reflection lands on geometry
+    // the Meshopt pass simplified into long skinny triangles — so the
+    // interpolated normals shear along those edges and every light source,
+    // however broad, gets stretched into a hairline streak. Those streaks
+    // are the "shattered windshield".
     //
-    // Colour is a true neutral — any blue in the hex tints the whole pane on
-    // a black-and-white page.
+    // Two changes kill it at the source:
+    //  1. Roughness up to 0.38 and the clearcoat mirror dropped. At this
+    //     roughness the specular lobe is wider than the normal error, so
+    //     shear spreads into a soft sheen instead of resolving as a line.
+    //  2. The pane is opaque. Transparent + depthWrite:false meant the pane's
+    //     own doubleSided back faces drew over its front faces in draw order
+    //     rather than depth order, laying a second, offset set of highlights
+    //     across the first. Opaque glass writes depth, so the z-buffer sorts
+    //     the pane against itself and only the near surface shows.
+    //
+    // Opaque also gives the near-black windshield the design asks for: no
+    // white body backfaces showing through, no dependence on the cabin lining
+    // behind it. Keep a little envMapIntensity and specular so it still reads
+    // as glass under the key light rather than as a hole in the truck.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x050505,
+      color: 0x040404,
       metalness: 0.0,            // dielectric: reflections come via fresnel
-      // Roughness is a balance, not a race to zero. At 0.05 the pane is a
-      // near-perfect mirror, and against narrow light sources that produces
-      // hairline-thin highlights that read as CRACKS across the glass. Enough
-      // blur to spread them into soft bands, still glossy enough to be glass.
-      roughness: 0.16,
-      clearcoat: 1.0,            // second specular layer, like laminated glass
-      clearcoatRoughness: 0.12,
-      specularIntensity: 0.7,
-      envMapIntensity: 0.30,
-      // You have to be able to SEE INTO a windshield or it reads as a painted
-      // panel with a gloss coat. This is what the cabin lining below exists
-      // for — without something dark behind it, letting light through would
-      // just expose the white inside of the far body shell.
-      transparent: true,
-      opacity: 0.80,
-      depthWrite: false,
+      roughness: 0.38,           // wider than the normal error — no hairlines
+      clearcoat: 0.25,           // a hint of laminate, not a second mirror
+      clearcoatRoughness: 0.55,
+      specularIntensity: 0.28,
+      envMapIntensity: 0.14,
+      transparent: false,
+      opacity: 1,
+      depthWrite: true,          // let the z-buffer sort the pane against itself
       side: THREE.DoubleSide     // the GLB panes are doubleSided; FrontSide would open holes
     });
 
@@ -264,8 +354,15 @@
           // normals if the file genuinely shipped without them.
           if (Array.isArray(o.material)) o.material[mi] = glassMat;
           else o.material = glassMat;
-          if (o.geometry && o.geometry.attributes && !o.geometry.attributes.normal) {
-            o.geometry.computeVertexNormals();
+          if (o.geometry && o.geometry.attributes) {
+            if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals();
+            // Relax the pane's normal field — see smoothNormals(). This is
+            // what stops the reflection breaking into creases; the material
+            // alone can only blur them.
+            if (!o.geometry.userData.__normalsSmoothed) {
+              smoothNormals(o.geometry, 3);
+              o.geometry.userData.__normalsSmoothed = true;
+            }
           }
         } else if (isLightish(mtag)) {
           if (!m.emissive) m.emissive = new THREE.Color();
