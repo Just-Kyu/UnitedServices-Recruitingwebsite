@@ -120,19 +120,22 @@
   ]
 }
 </script>
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=16">
-<link rel="icon" type="image/png" sizes="any" href="assets/logo-chrome.png?v=16">
-<link rel="apple-touch-icon" href="assets/logo-chrome.png">
-<link rel="stylesheet" href="styles.css?v=16">
-<link rel="stylesheet" href="home.css?v=16">
-<link rel="stylesheet" href="lane.css?v=16">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=17">
+<link rel="icon" type="image/png" sizes="any" href="assets/logo-chrome.png?v=17">
+<link rel="apple-touch-icon" href="assets/logo-chrome.png?v=17">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css?v=17">
+<link rel="stylesheet" href="home.css?v=17">
+<link rel="stylesheet" href="lane.css?v=17">
 </head>
 <body class="loading">
 
 <!-- ░░ Loader ░░ -->
 <div id="loader">
   <div class="load-stage">
-    <img src="assets/logo-chrome.png" alt="United Services">
+    <img src="assets/logo-chrome.png?v=17" alt="United Services">
     <div class="load-bar"><i></i></div>
     <div class="load-cap">United Services · Recruiting</div>
   </div>
@@ -142,7 +145,7 @@
 <div class="nav-shell">
   <nav class="nav" aria-label="Primary">
     <a class="nav-brand" href="index.html">
-      <img src="assets/logo-chrome.png" alt="">
+      <img src="assets/logo-chrome.png?v=17" alt="">
       <span><span class="bt">United Services</span><br><span class="bs">Recruiting</span></span>
     </a>
     <div class="nav-links">
@@ -1093,7 +1096,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <img src="assets/logo-chrome.png" alt="United Services">
+        <img src="assets/logo-chrome.png?v=17" alt="United Services">
         <p style="max-width:280px;color:var(--silver-dim);font-size:14px">United Services Recruiting connects reliable CDL drivers with carriers hiring across all 48 states. Part of the United Services family.</p>
       </div>
       <div class="foot-col">
@@ -1125,7 +1128,7 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=16"></script>
+<script src="js/site.js?v=17"></script>
 <script>
 // Desktop gets the 3D truck; mobile gets the route map and skips ~750 KB of
 // three.js + GLB entirely. Scripts load in sequence (each depends on the last).
@@ -1135,7 +1138,7 @@
     'https://unpkg.com/three@0.147.0/build/three.min.js',
     'https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js',
     'https://unpkg.com/three@0.147.0/examples/js/libs/meshopt_decoder.js',
-    'js/hero3d.js?v=16'
+    'js/hero3d.js?v=17'
   ];
   (function next(i) {
     if (i >= files.length) return;
@@ -1146,8 +1149,8 @@
   })(0);
 })();
 </script>
-<script src="js/matcher.js?v=16"></script>
-<script src="js/equip.js?v=16"></script>
+<script src="js/matcher.js?v=17"></script>
+<script src="js/equip.js?v=17"></script>
 <script>
 // Route map hero→background hand-off: bright and big at the top of the page,
 // dimmed ambient layer once you scroll. CSS transition does the easing; this
@@ -1166,7 +1169,7 @@
 </script>
 <!-- Live offers: replace the sample cards with real admin-published offers if any exist -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/config.js?v=16"></script>
+<script src="js/config.js?v=17"></script>
 <script>
 (function () {
   var sb = window.usrSupabase, grid = document.getElementById('home-offers-grid');

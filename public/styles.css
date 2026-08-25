@@ -1,7 +1,8 @@
 /* United Services Recruiting — black & white marketing site.
    Ink and paper, alternating bands, frosted glass surfaces. */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Fonts are loaded via <link rel=preconnect/stylesheet> in each page head —
+   an @import here costs an extra round trip before any text can render. */
 
 /* ─────────────────────────────────────────────────────────────
    Black & white. Two inks, and a band system.
