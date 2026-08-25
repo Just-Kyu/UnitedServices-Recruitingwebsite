@@ -115,3 +115,9 @@
 .form-ok .ok-ico svg { width: 30px; height: 30px; }
 .form-ok h3 { font-size: 24px; margin-bottom: 10px; }
 .form-ok p { color: var(--fg-2); }
+
+/* Driver name leads the card; the reference id sits under it. */
+.dc-ref {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--fg-2); margin-top: 3px;
+}

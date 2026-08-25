@@ -63,6 +63,54 @@
     });
   });
 
+
+  /* ---------- carrier logo ---------- */
+  // Stored as a data URL on the offer row: no storage bucket to provision, and
+  // a logo downscaled to 256px is a few KB. Colour is kept as uploaded; the
+  // public site renders every logo black-and-white via CSS.
+  var offerLogo = null;
+  (function () {
+    var input = document.getElementById('offer-logo');
+    var prev = document.getElementById('offer-logo-prev');
+    var clear = document.getElementById('offer-logo-clear');
+    if (!input) return;
+    function reset() {
+      offerLogo = null; input.value = '';
+      prev.hidden = true; clear.hidden = true;
+    }
+    clear.addEventListener('click', reset);
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      if (!file) return reset();
+      if (file.size > 4 * 1024 * 1024) { alert('Logo is over 4 MB — please use a smaller file.'); return reset(); }
+      var reader = new FileReader();
+      reader.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          var max = 256, w = img.width, h = img.height;
+          var scale = Math.min(1, max / Math.max(w, h));
+          var c = document.createElement('canvas');
+          c.width = Math.max(1, Math.round(w * scale));
+          c.height = Math.max(1, Math.round(h * scale));
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          offerLogo = c.toDataURL('image/png');
+          prev.querySelector('img').src = offerLogo;
+          prev.hidden = false; clear.hidden = false;
+        };
+        // SVG has no intrinsic raster size in some browsers — keep it as-is.
+        if (file.type === 'image/svg+xml') {
+          offerLogo = reader.result;
+          prev.querySelector('img').src = offerLogo;
+          prev.hidden = false; clear.hidden = false;
+          return;
+        }
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    window.__resetOfferLogo = reset;
+  })();
+
   /* ---------- offers ---------- */
   function loadOffers() {
     sb.from('offers').select('*').order('created_at', { ascending: false }).then(function (res) {
@@ -73,9 +121,10 @@
       if (!rows.length) { list.innerHTML = '<div class="admin-empty">No offers yet. Add one on the left.</div>'; return; }
       list.innerHTML = rows.map(function (o) {
         var tags = (o.tags || []).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
-        var sub = [o.location, o.route, o.equipment, o.pay].filter(Boolean).map(esc).join(' · ');
+        var sub = [o.location, o.route, o.equipment, o.pay, o.home_time].filter(Boolean).map(esc).join(' · ');
+        var thumb = o.logo_url ? '<span class="ar-logo"><img src="' + esc(o.logo_url) + '" alt=""></span>' : '';
         return '<div class="admin-row' + (o.is_published ? '' : ' is-hidden') + '">' +
-          '<div class="ar-main"><div class="ar-title">' + esc(o.company) + '</div>' +
+          '<div class="ar-main"><div class="ar-title">' + thumb + esc(o.company) + '</div>' +
           '<div class="ar-sub">' + sub + '</div><div class="ar-tags">' + tags + '</div></div>' +
           '<div class="ar-actions">' +
           '<button class="ar-btn ' + (o.is_published ? 'pub' : 'hidden') + '" data-pub="offers" data-id="' + o.id + '" data-val="' + (o.is_published ? 'false' : 'true') + '">' + (o.is_published ? 'Live' : 'Draft') + '</button>' +
@@ -96,6 +145,13 @@
       tags: f.tags.value.trim() ? f.tags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean) : null,
       badge: f.badge.value.trim() || null,
       notes: f.notes.value.trim() || null,
+      logo_url: offerLogo || null,
+      home_time: f.home_time.value.trim() || null,
+      escrow: f.escrow.value.trim() || null,
+      sign_on: f.sign_on.value.trim() || null,
+      insurance: f.insurance.value.trim() || null,
+      rpm: f.rpm.value ? parseFloat(f.rpm.value) : null,
+      avg_miles: f.avg_miles.value ? parseInt(f.avg_miles.value, 10) : null,
       is_published: f.is_published.value === 'true'
     };
     if (!row.company) return;
@@ -103,6 +159,7 @@
       if (res.error) { msg.className = 'form-msg err'; msg.textContent = res.error.message; return; }
       msg.className = 'form-msg ok'; msg.textContent = 'Offer added.';
       f.reset(); f.badge.value = 'Hiring now';
+      if (window.__resetOfferLogo) window.__resetOfferLogo();
       setTimeout(function () { msg.textContent = ''; }, 2500);
       loadOffers();
     });
@@ -117,10 +174,10 @@
       document.getElementById('cnt-drivers').textContent = rows.length;
       if (!rows.length) { list.innerHTML = '<div class="admin-empty">No drivers yet. Add one on the left.</div>'; return; }
       list.innerHTML = rows.map(function (d) {
-        var sub = [d.location, d.cdl_class, d.years, d.route].filter(Boolean).map(esc).join(' · ');
+        var sub = [d.handle, d.location, d.cdl_class, d.years, d.route].filter(Boolean).map(esc).join(' · ');
         var tags = [d.equipment, d.clearance].filter(Boolean).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
         return '<div class="admin-row' + (d.is_published ? '' : ' is-hidden') + '">' +
-          '<div class="ar-main"><div class="ar-title">' + esc(d.handle || 'Driver') + '</div>' +
+          '<div class="ar-main"><div class="ar-title">' + esc(d.name || d.handle || 'Driver') + '</div>' +
           '<div class="ar-sub">' + sub + '</div><div class="ar-tags">' + tags + '</div></div>' +
           '<div class="ar-actions">' +
           '<button class="ar-btn ' + (d.is_published ? 'pub' : 'hidden') + '" data-pub="drivers" data-id="' + d.id + '" data-val="' + (d.is_published ? 'false' : 'true') + '">' + (d.is_published ? 'Live' : 'Draft') + '</button>' +
@@ -133,6 +190,7 @@
     e.preventDefault();
     var f = e.target, msg = document.getElementById('driver-msg');
     var row = {
+      name: f.name.value.trim() || null,
       handle: f.handle.value.trim() || null,
       location: f.location.value.trim() || null,
       cdl_class: f.cdl_class.value,
