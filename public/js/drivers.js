@@ -141,10 +141,13 @@
         ? '<span class="clear">SAP-cleared</span>'
         : '<span class="clear">' + escapeHtml(d.clearance || 'Clean record') + '</span>';
       var availPill = '<span class="pill live"><span class="dot"></span>Available</span>';
-      var name = d.handle || ('Driver #' + shortId(d.id));
+      var name = d.name || d.handle || ('Driver #' + shortId(d.id));
+      // The reference id stays visible, just demoted under the name.
+      var ref = d.name && d.handle ? d.handle : (d.name ? 'Driver #' + shortId(d.id) : '');
       return '<div class="card driver-card edge-top">' +
         '<div class="dc-top"><div class="dc-avatar">' + driverIco + '</div>' +
           '<div><div class="dc-id">' + escapeHtml(name) + '</div>' +
+          (ref ? '<div class="dc-ref">' + escapeHtml(ref) + '</div>' : '') +
           '<div class="dc-loc">' + escapeHtml(shortLocation(d.location)) + '</div></div></div>' +
         '<div class="dc-meta">' +
           '<div class="dc-line"><span class="lab">License</span><span class="val">' + escapeHtml(d.cdl_class || '—') + '</span></div>' +
@@ -170,7 +173,7 @@
   function go() {
     var sb = window.usrSupabase;
     sb.from('drivers')
-      .select('id, created_at, handle, cdl_class, years, exp_level, equipment, route, clearance, location')
+      .select('id, created_at, name, handle, cdl_class, years, exp_level, equipment, route, clearance, location')
       .order('created_at', { ascending: false })
       .limit(120)
       .then(function (res) {

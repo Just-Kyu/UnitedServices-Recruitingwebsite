@@ -55,6 +55,14 @@
       <form class="admin-card admin-form" id="offer-form">
         <h2>Add a carrier offer</h2>
         <div class="field"><label>Company *</label><input name="company" required placeholder="Cardinal Freightways"></div>
+        <div class="field"><label>Company logo <span class="hint">(shown in black &amp; white)</span></label>
+          <div class="logo-pick">
+            <input type="file" name="logo" id="offer-logo" accept="image/png,image/jpeg,image/svg+xml,image/webp">
+            <label class="logo-btn" for="offer-logo">Choose image</label>
+            <span class="logo-prev" id="offer-logo-prev" hidden><img alt=""></span>
+            <button type="button" class="logo-clear" id="offer-logo-clear" hidden>Remove</button>
+          </div>
+        </div>
         <div class="row2">
           <div class="field"><label>Location</label><input name="location" placeholder="Columbus, OH"></div>
           <div class="field"><label>Route</label>
@@ -66,6 +74,18 @@
             <select name="equipment"><option value="">—</option><option>Dry Van</option><option>Flatbed</option><option>Reefer</option><option>Step Deck</option><option>Tanker</option><option>Power Only</option><option>Car Hauler</option><option>Mixed fleet</option></select>
           </div>
           <div class="field"><label>Pay</label><input name="pay" placeholder="$0.62/mi · $1,500/wk · $26/hr"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Home time</label><input name="home_time" placeholder="Every 2–3 weeks"></div>
+          <div class="field"><label>Escrow</label><input name="escrow" placeholder="$1,000 · refundable"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Sign-on bonus</label><input name="sign_on" placeholder="$5,000"></div>
+          <div class="field"><label>Insurance</label><input name="insurance" placeholder="Health + dental after 60 days"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Rate / mile <span class="hint">(drives the calculator)</span></label><input name="rpm" type="number" step="0.01" min="0" placeholder="0.62"></div>
+          <div class="field"><label>Avg miles / week</label><input name="avg_miles" type="number" step="50" min="0" placeholder="2500"></div>
         </div>
         <div class="field"><label>Tags <span class="hint">(comma separated)</span></label><input name="tags" placeholder="CDL-A, 2+ yrs, No-touch"></div>
         <div class="row2">
@@ -88,7 +108,7 @@
       <form class="admin-card admin-form" id="driver-form">
         <h2>Add an available driver</h2>
         <div class="row2">
-          <div class="field"><label>Display name / ID</label><input name="handle" placeholder="Driver #1042"></div>
+          <div class="field"><label>Driver name *</label><input name="name" placeholder="Marcus Webb"></div>
           <div class="field"><label>Location</label><input name="location" placeholder="Dallas, TX"></div>
         </div>
         <div class="row2">
@@ -100,15 +120,18 @@
           </div>
         </div>
         <div class="row2">
-          <div class="field"><label>Years (label)</label><input name="years" placeholder="3 yrs"></div>
+          <div class="field"><label>Reference ID <span class="hint">(secondary)</span></label><input name="handle" placeholder="Driver #1042"></div>
           <div class="field"><label>Equipment</label>
             <select name="equipment"><option value="">—</option><option>Dry Van</option><option>Flatbed</option><option>Reefer</option><option>Step Deck</option><option>Tanker</option><option>Power Only</option><option>Car Hauler</option></select>
           </div>
         </div>
         <div class="row2">
+          <div class="field"><label>Years (label)</label><input name="years" placeholder="3 yrs"></div>
           <div class="field"><label>Route</label>
             <select name="route"><option value="">—</option><option>OTR</option><option>Regional</option><option>Local</option><option>Dedicated</option></select>
           </div>
+        </div>
+        <div class="row2">
           <div class="field"><label>Clearance</label>
             <select name="clearance"><option>Clean record</option><option>SAP-cleared</option></select>
           </div>

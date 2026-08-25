@@ -440,6 +440,121 @@
   .offer-card .oc-pay { flex: 1 0 100%; max-width: 100%; text-align: left; margin-top: 2px; }
 }
 
+/* ── Offer card: collapsed head, expandable detail ────────────────────── */
+.offer-card { padding: 0; overflow: hidden; transition: box-shadow .3s var(--ease-out); }
+.offer-card > * { padding-inline: 24px; }
+.oc-hit {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+  width: 100%; padding: 24px 24px 16px; background: none; border: 0; text-align: left;
+  color: inherit; font: inherit; cursor: pointer;
+}
+.oc-head { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 auto; }
+.oc-id { display: block; min-width: 0; }
+.oc-id .oc-co, .oc-id .oc-loc { display: block; }
+.oc-payline .oc-pay { text-align: right; max-width: none; }
+/* Carrier artwork is rendered black-and-white whatever the source file is, so
+   a colourful logo can't break the page's two-tone palette. */
+.oc-logo {
+  flex: none; width: 44px; height: 44px; border-radius: 10px;
+  border: 1px solid var(--glass-line); background: var(--glass-bg);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.oc-logo img {
+  max-width: 78%; max-height: 78%; object-fit: contain;
+  filter: grayscale(1) contrast(1.35) brightness(0.92);
+}
+[data-band="ink"] .oc-logo img { filter: grayscale(1) contrast(1.25) brightness(1.6); }
+/* Narrow enough and the pay broke mid-figure ("$0.6 / 2/mi") — give the
+   column a floor so short rates always sit on one line. */
+.oc-payline { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: 0 0 auto; min-width: 118px; }
+.oc-more {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--fg-2); white-space: nowrap;
+}
+.oc-more svg { width: 13px; height: 13px; transition: transform .3s var(--ease-out); }
+.offer-card.is-open .oc-more svg { transform: rotate(180deg); }
+.offer-card.is-open { box-shadow: inset 0 1px 0 var(--glass-top), 0 30px 70px -30px rgba(0,0,0,0.55); }
+/* Expanded card takes the whole row — "wider", as the grid allows. */
+.offers-grid .offer-card.is-open,
+.drivers-grid .offer-card.is-open { grid-column: 1 / -1; }
+.offer-card.is-open .oc-co { font-size: 22px; }
+.offer-card.is-open .oc-logo { width: 56px; height: 56px; }
+
+.oc-detail { padding-top: 4px; padding-bottom: 4px; animation: ocIn .35s var(--ease-out); }
+@keyframes ocIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+/* fact frames */
+.oc-frames { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 18px; }
+.oc-frame {
+  display: flex; flex-direction: column; gap: 5px;
+  padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--glass-line); background: var(--glass-bg);
+}
+.oc-frame .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-2); }
+.oc-frame .v { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--fg); overflow-wrap: anywhere; }
+
+/* notes */
+.oc-notes { margin-bottom: 18px; }
+.oc-notes .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-2); }
+.oc-notes p { margin-top: 8px; font-size: 14px; line-height: 1.6; color: var(--fg-2); }
+
+/* calculator */
+.oc-calc {
+  border: 1px solid var(--glass-line); border-radius: 14px;
+  padding: 18px; margin-bottom: 18px; background: var(--glass-bg);
+}
+.oc-calc-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--fg);
+  margin-bottom: 16px;
+}
+.oc-calc-head span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-2); }
+.oc-ctl { display: block; margin-bottom: 14px; }
+.oc-ctl .lab {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--fg-2); margin-bottom: 8px;
+}
+.oc-ctl .lab b { font-family: var(--font-display); font-size: 16px; color: var(--fg); letter-spacing: -0.01em; }
+.oc-step { display: flex; align-items: center; gap: 10px; }
+.oc-step button {
+  flex: none; width: 30px; height: 30px; border-radius: 999px;
+  border: 1px solid var(--glass-line); background: none; color: var(--fg);
+  font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  transition: background .2s, border-color .2s;
+}
+.oc-step button:hover { border-color: var(--fg); }
+.oc-calc input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 3px;
+  border-radius: 999px; background: var(--line); outline: none;
+}
+.oc-calc input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--btn-fill); border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--glass-line); cursor: pointer;
+}
+.oc-calc input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%; background: var(--btn-fill);
+  border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--glass-line); cursor: pointer;
+}
+.oc-calc-out { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+.oc-calc-out > div {
+  padding: 12px 10px; border-radius: 12px; text-align: center;
+  border: 1px solid var(--glass-line);
+}
+.oc-calc-out .k { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-2); }
+.oc-calc-out .v { display: block; margin-top: 6px; font-family: var(--font-display); font-weight: 800; font-size: clamp(17px, 2.2vw, 24px); color: var(--fg); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.oc-calc-note { margin-top: 14px; font-size: 11.5px; line-height: 1.5; color: var(--fg-2); }
+
+@media (max-width: 560px) {
+  .offer-card > *, .oc-hit { padding-inline: 20px; }
+  .oc-hit { flex-wrap: wrap; }
+  .oc-payline { align-items: flex-start; width: 100%; flex-basis: 100%; }
+  .oc-payline .oc-pay { text-align: left; }
+  .oc-calc-out { grid-template-columns: 1fr; }
+}
+
 /* ─────────── HOW IT WORKS — sticky stacking cards ─────────── */
 .how-sticky { position: relative; padding-block: 0; }
 .how-intro { padding-block: clamp(80px, 11vw, 160px) clamp(40px, 6vw, 80px); }

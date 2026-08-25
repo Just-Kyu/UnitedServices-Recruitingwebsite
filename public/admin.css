@@ -76,3 +76,30 @@
 .admin-table .lt-name { color: #fff; font-weight: 600; }
 .admin-table .lt-contact { color: var(--steel-hi, #ffffff); }
 .admin-table .lt-meta { color: var(--silver-dim, #ffffff); }
+
+/* ── Carrier logo picker ────────────────────────────────────────────────── */
+.logo-pick { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.logo-pick input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.logo-btn {
+  display: inline-flex; align-items: center; padding: 9px 16px; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.22); color: #fff; font-size: 13px; cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.logo-btn:hover { border-color: #fff; background: rgba(255,255,255,0.06); }
+.logo-prev {
+  width: 42px; height: 42px; border-radius: 10px; overflow: hidden; flex: none;
+  border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05);
+  display: flex; align-items: center; justify-content: center;
+}
+/* Previewed exactly as the public site will render it: black and white. */
+.logo-prev img { max-width: 80%; max-height: 80%; object-fit: contain; filter: grayscale(1) contrast(1.25) brightness(1.5); }
+.logo-clear { background: none; border: 0; color: rgba(255,255,255,0.55); font-size: 12px; text-decoration: underline; cursor: pointer; }
+.logo-clear:hover { color: #fff; }
+
+/* logo thumb in the saved-offers list */
+.ar-logo {
+  display: inline-flex; align-items: center; justify-content: center; vertical-align: -6px;
+  width: 24px; height: 24px; margin-right: 8px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.05); overflow: hidden;
+}
+.ar-logo img { max-width: 82%; max-height: 82%; object-fit: contain; filter: grayscale(1) contrast(1.25) brightness(1.5); }
