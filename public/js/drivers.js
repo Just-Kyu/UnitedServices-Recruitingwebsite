@@ -173,7 +173,7 @@
   function go() {
     var sb = window.usrSupabase;
     sb.from('drivers')
-      .select('id, created_at, name, handle, cdl_class, years, exp_level, equipment, route, clearance, location')
+      .select('*')   // '*' so the new name column can't error the board out pre-migration
       .order('created_at', { ascending: false })
       .limit(120)
       .then(function (res) {
