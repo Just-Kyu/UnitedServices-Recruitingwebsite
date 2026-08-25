@@ -128,7 +128,7 @@
   function go() {
     var sb = window.usrSupabase;
     sb.from('offers')
-      .select('id, created_at, company, location, route, equipment, pay, tags, badge, notes, logo_url, home_time, escrow, sign_on, insurance, rpm, avg_miles')
+      .select('*')   // '*' so a not-yet-migrated column can't error the whole query out
       .order('created_at', { ascending: false })
       .limit(120)
       .then(function (res) {
