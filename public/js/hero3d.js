@@ -306,13 +306,17 @@
     // behind it. Keep a little envMapIntensity and specular so it still reads
     // as glass under the key light rather than as a hole in the truck.
     var glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x040404,
-      metalness: 0.0,            // dielectric: reflections come via fresnel
-      roughness: 0.38,           // wider than the normal error — no hairlines
-      clearcoat: 0.25,           // a hint of laminate, not a second mirror
-      clearcoatRoughness: 0.55,
-      specularIntensity: 0.28,
-      envMapIntensity: 0.14,
+      color: 0x030303,
+      metalness: 0.0,
+      // Roughness this high can't form a sharp highlight at ANY camera angle,
+      // on any GPU. Every softer setting kept a specular lobe alive, and a
+      // specular lobe on this geometry is a streak — the earlier passes only
+      // moved where it landed. The pane is a dark tinted sheet now: it takes
+      // the key light as a faint sheen and nothing else.
+      roughness: 0.70,
+      clearcoat: 0.0,            // no second specular layer at all
+      specularIntensity: 0.15,
+      envMapIntensity: 0.05,     // the studio softboxes stop showing up in it
       transparent: false,
       opacity: 1,
       depthWrite: true,          // let the z-buffer sort the pane against itself
