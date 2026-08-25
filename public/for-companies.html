@@ -37,7 +37,10 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-MHK64NZ8JN');
+  // page_title is the label GA4 groups by in its reports. The SEO <title>
+  // above stays as-is for search; this is purely how the page is named in
+  // Analytics, so the pages are told apart at a glance.
+  gtag('config', 'G-MHK64NZ8JN', { page_title: 'For companies' });
 </script>
 
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=13">
