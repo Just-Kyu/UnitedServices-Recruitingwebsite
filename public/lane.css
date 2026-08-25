@@ -96,3 +96,10 @@
   .lane-cta { padding: 24px; }
   .lane-body p { font-size: 16px; }
 }
+
+/* sub-heading inside the browse-by-lane block */
+.lane-sub-h {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--fg-2); font-weight: 500;
+  margin: 34px 0 14px;
+}
