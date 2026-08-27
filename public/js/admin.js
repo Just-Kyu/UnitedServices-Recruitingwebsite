@@ -222,10 +222,17 @@
     }
     var del = e.target.closest('[data-del]');
     if (del) {
-      if (!confirm('Delete this listing permanently?')) return;
       var t = del.getAttribute('data-del');
+      var isLead = t === 'driver_leads' || t === 'company_leads';
+      if (!confirm(isLead
+            ? 'Delete this enquiry permanently? Their details will be gone.'
+            : 'Delete this listing permanently?')) return;
       sb.from(t).delete().eq('id', del.getAttribute('data-id'))
-        .then(function () { t === 'offers' ? loadOffers() : loadDrivers(); });
+        .then(function () {
+          if (isLead) loadLeads();
+          else if (t === 'offers') loadOffers();
+          else loadDrivers();
+        });
     }
   });
 
@@ -239,7 +246,8 @@
         var eq = Array.isArray(l.equipment) ? l.equipment.join(', ') : (l.equipment || '');
         return '<tr><td class="lt-name">' + esc(l.name || '—') + '<div class="lt-meta">' + esc(l.cdl_class || '') + ' · ' + esc(l.years || '') + '</div></td>' +
           '<td class="lt-contact">' + esc(l.phone || '') + '<br>' + esc(l.email || '') + '</td>' +
-          '<td class="lt-meta">' + esc([eq, l.route, l.sap_status, l.location].filter(Boolean).join(' · ')) + '</td></tr>';
+          '<td class="lt-meta">' + esc([eq, l.route, l.sap_status, l.location].filter(Boolean).join(' · ')) + '</td>' +
+          '<td><button class="ar-btn del" data-del="driver_leads" data-id="' + l.id + '">Delete</button></td></tr>';
       }).join('') : '<tr><td class="lt-meta">No driver applications yet.</td></tr>';
     });
     sb.from('company_leads').select('*').order('created_at', { ascending: false }).limit(200).then(function (res) {
@@ -250,7 +258,8 @@
       tb.innerHTML = rows.length ? rows.map(function (l) {
         return '<tr><td class="lt-name">' + esc(l.company || '—') + '<div class="lt-meta">' + esc(l.name || '') + '</div></td>' +
           '<td class="lt-contact">' + esc(l.phone || '') + '<br>' + esc(l.email || '') + '</td>' +
-          '<td class="lt-meta">' + esc([l.equipment, l.hire_count, l.notes].filter(Boolean).join(' · ')) + '</td></tr>';
+          '<td class="lt-meta">' + esc([l.equipment, l.hire_count, l.notes].filter(Boolean).join(' · ')) + '</td>' +
+          '<td><button class="ar-btn del" data-del="company_leads" data-id="' + l.id + '">Delete</button></td></tr>';
       }).join('') : '<tr><td class="lt-meta">No carrier requests yet.</td></tr>';
     });
   }

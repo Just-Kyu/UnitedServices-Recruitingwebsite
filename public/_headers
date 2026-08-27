@@ -15,6 +15,16 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.googletagmanager.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+
+# Content-Security-Policy notes — every host above is one the site genuinely
+# loads: googletagmanager (GA4), jsdelivr (supabase-js), unpkg (three.js +
+# the meshopt decoder, which is WASM, hence wasm-unsafe-eval), Google Fonts,
+# and the Supabase project for data. 'unsafe-inline' is required because the
+# GA snippet and several page scripts are inline. If anything on the site
+# stops working after deploy, delete the Content-Security-Policy line and
+# redeploy — nothing else depends on it.
 
 # Images and the 3D model rarely change — let them sit briefly to cut
 # round-trips, but NO `immutable`, so they still self-heal within the hour.

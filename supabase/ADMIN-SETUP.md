@@ -16,11 +16,11 @@ few starter listings so the boards aren't empty.
 Supabase → **Authentication** → **Users** → **Add user** → **Create new user**:
 
 - **Email:** `admin@unitedservices.app`
-- **Password:** `sean0102`
+- **Password:** `<in the team password manager>`
 - ✅ **Auto Confirm User** (so it works without an email round-trip)
 
 That's it. Go to **`/admin`**, sign in with username **`admin`** and password
-**`sean0102`** (the portal maps `admin` → `admin@unitedservices.app` for you).
+**`<in the team password manager>`** (the portal maps `admin` → `admin@unitedservices.app` for you).
 
 > Want different credentials? Create the auth user with any email + password,
 > then log in with that email (the username box accepts a full email too).
@@ -41,3 +41,8 @@ That's it. Go to **`/admin`**, sign in with username **`admin`** and password
 - The login is one shared admin account. If you later want per-person logins or
   roles, add more Supabase users — the same policies apply to all authenticated
   users.
+
+> **Never commit the password.** It was previously written into this file and
+> into `admin-schema.sql`, so it still exists in this repository's git history.
+> Rotating it in Supabase → Authentication → Users is what actually protects
+> the account — editing these files does not.

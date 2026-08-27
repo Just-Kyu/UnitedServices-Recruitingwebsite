@@ -12,7 +12,7 @@
 --     unpublish). So a random visitor with the public key can read the live
 --     board but cannot create or tamper with listings.
 --   * To log in, create one Supabase Auth user (see supabase/ADMIN-SETUP.md):
---       email: admin@unitedservices.app   password: sean0102
+--       email: admin@unitedservices.app   password: <set in Supabase; keep it in the password manager>
 
 -- ============================ offers ============================
 create table if not exists public.offers (

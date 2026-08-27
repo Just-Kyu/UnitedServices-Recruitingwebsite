@@ -141,9 +141,12 @@
         ? '<span class="clear">SAP-cleared</span>'
         : '<span class="clear">' + escapeHtml(d.clearance || 'Clean record') + '</span>';
       var availPill = '<span class="pill live"><span class="dot"></span>Available</span>';
-      var name = d.name || d.handle || ('Driver #' + shortId(d.id));
-      // The reference id stays visible, just demoted under the name.
-      var ref = d.name && d.handle ? d.handle : (d.name ? 'Driver #' + shortId(d.id) : '');
+      // PUBLIC BOARD — anyone can read this, including a driver's current
+      // employer. Names stay internal (admin only): a real name next to a
+      // location and a clearance status tells the world that a named person is
+      // job-hunting, and in the SAP case, why. Handles only out here.
+      var name = d.handle || ('Driver #' + shortId(d.id));
+      var ref = '';
       return '<div class="card driver-card edge-top">' +
         '<div class="dc-top"><div class="dc-avatar">' + driverIco + '</div>' +
           '<div><div class="dc-id">' + escapeHtml(name) + '</div>' +
