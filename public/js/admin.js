@@ -11,7 +11,11 @@
   var sb = window.usrSupabase;
   var LOGIN = document.getElementById('login-screen');
   var DASH = document.getElementById('dash');
-  var ADMIN_DOMAIN = 'unitedservices.app';
+  // Domain appended when the username field has no '@'. Keep this on a domain
+  // you actually control: password-recovery mail goes to this address, so
+  // whoever owns the domain can take over the admin account.
+  // Typing a full email address in the login field bypasses this entirely.
+  var ADMIN_DOMAIN = 'us-unitedservices.com';
 
   if (!sb) {
     document.getElementById('login-err').textContent =
