@@ -155,11 +155,19 @@
       // Supabase not configured (e.g. opened as a static file or keys missing).
       // Still show the user a confirmation so the experience isn't broken.
       console.warn('Supabase not configured — driver lead not persisted.');
+      if (window.usrTrack) window.usrTrack('generate_lead', { form: 'driver_application', reference: ref });
       showSuccess(ref);
       return;
     }
     sb.from('driver_leads').insert(row).then(function (res) {
-      if (res.error) console.warn('driver_leads insert failed:', res.error.message);
+      // A driver who sees a reference number believes they have applied. If the
+      // insert failed, nobody has their details — say so and give them a way
+      // through instead of handing out a number that means nothing.
+      if (res.error) {
+        console.warn('driver_leads insert failed:', res.error.message);
+        showFailure();
+        return;
+      }
       showSuccess(ref);
     });
   }
@@ -181,6 +189,28 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
+  function showFailure() {
+    var shell = document.getElementById('apply-shell');
+    var box = document.getElementById('apply-error');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'apply-error';
+      box.className = 'apply-error';
+      box.innerHTML =
+        '<h3>We couldn\'t send your application</h3>' +
+        '<p>Something went wrong on our side — your details did not reach us, so please don\'t wait on a call. ' +
+        'Call or email us and we\'ll take it down directly, or try submitting again in a minute.</p>' +
+        '<div class="apply-error-row">' +
+          '<a class="btn btn-chrome" href="tel:+14402968338">Call (440) 296-8338</a>' +
+          '<a class="btn btn-ghost" href="mailto:recruiting@us-unitedservices.com">Email us</a>' +
+        '</div>';
+      (shell && shell.parentNode ? shell.parentNode : document.body).insertBefore(box, shell);
+    }
+    box.hidden = false;
+    if (navNext) { navNext.disabled = false; navNext.textContent = 'Try again'; }
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   function line(k, v) { return '<div class="s-line"><span class="k">' + esc(k) + '</span><span class="v">' + esc(v || '—') + '</span></div>'; }
 
   goTo(0);

@@ -15,12 +15,12 @@ few starter listings so the boards aren't empty.
 ## 2. Create the admin login
 Supabase → **Authentication** → **Users** → **Add user** → **Create new user**:
 
-- **Email:** `admin@unitedservices.app`
-- **Password:** `sean0102`
+- **Email:** `<your admin email>`
+- **Password:** `<in the team password manager>`
 - ✅ **Auto Confirm User** (so it works without an email round-trip)
 
 That's it. Go to **`/admin`**, sign in with username **`admin`** and password
-**`sean0102`** (the portal maps `admin` → `admin@unitedservices.app` for you).
+**`<in the team password manager>`** (the portal maps `admin` → `<your admin email>` for you).
 
 > Want different credentials? Create the auth user with any email + password,
 > then log in with that email (the username box accepts a full email too).
@@ -41,3 +41,27 @@ That's it. Go to **`/admin`**, sign in with username **`admin`** and password
 - The login is one shared admin account. If you later want per-person logins or
   roles, add more Supabase users — the same policies apply to all authenticated
   users.
+
+> **Never commit the password.** It was previously written into this file and
+> into `admin-schema.sql`, so it still exists in this repository's git history.
+> Rotating it in Supabase → Authentication → Users is what actually protects
+> the account — editing these files does not.
+
+## Moving the admin account to an address you control
+
+The original account was `admin@unitedservices.app` — a domain nobody on the
+team owns. That matters: Supabase sends password-recovery mail to the
+account's address, so whoever controls that domain can take the account over.
+
+1. **Supabase → Authentication → Users → Add user → Create new user.**
+   Use an email you actually receive mail at, set a long random password, and
+   tick **Auto Confirm User** so no verification email is needed.
+2. **Sign in at `/admin`** with that full email address to confirm it works.
+   The login field accepts either a full email or a bare username (a username
+   gets `@us-unitedservices.com` appended — see `ADMIN_DOMAIN` in
+   `js/admin.js`).
+3. **Delete the old `admin@unitedservices.app` user** from the same screen.
+
+There is no need for access to the old mailbox to do any of this — creating
+and deleting users from the dashboard doesn't send mail when Auto Confirm is
+on.

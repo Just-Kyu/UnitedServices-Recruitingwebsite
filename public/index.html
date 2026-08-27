@@ -120,22 +120,23 @@
   ]
 }
 </script>
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=17">
-<link rel="icon" type="image/png" sizes="any" href="assets/logo-chrome.png?v=17">
-<link rel="apple-touch-icon" href="assets/logo-chrome.png?v=17">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=18">
+<link rel="icon" type="image/png" sizes="any" href="assets/logo-chrome.png?v=18">
+<link rel="apple-touch-icon" href="assets/logo-chrome.png?v=18">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="styles.css?v=17">
-<link rel="stylesheet" href="home.css?v=17">
-<link rel="stylesheet" href="lane.css?v=17">
+<link rel="stylesheet" href="styles.css?v=18">
+<link rel="stylesheet" href="home.css?v=18">
+<link rel="stylesheet" href="lane.css?v=18">
 </head>
 <body class="loading">
+<a class="skip-link" href="#hero-saga">Skip to content</a>
 
 <!-- ░░ Loader ░░ -->
-<div id="loader">
+<div id="loader" tabindex="-1">
   <div class="load-stage">
-    <img src="assets/logo-chrome.png?v=17" alt="United Services">
+    <img src="assets/logo-chrome.png?v=18" alt="United Services">
     <div class="load-bar"><i></i></div>
     <div class="load-cap">United Services · Recruiting</div>
   </div>
@@ -145,7 +146,7 @@
 <div class="nav-shell">
   <nav class="nav" aria-label="Primary">
     <a class="nav-brand" href="index.html">
-      <img src="assets/logo-chrome.png?v=17" alt="">
+      <img src="assets/logo-chrome.png?v=18" alt="">
       <span><span class="bt">United Services</span><br><span class="bs">Recruiting</span></span>
     </a>
     <div class="nav-links">
@@ -155,7 +156,6 @@
       <a href="index.html#how">How it works</a>
     </div>
     <div class="nav-cta">
-      <a class="btn btn-ghost btn-sm nav-admin" href="admin.html">Admin</a>
       <a class="btn btn-ghost btn-sm" href="for-companies.html#contact">Contact</a>
       <a class="btn btn-chrome btn-sm" href="apply.html" data-magnetic="0.3">Apply</a>
     </div>
@@ -172,7 +172,7 @@
   <a href="offers.html">Available offers</a>
   <a href="for-companies.html">For Companies</a>
   <a href="index.html#how">How it works</a>
-  <div class="row"><a class="btn btn-ghost" href="admin.html">Admin</a>
+  <div class="row">
     <a class="btn btn-ghost" href="for-companies.html#contact">Contact</a>
     <a class="btn btn-chrome" href="apply.html">Apply</a>
   </div>
@@ -470,9 +470,9 @@
           <a class="btn btn-ghost btn-lg" href="#how">How it works</a>
         </div>
         <div class="hero-stats reveal" data-d="4">
-          <div class="hero-stat"><div class="v"><span data-count="50">50</span>+</div><div class="k">Carrier partners</div></div>
-          <div class="hero-stat"><div class="v"><span data-count="48">48</span></div><div class="k">States covered</div></div>
-          <div class="hero-stat"><div class="v"><span data-count="90">90</span>+</div><div class="k">Live openings</div></div>
+          <div class="hero-stat"><div class="v">48</div><div class="k">States we recruit in</div></div>
+          <div class="hero-stat"><div class="v">7</div><div class="k">Equipment types</div></div>
+          <div class="hero-stat"><div class="v">SAP</div><div class="k">&amp; no-experience welcome</div></div>
         </div>
       </div>
     </div>
@@ -965,37 +965,8 @@
       <p>Sample openings filtered by equipment, route, pay and experience level. New roles are added daily.</p>
     </div>
     <div class="offers-grid" id="home-offers-grid">
-      <div class="card offer-card edge-top reveal" data-d="1">
-        <div class="oc-top"><div><div class="oc-co">Cardinal Freightways</div><div class="oc-loc">Columbus, OH · OTR</div></div><div class="oc-pay">$0.62<span style="font-size:13px">/mi</span></div></div>
-        <div class="oc-meta"><span>Dry Van</span><span>CDL-A</span><span>2+ yrs</span></div>
-        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+        <div class="board-state" id="home-offers-state">Loading today's openings…</div>
       </div>
-      <div class="card offer-card edge-top reveal" data-d="2">
-        <div class="oc-top"><div><div class="oc-co">Ironwood Carriers</div><div class="oc-loc">Dallas, TX · Regional</div></div><div class="oc-pay">$1,500<span style="font-size:13px">/wk</span></div></div>
-        <div class="oc-meta"><span>Flatbed</span><span>CDL-A</span><span>Home weekends</span></div>
-        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-      </div>
-      <div class="card offer-card edge-top reveal" data-d="3">
-        <div class="oc-top"><div><div class="oc-co">Summit Hauling Co.</div><div class="oc-loc">Phoenix, AZ · OTR</div></div><div class="oc-pay">Paid<span style="font-size:13px"> CDL</span></div></div>
-        <div class="oc-meta"><span>Dry Van</span><span>No experience</span><span>Training</span></div>
-        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-      </div>
-      <div class="card offer-card edge-top reveal" data-d="1">
-        <div class="oc-top"><div><div class="oc-co">Polar Line Logistics</div><div class="oc-loc">Chicago, IL · OTR</div></div><div class="oc-pay">$0.64<span style="font-size:13px">/mi</span></div></div>
-        <div class="oc-meta"><span>Reefer</span><span>CDL-A</span><span>$5k sign-on</span></div>
-        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-      </div>
-      <div class="card offer-card edge-top reveal" data-d="2">
-        <div class="oc-top"><div><div class="oc-co">Meridian Transport</div><div class="oc-loc">Atlanta, GA · Regional</div></div><div class="oc-pay">$1,450<span style="font-size:13px">/wk</span></div></div>
-        <div class="oc-meta"><span>Dry Van</span><span>SAP friendly</span><span>CDL-A</span></div>
-        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-      </div>
-      <div class="card offer-card edge-top reveal" data-d="3">
-        <div class="oc-top"><div><div class="oc-co">Crossroads Express</div><div class="oc-loc">Newark, NJ · Local</div></div><div class="oc-pay">$26<span style="font-size:13px">/hr</span></div></div>
-        <div class="oc-meta"><span>Dry Van</span><span>CDL-A</span><span>Home daily</span></div>
-        <div class="oc-foot"><span class="pill live"><span class="dot"></span>Hiring now</span><a href="apply.html">Apply<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1012,6 +983,18 @@
     <h3 class="lane-sub-h reveal">By state</h3>
     <div class="lane-rels"><a class="lane-rel reveal" href="cdl-jobs-texas.html"><span class="t">CDL jobs in Texas</span><span class="s">DFW · Houston · Laredo</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="lane-rel reveal" href="cdl-jobs-ohio.html"><span class="t">CDL jobs in Ohio</span><span class="s">Columbus · Cleveland · Cincinnati</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="lane-rel reveal" href="cdl-jobs-pennsylvania.html"><span class="t">CDL jobs in Pennsylvania</span><span class="s">Harrisburg · Lehigh Valley · Philly</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="lane-rel reveal" href="cdl-jobs-illinois.html"><span class="t">CDL jobs in Illinois</span><span class="s">Chicago · Joliet · Rockford</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="lane-rel reveal" href="cdl-jobs-georgia.html"><span class="t">CDL jobs in Georgia</span><span class="s">Atlanta · Savannah</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
   </div>
+</section>
+
+
+<!-- ░░ CARRIER PARTNERS ░░ — built from js/partners.js; hides itself if empty -->
+<section class="section partners" id="partners" data-band="ink" data-screen-label="Partners">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Carriers we place with</span>
+      <h2>The fleets on the other<br>end of the call.</h2>
+    </div>
+  </div>
+  <div class="partner-track" id="partner-track"></div>
 </section>
 
 <!-- ░░ HOW IT WORKS ░░ -->
@@ -1071,7 +1054,7 @@
             <li><b>Orientation</b> Carrier-paid. We coordinate timing, travel and the first dispatch call.</li>
             <li><b>First mile</b> Average sign-to-seat is 6 days. First paycheck inside two weeks.</li>
           </ul>
-          <p class="how-step-note">94% of drivers we place are still with the same carrier at 90 days. Lifestyle fit, not just rate.</p>
+          <p class="how-step-note">We match on lifestyle fit — home time, routes, equipment — not just the rate on the flyer. A seat you stay in beats a seat you leave in two months.</p>
         </div>
       </div>
     </article>
@@ -1084,7 +1067,7 @@
   <div class="wrap">
     <div class="cta-inner reveal">
       <h2 class="chrome-text">Your next mile<br>starts here.</h2>
-      <p>Join thousands of drivers we've matched with carriers that respect their time, their equipment and their pay.</p>
+      <p>Tell us what you drive and how often you need to be home. We take it to carriers that respect your time, your equipment and your pay.</p>
       <div class="hero-cta">
         <a class="btn btn-chrome btn-lg" href="apply.html" data-magnetic="0.3">Find my job<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a class="btn btn-ghost btn-lg" href="for-companies.html">I'm hiring drivers</a>
@@ -1098,7 +1081,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <img src="assets/logo-chrome.png?v=17" alt="United Services">
+        <img src="assets/logo-chrome.png?v=18" alt="United Services">
         <p style="max-width:280px;color:var(--silver-dim);font-size:14px">United Services Recruiting connects reliable CDL drivers with carriers hiring across all 48 states. Part of the United Services family.</p>
       </div>
       <div class="foot-col">
@@ -1140,7 +1123,7 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=17"></script>
+<script src="js/site.js?v=18"></script>
 <script>
 // Desktop gets the 3D truck; mobile gets the route map and skips ~750 KB of
 // three.js + GLB entirely. Scripts load in sequence (each depends on the last).
@@ -1150,7 +1133,7 @@
     'https://unpkg.com/three@0.147.0/build/three.min.js',
     'https://unpkg.com/three@0.147.0/examples/js/loaders/GLTFLoader.js',
     'https://unpkg.com/three@0.147.0/examples/js/libs/meshopt_decoder.js',
-    'js/hero3d.js?v=17'
+    'js/hero3d.js?v=18'
   ];
   (function next(i) {
     if (i >= files.length) return;
@@ -1161,8 +1144,8 @@
   })(0);
 })();
 </script>
-<script src="js/matcher.js?v=17"></script>
-<script src="js/equip.js?v=17"></script>
+<script src="js/matcher.js?v=18"></script>
+<script src="js/equip.js?v=18"></script>
 <script>
 // Route map hero→background hand-off: bright and big at the top of the page,
 // dimmed ambient layer once you scroll. CSS transition does the easing; this
@@ -1179,21 +1162,33 @@
   update();
 })();
 </script>
-<!-- Live offers: replace the sample cards with real admin-published offers if any exist -->
+<!-- Offers board: real admin-published offers only. If the board can't load we
+     say so — a placeholder carrier is a job that doesn't exist. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/config.js?v=17"></script>
+<script src="js/config.js?v=18"></script>
 <script>
 (function () {
-  var sb = window.usrSupabase, grid = document.getElementById('home-offers-grid');
-  if (!sb || !grid) return;
+  var grid = document.getElementById('home-offers-grid');
+  var state = document.getElementById('home-offers-state');
+  if (!grid) return;
+
+  function say(msg, withPhone) {
+    grid.innerHTML = '<div class="board-state">' + msg +
+      (withPhone ? ' <a href="tel:+14402968338">(440) 296-8338</a>' : '') + '</div>';
+  }
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   var arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-  sb.from('offers').select('company,location,route,equipment,pay,tags,badge')
-    .order('created_at', { ascending: false }).limit(6)
+
+  var sb = window.usrSupabase;
+  if (!sb) { say('Openings are on our board — call us and we\'ll walk you through what\'s live:', true); return; }
+
+  sb.from('offers').select('*').order('created_at', { ascending: false }).limit(6)
     .then(function (res) {
-      if (res.error || !res.data || !res.data.length) return;   // keep the static sample
-      grid.innerHTML = res.data.map(function (o, i) {
-        var loc = [o.location, o.route].filter(Boolean).map(esc).join(' · ');
+      if (res.error) { say('We couldn\'t load the board just now. Refresh, or call us:', true); return; }
+      var rows = res.data || [];
+      if (!rows.length) { say('No openings are posted right now. New roles are added continuously — <a href="apply.html">tell us what you\'re looking for</a> and we\'ll call when one lands.'); return; }
+      grid.innerHTML = rows.map(function (o, i) {
+        var loc = [o.location, o.route].filter(Boolean).map(esc).join(' \u00b7 ');
         var tags = (o.tags && o.tags.length ? o.tags : [o.equipment].filter(Boolean)).slice(0, 3)
           .map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
         return '<div class="card offer-card edge-top reveal in" data-d="' + ((i % 3) + 1) + '">' +
@@ -1206,5 +1201,7 @@
     });
 })();
 </script>
+<script src="js/partners.js?v=18"></script>
+<script src="js/track.js?v=18"></script>
 </body>
 </html>

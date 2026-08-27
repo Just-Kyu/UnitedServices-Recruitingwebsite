@@ -90,3 +90,13 @@
 .summary .s-line { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
 .summary .s-line .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; color: var(--fg-2); text-transform: uppercase; }
 .summary .s-line .v { color: var(--fg-2); text-align: right; }
+
+/* Shown only when a submission fails — the driver needs a way through, not a
+   reference number for an application we never received. */
+.apply-error {
+  border: 1px solid rgba(255,255,255,0.22); border-radius: 18px;
+  background: rgba(255,255,255,0.05); padding: 26px 28px; margin-bottom: 26px;
+}
+.apply-error h3 { font-family: var(--font-display); font-size: 20px; margin: 0 0 10px; color: #fff; }
+.apply-error p { color: var(--silver-txt, #ccc); font-size: 15px; line-height: 1.6; margin: 0 0 18px; }
+.apply-error-row { display: flex; gap: 12px; flex-wrap: wrap; }
