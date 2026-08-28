@@ -580,10 +580,10 @@
 .board-state a { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ─────────── Carrier partner strip ───────────
-   Pure black band, a small header, and a row of partner marks drifting left.
-   Both edges fade to nothing; the row can be grabbed and thrown by hand
-   (js/partners.js). Logos are supplied white on transparent and render at
-   full strength — an opacity or filter here turns them grey. */
+   Pure black band, small header, marks looping left. Two identical runs and a
+   translate of exactly -50% make the loop seamless — the restart lands where
+   the previous run began. Logos are pure white on transparent and are drawn
+   at full strength: any opacity or filter here turns them grey. */
 .partners {
   background: #000;
   padding-block: clamp(48px, 6vw, 76px);
@@ -606,35 +606,46 @@
 }
 .partner-viewport {
   position: relative;
-  cursor: grab; touch-action: pan-y;
-  -webkit-user-select: none; user-select: none;
-  /* Both edges dissolve into the black over a real distance, rather than the
-     marks being clipped at the boundary. */
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.3) 8%, #000 24%, #000 76%, rgba(0,0,0,0.3) 92%, transparent 100%);
-          mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.3) 8%, #000 24%, #000 76%, rgba(0,0,0,0.3) 92%, transparent 100%);
+  /* Deep fades: marks dissolve into the black across roughly a third of the
+     band on each side rather than being clipped at the edge. */
+  /* Fade only at the edges. Earlier this ramped to full opacity at 36%, which
+     meant a logo was part-transparent — and so looked grey — for most of its
+     travel. Full strength across the middle 76%; the dissolve happens in the
+     outer eighth on each side. */
+  -webkit-mask-image: linear-gradient(90deg,
+      transparent 0%, rgba(0,0,0,0.55) 6%, #000 13%, #000 87%, rgba(0,0,0,0.55) 94%, transparent 100%);
+          mask-image: linear-gradient(90deg,
+      transparent 0%, rgba(0,0,0,0.55) 6%, #000 13%, #000 87%, rgba(0,0,0,0.55) 94%, transparent 100%);
 }
-.partner-viewport.is-dragging { cursor: grabbing; }
 .partner-track {
   display: flex; align-items: center; width: max-content;
+  animation: ptRoll 30s linear infinite;
   will-change: transform;
+}
+@keyframes ptRoll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 .pt-mark {
   flex: none; display: flex; align-items: center; justify-content: center;
-  height: 58px; padding: 0 clamp(30px, 4.2vw, 62px);
+  height: calc(62px * var(--s, 1)); padding: 0 clamp(30px, 4.2vw, 62px);
 }
-.pt-mark img { max-height: 100%; width: auto; display: block; -webkit-user-drag: none; }
+.pt-mark img {
+  max-height: 100%; width: auto; display: block;
+  -webkit-user-drag: none; user-select: none; pointer-events: none;
+}
 
-/* Reduced motion: no drift, no drag — one static centred row. */
+/* Reduced motion: one static centred row, no loop. */
 .partner-track.is-static {
   width: 100%; flex-wrap: wrap; justify-content: center;
-  gap: 14px 0; transform: none !important;
+  gap: 14px 0; animation: none; transform: none;
 }
 .partner-track.is-static .pt-mark:nth-child(n+5) { display: none; }
 
 @media (max-width: 560px) {
-  .pt-mark { height: 42px; padding: 0 26px; }
+  .pt-mark { height: calc(46px * var(--s, 1)); padding: 0 26px; }
   .partner-viewport {
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-            mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
   }
 }
