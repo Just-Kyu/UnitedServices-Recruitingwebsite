@@ -1,6 +1,11 @@
 /* United Services — admin portal styles (dark, matches the brand) */
 .admin-body { background: #000000; color: var(--silver-txt, #ffffff); min-height: 100vh; }
 
+/* Several blocks here are flex or grid, and a display rule beats the browser's
+   default [hidden] styling — without this the sign-in card stays on screen
+   underneath the dashboard, and the empty logo preview never goes away. */
+[hidden] { display: none !important; }
+
 /* ── login ── */
 .admin-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
   background: radial-gradient(120% 90% at 50% 0%, #000000 0%, #000000 55%, #000000 100%); }
@@ -66,16 +71,129 @@
 .ar-btn.del:hover { color: #ffffff; border-color: rgba(0,0,0,0.5); }
 .admin-row.is-hidden { opacity: 0.5; }
 
-/* ── leads tables ── */
-.leads-note { color: var(--silver-dim, #ffffff); font-size: 14px; margin-bottom: 20px; max-width: 700px; }
-.leads-h { font-family: var(--font-display, sans-serif); font-size: 18px; color: #fff; margin: 22px 0 12px; }
-.admin-table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
-.admin-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px; }
-.admin-table td, .admin-table th { padding: 11px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
-.admin-table tr:last-child td { border-bottom: none; }
-.admin-table .lt-name { color: #fff; font-weight: 600; }
-.admin-table .lt-contact { color: var(--steel-hi, #ffffff); }
-.admin-table .lt-meta { color: var(--silver-dim, #ffffff); }
+/* ── inbound leads ───────────────────────────────────────────────────────
+   Leads are worked, not just read: the layout leads with who and when, puts
+   the phone and email one tap away, and keeps every answer they gave on a
+   labelled line instead of one dot-joined run of text. */
+.leads-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 18px; }
+.leads-note { color: rgba(255,255,255,0.6); font-size: 13.5px; line-height: 1.6; max-width: 620px; margin: 0; }
+
+.leads-switch { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.lsw {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-display, sans-serif); font-size: 14px; font-weight: 600;
+  color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 999px;
+  padding: 9px 16px; cursor: pointer; transition: color .18s, border-color .18s, background .18s;
+}
+.lsw:hover { color: #fff; border-color: rgba(255,255,255,0.28); }
+.lsw.active { color: #000; background: #fff; border-color: #fff; }
+.lsw .cnt { font-family: var(--font-mono, monospace); font-size: 11px; padding: 2px 7px; border-radius: 999px;
+  background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+.lsw.active .cnt { background: rgba(0,0,0,0.14); color: #000; }
+
+.leads-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.leads-search { position: relative; flex: 1 1 260px; min-width: 0; }
+.leads-search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: rgba(255,255,255,0.4); pointer-events: none; }
+.leads-search input {
+  width: 100%; font-family: var(--font-body, sans-serif); font-size: 14px; color: #fff;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 10px; padding: 11px 13px 11px 36px; transition: border-color .2s, box-shadow .2s;
+}
+.leads-search input::placeholder { color: rgba(255,255,255,0.35); }
+.leads-search input:focus { outline: none; border-color: rgba(255,255,255,0.5); box-shadow: 0 0 0 3px rgba(255,255,255,0.1); }
+.leads-sel {
+  appearance: none; font-family: var(--font-body, sans-serif); font-size: 13.5px; color: #fff; cursor: pointer;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.16); border-radius: 10px;
+  padding: 11px 32px 11px 13px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 11px center;
+}
+.leads-sel:focus { outline: none; border-color: rgba(255,255,255,0.5); }
+.leads-count { font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: .06em;
+  text-transform: uppercase; color: rgba(255,255,255,0.45); margin-left: auto; }
+
+.lead-list { display: flex; flex-direction: column; gap: 10px; }
+.lead-hint { font-size: 12.5px; color: rgba(255,255,255,0.5); border: 1px dashed rgba(255,255,255,0.16);
+  border-radius: 10px; padding: 11px 14px; }
+.lead-hint code { font-family: var(--font-mono, monospace); color: #fff; }
+
+.lead {
+  background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 16px 18px; transition: border-color .18s, background .18s;
+}
+.lead:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+.lead.is-done { opacity: 0.55; }
+
+.lead-top { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.lead-who { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; min-width: 0; }
+.lead-who h3 { font-family: var(--font-display, sans-serif); font-size: 16px; font-weight: 700; color: #fff; margin: 0; }
+.lead-when { font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: .05em;
+  color: rgba(255,255,255,0.45); white-space: nowrap; cursor: help; }
+.pill { font-family: var(--font-mono, monospace); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.22); color: rgba(255,255,255,0.75); }
+.pill.new { background: #fff; color: #000; border-color: #fff; }
+.pill.dup { border-style: dashed; }
+
+.lead-contact { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 11px; }
+.lc-pair { display: inline-flex; align-items: center; gap: 7px; min-width: 0; max-width: 100%; }
+.lc {
+  display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+  font-size: 13.5px; color: #fff; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 7px 13px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  transition: border-color .18s, background .18s;
+}
+.lc:hover { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.09); }
+.lc svg { width: 13px; height: 13px; flex: none; opacity: 0.65; }
+.lc-copy {
+  font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  background: none; border: 1px solid rgba(255,255,255,0.14); border-radius: 999px;
+  color: rgba(255,255,255,0.5); padding: 6px 10px; cursor: pointer; transition: color .18s, border-color .18s;
+}
+.lc-copy:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+.lc-copy.done { color: #000; background: #fff; border-color: #fff; }
+
+.lead-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px 18px;
+  margin: 14px 0 0; padding: 13px 0 0; border-top: 1px solid rgba(255,255,255,0.08); }
+.lead-facts > div { min-width: 0; }
+.lead-facts dt { font-family: var(--font-mono, monospace); font-size: 9.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.4); }
+.lead-facts dd { margin: 3px 0 0; font-size: 13.5px; color: rgba(255,255,255,0.9); overflow-wrap: anywhere; }
+
+.lead-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+.lead-chips span { font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: .04em;
+  padding: 3px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.8); }
+
+.lead-notes { margin: 12px 0 0; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.72);
+  background: rgba(255,255,255,0.03); border-left: 2px solid rgba(255,255,255,0.2);
+  border-radius: 0 8px 8px 0; padding: 9px 12px; overflow-wrap: anywhere; }
+.lead-notes b { display: block; font-family: var(--font-mono, monospace); font-size: 9.5px; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 3px; }
+
+.lead-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 14px; padding-top: 13px; border-top: 1px solid rgba(255,255,255,0.08); }
+.lead-status { appearance: none; font-family: var(--font-mono, monospace); font-size: 10.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: #fff; cursor: pointer;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 999px;
+  padding: 7px 28px 7px 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.lead-ref { font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: .08em;
+  color: rgba(255,255,255,0.35); margin-left: auto; }
+.lead-foot .ar-btn.del { border-color: rgba(255,255,255,0.14); color: rgba(255,255,255,0.5); }
+.lead-foot .ar-btn.del:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+@media (max-width: 620px) {
+  .leads-head { flex-direction: column; gap: 12px; }
+  .leads-count { margin-left: 0; width: 100%; }
+  .lead { padding: 15px 14px; }
+  .lc-pair { flex: 1 1 100%; }
+  .lc { flex: 1 1 auto; min-width: 0; justify-content: flex-start; }
+  .lc-copy { flex: none; }
+  .lead-ref { margin-left: 0; width: 100%; }
+}
 
 /* ── Carrier logo picker ────────────────────────────────────────────────── */
 .logo-pick { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
