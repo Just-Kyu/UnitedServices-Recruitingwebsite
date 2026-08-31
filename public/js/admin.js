@@ -245,7 +245,7 @@
    * next action is one click away: who and when at the top, phone and email
    * as real tel:/mailto: links with copy buttons, every answer on its own
    * labelled line, and search / date / status filters so a list of 200 stays
-   * workable. Status needs the column from supabase/lead-status.sql; without
+   * workable. Status needs the column from supabase/leads-extras.sql; without
    * it the control is hidden and the rest still works.
    */
   var LEADS = { driver: [], company: [] };
@@ -337,6 +337,7 @@
         fact('CDL class', l.cdl_class) +
         fact('Experience', l.years) +
         fact('Route', l.route) +
+        fact('Weekly miles', l.weekly_miles) +
         fact('SAP status', l.sap_status) +
         fact('Location', l.location) +
       '</dl>' +
@@ -377,7 +378,7 @@
       if (leadState.status && (l.status || 'new') !== leadState.status) return false;
       if (!q) return true;
       var hay = [l.name, l.company, l.phone, l.email, l.location, l.route, l.sap_status,
-                 l.cdl_class, l.years, l.hire_count, l.notes, l.ref,
+                 l.cdl_class, l.years, l.weekly_miles, l.hire_count, l.notes, l.ref,
                  listify(l.equipment).join(' ')].join(' ').toLowerCase();
       return hay.indexOf(q) !== -1;
     });
@@ -409,7 +410,7 @@
       return;
     }
     var hint = statusOk[kind] ? '' :
-      '<div class="lead-hint">Want to track follow-ups? Run <code>supabase/lead-status.sql</code> once in the ' +
+      '<div class="lead-hint">Want to track follow-ups? Run <code>supabase/leads-extras.sql</code> once in the ' +
       'Supabase SQL editor and a status control appears on every lead.</div>';
     box.innerHTML = hint + rows.map(kind === 'driver' ? renderDriver : renderCompany).join('');
   }
@@ -522,7 +523,7 @@
       var rows = visibleLeads();
       if (!rows.length) { alert('Nothing to export with the current filters.'); return; }
       var cols = leadState.kind === 'driver'
-        ? ['created_at', 'ref', 'name', 'phone', 'email', 'cdl_class', 'years', 'equipment', 'route', 'sap_status', 'location', 'notes', 'status']
+        ? ['created_at', 'ref', 'name', 'phone', 'email', 'cdl_class', 'years', 'equipment', 'route', 'weekly_miles', 'sap_status', 'location', 'notes', 'status']
         : ['created_at', 'ref', 'company', 'name', 'phone', 'email', 'equipment', 'hire_count', 'notes', 'status'];
       var cell = function (v) {
         if (v == null) return '';

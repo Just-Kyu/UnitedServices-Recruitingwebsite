@@ -95,6 +95,7 @@
     data.cls = val('cdl-class'); data.years = val('experience');
     data.equipment = [].map.call(root.querySelectorAll('.eq-opt.on'), function (o) { return o.textContent; }).join(', ') || '—';
     var routeSel = root.querySelector('#route-seg .seg-opt.on'); data.route = routeSel ? routeSel.textContent : '—';
+    var milesSel = root.querySelector('#miles-seg .seg-opt.on'); data.miles = milesSel ? milesSel.textContent : '—';
     var sapSel = root.querySelector('#sap-seg .seg-opt.on'); data.sap = sapSel ? sapSel.textContent : '—';
     data.location = val('location');
   }
@@ -141,6 +142,7 @@
         ? data.equipment.split(', ').filter(Boolean)
         : null,
       route: data.route && data.route !== '—' ? data.route : null,
+      weekly_miles: data.miles && data.miles !== '—' ? data.miles : null,
       sap_status: data.sap && data.sap !== '—' ? data.sap : null,
       location: data.location || null,
       notes: val('notes') || null,
@@ -159,16 +161,27 @@
       showSuccess(ref);
       return;
     }
-    sb.from('driver_leads').insert(row).then(function (res) {
-      // A driver who sees a reference number believes they have applied. If the
-      // insert failed, nobody has their details — say so and give them a way
-      // through instead of handing out a number that means nothing.
+    // A driver who sees a reference number believes they have applied. If the
+    // insert failed, nobody has their details — say so and give them a way
+    // through instead of handing out a number that means nothing.
+    function done(res) {
       if (res.error) {
         console.warn('driver_leads insert failed:', res.error.message);
         showFailure();
         return;
       }
       showSuccess(ref);
+    }
+    // weekly_miles arrived after the table did. Until supabase/leads-extras.sql
+    // is run the column is missing, and an application must not be lost over a
+    // field nobody has asked for yet — so drop it and send the rest.
+    sb.from('driver_leads').insert(row).then(function (res) {
+      if (res.error && /weekly_miles/.test(res.error.message || '')) {
+        delete row.weekly_miles;
+        sb.from('driver_leads').insert(row).then(done);
+        return;
+      }
+      done(res);
     });
   }
   function localRef() { return (window.usrRef ? window.usrRef('USR') : 'USR-' + Math.floor(100000 + Math.random() * 899999)); }
@@ -178,7 +191,8 @@
     if (sum) {
       sum.innerHTML =
         line('Name', data.name) + line('License', data.cls) + line('Experience', data.years) +
-        line('Equipment', data.equipment) + line('Route', data.route) + line('SAP status', data.sap);
+        line('Equipment', data.equipment) + line('Route', data.route) +
+        line('Weekly miles', data.miles) + line('SAP status', data.sap);
     }
     var refEl = document.getElementById('ref-num'); if (refEl) refEl.textContent = ref;
     document.getElementById('apply-success').classList.add('show');
