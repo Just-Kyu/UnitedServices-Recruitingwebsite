@@ -74,6 +74,13 @@
 .apply-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 30px; }
 .apply-nav .btn-back { visibility: hidden; }
 .apply-nav.show-back .btn-back { visibility: visible; }
+/* On the last step "Continue" becomes "Submit application", and the pair no
+   longer fits a phone: without this the row pushes the page sideways. */
+@media (max-width: 460px) {
+  .apply-nav { gap: 10px; }
+  .apply-nav .btn { min-width: 0; }
+  .apply-nav #btn-next { flex: 1 1 auto; padding-left: 18px; padding-right: 18px; }
+}
 
 /* success */
 .apply-success { display: none; text-align: center; padding: 30px 10px; }

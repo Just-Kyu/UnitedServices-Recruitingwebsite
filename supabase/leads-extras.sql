@@ -1,9 +1,15 @@
--- United Services — follow-up status on inbound leads
+-- United Services — extra columns on the inbound lead tables
 --
--- Run this ONCE in the Supabase SQL Editor. It is optional: the admin leads
--- page works without it and simply hides the status control. With it, every
--- lead can be moved through new → contacted → placed → closed so nobody gets
--- called twice and nobody gets forgotten.
+-- Run this ONCE in the Supabase SQL Editor. Both parts are optional and the
+-- site keeps working without them:
+--
+--   status        follow-up tracking in the admin. Without the column the
+--                 status control is simply hidden.
+--   weekly_miles  the "miles you can run per week" answer on the apply form.
+--                 Without the column the form drops that one field and still
+--                 saves the application.
+--
+-- ===================== follow-up status =====================
 
 alter table public.driver_leads
   add column if not exists status text not null default 'new';
@@ -30,3 +36,9 @@ create index if not exists company_leads_status_idx on public.company_leads (sta
 -- The signed-in admin already holds update rights from admin-schema.sql; this
 -- is here so a fresh project that skipped that file still works.
 grant select, update, delete on public.driver_leads, public.company_leads to authenticated;
+
+-- ===================== weekly miles =====================
+-- The apply form asks how many miles a driver can run in a week, as a band
+-- ('2,500–3,000'). Text, not a number, because a range is the honest answer.
+alter table public.driver_leads
+  add column if not exists weekly_miles text;
