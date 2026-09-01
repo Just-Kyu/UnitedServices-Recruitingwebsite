@@ -16,7 +16,8 @@ window.USR_PARTNERS = [
   { name: 'DGLIFE Logistics',       file: 'dglife.png' },
   { name: 'Premier Trucking Group', file: 'ptg.png' },
   { name: 'Ryan LLC',               file: 'ryan.png' },
-  { name: 'SCJ Cartage LLC',        file: 'scj.png', scale: 1.5 }
+  { name: 'SCJ Cartage LLC',        file: 'scj.png', scale: 1.5 },
+  { name: 'RBY Trucking',           file: 'rby.png', scale: 1.5 }
 ];
 
 (function () {
@@ -33,7 +34,7 @@ window.USR_PARTNERS = [
   function esc(s) { return String(s).replace(/"/g, '&quot;'); }
   function mark(p) {
     return '<div class="pt-mark"' + (p.scale ? ' style="--s:' + p.scale + '"' : '') +
-           '><img src="assets/partners/' + encodeURIComponent(p.file) + '?v=30' +
+           '><img src="assets/partners/' + encodeURIComponent(p.file) + '?v=31' +
            '" alt="' + esc(p.name) + '" loading="eager" decoding="async" draggable="false"></div>';
   }
 
