@@ -37,6 +37,27 @@
 .form-msg { font-size: 13px; min-height: 18px; margin-top: 8px; }
 .form-msg.ok { color: #ffffff; } .form-msg.err { color: #ffffff; }
 
+/* ── multi-select chips + paired range inputs ─────────────────────────────
+   An offer usually covers more than one trailer and more than one route, and
+   a rate is quoted as a band rather than a single number. Both are picked
+   here rather than typed. */
+.pickset { display: flex; flex-wrap: wrap; gap: 7px; }
+.pick {
+  font-family: var(--font-body, sans-serif); font-size: 13px; font-weight: 600;
+  color: rgba(255,255,255,0.65); background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.16); border-radius: 999px;
+  padding: 8px 14px; cursor: pointer; transition: color .18s, border-color .18s, background .18s;
+}
+.pick:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+.pick.on { color: #000; background: #fff; border-color: #fff; }
+.pick:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.28); }
+.field .req { color: #fff; }
+
+.range2 { display: flex; align-items: center; gap: 8px; }
+.range2 .pre { font-family: var(--font-mono, monospace); font-size: 14px; color: rgba(255,255,255,0.45); }
+.range2 .dash { color: rgba(255,255,255,0.4); padding: 0 2px; }
+.range2 input { flex: 1 1 0; min-width: 0; }
+
 /* ── dashboard ── */
 .admin-dash { max-width: 1180px; margin: 0 auto; padding: 20px clamp(16px, 4vw, 40px) 80px; }
 .admin-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 6px 0 20px; }

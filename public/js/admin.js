@@ -115,7 +115,67 @@
     window.__resetOfferLogo = reset;
   })();
 
+  /* ---------- chip pickers -------------------------------------------------
+   * .pickset toggles many values; .pickset.one behaves as a radio group.
+   * Values are read straight off the DOM at submit time, so there is no
+   * separate state to keep in sync.
+   */
+  function picked(id) {
+    var box = document.getElementById(id);
+    if (!box) return [];
+    return [].map.call(box.querySelectorAll('.pick.on'), function (b) { return b.getAttribute('data-v'); });
+  }
+  function clearPicks(id, firstOn) {
+    var box = document.getElementById(id);
+    if (!box) return;
+    var all = box.querySelectorAll('.pick');
+    [].forEach.call(all, function (b, i) { b.classList.toggle('on', !!firstOn && i === 0); });
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('.pickset .pick');
+    if (!b) return;
+    var set = b.parentElement;
+    if (set.classList.contains('one')) {
+      [].forEach.call(set.querySelectorAll('.pick'), function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+    } else {
+      b.classList.toggle('on');
+    }
+    if (set.id === 'f-offer-type') syncOfferType();
+  });
+  function syncOfferType() {
+    var t = picked('f-offer-type')[0] || 'company';
+    var gross = document.getElementById('gross-field');
+    if (gross) gross.hidden = t !== 'owner_operator';
+  }
+  syncOfferType();
+
   /* ---------- offers ---------- */
+  function offerSummary(o) {
+    var eq = arr(o.equipment_list, o.equipment);
+    var rt = arr(o.route_list, o.route);
+    var bits = [o.location, rt.join(' / '), eq.join(' / '), o.pay, rpmText(o), grossText(o), o.home_time];
+    return bits.filter(Boolean).map(esc).join(' · ');
+  }
+  function arr(list, single) {
+    if (Array.isArray(list) && list.length) return list;
+    return single ? [single] : [];
+  }
+  function num(v) { return (v === null || v === undefined || v === '') ? null : Number(v); }
+  function money(n) { return '$' + Number(n).toLocaleString(); }
+  function rpmText(o) {
+    var lo = num(o.rpm_min), hi = num(o.rpm_max);
+    if (lo == null && hi == null) return '';
+    if (lo != null && hi != null && lo !== hi) return '$' + lo.toFixed(2) + '–$' + hi.toFixed(2) + '/mi';
+    return '$' + Number(lo != null ? lo : hi).toFixed(2) + '/mi';
+  }
+  function grossText(o) {
+    var lo = num(o.gross_min), hi = num(o.gross_max);
+    if (lo == null && hi == null) return '';
+    if (lo != null && hi != null && lo !== hi) return money(lo) + '–' + money(hi) + ' gross/wk';
+    return money(lo != null ? lo : hi) + ' gross/wk';
+  }
+
   function loadOffers() {
     sb.from('offers').select('*').order('created_at', { ascending: false }).then(function (res) {
       var list = document.getElementById('offer-list');
@@ -124,12 +184,13 @@
       document.getElementById('cnt-offers').textContent = rows.length;
       if (!rows.length) { list.innerHTML = '<div class="admin-empty">No offers yet. Add one on the left.</div>'; return; }
       list.innerHTML = rows.map(function (o) {
-        var tags = (o.tags || []).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
-        var sub = [o.location, o.route, o.equipment, o.pay, o.home_time].filter(Boolean).map(esc).join(' · ');
+        var chipVals = (o.tags && o.tags.length ? o.tags : []).concat(
+          o.offer_type === 'owner_operator' ? ['Owner operator'] : (o.offer_type ? ['Company driver'] : []));
+        var tags = chipVals.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
         var thumb = o.logo_url ? '<span class="ar-logo"><img src="' + esc(o.logo_url) + '" alt=""></span>' : '';
         return '<div class="admin-row' + (o.is_published ? '' : ' is-hidden') + '">' +
           '<div class="ar-main"><div class="ar-title">' + thumb + esc(o.company) + '</div>' +
-          '<div class="ar-sub">' + sub + '</div><div class="ar-tags">' + tags + '</div></div>' +
+          '<div class="ar-sub">' + offerSummary(o) + '</div><div class="ar-tags">' + tags + '</div></div>' +
           '<div class="ar-actions">' +
           '<button class="ar-btn ' + (o.is_published ? 'pub' : 'hidden') + '" data-pub="offers" data-id="' + o.id + '" data-val="' + (o.is_published ? 'false' : 'true') + '">' + (o.is_published ? 'Live' : 'Draft') + '</button>' +
           '<button class="ar-btn del" data-del="offers" data-id="' + o.id + '">Delete</button>' +
@@ -137,34 +198,80 @@
       }).join('');
     });
   }
+
+  /* An offer must never be lost because the database has not had
+   * supabase/offer-details.sql run against it yet. Postgres rejects the whole
+   * insert over one unknown column, so drop whichever column it names and try
+   * again, then say plainly which fields did not make it. */
+  function insertTolerantly(table, row, done) {
+    var dropped = [];
+    function attempt() {
+      sb.from(table).insert(row).then(function (res) {
+        var m = res.error && /Could not find the '([a-z_]+)' column/i.exec(res.error.message || '');
+        if (m && Object.prototype.hasOwnProperty.call(row, m[1]) && dropped.length < 20) {
+          dropped.push(m[1]);
+          delete row[m[1]];
+          attempt();
+          return;
+        }
+        done(res, dropped);
+      });
+    }
+    attempt();
+  }
+
   document.getElementById('offer-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var f = e.target, msg = document.getElementById('offer-msg');
+    var equipment = picked('f-equipment');
+    var route = picked('f-route');
+    var type = picked('f-offer-type')[0] || 'company';
     var row = {
       company: f.company.value.trim(),
       location: f.location.value.trim() || null,
-      route: f.route.value || null,
-      equipment: f.equipment.value || null,
       pay: f.pay.value.trim() || null,
+      offer_type: type,
+      // The single-value columns stay in step with the first pick so anything
+      // still reading offers.equipment / offers.route keeps working.
+      equipment: equipment[0] || null,
+      route: route[0] || null,
+      equipment_list: equipment.length ? equipment : null,
+      route_list: route.length ? route : null,
+      rpm_min: f.rpm_min.value ? parseFloat(f.rpm_min.value) : null,
+      rpm_max: f.rpm_max.value ? parseFloat(f.rpm_max.value) : null,
+      gross_min: type === 'owner_operator' && f.gross_min.value ? parseFloat(f.gross_min.value) : null,
+      gross_max: type === 'owner_operator' && f.gross_max.value ? parseFloat(f.gross_max.value) : null,
       tags: f.tags.value.trim() ? f.tags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean) : null,
       badge: f.badge.value.trim() || null,
       notes: f.notes.value.trim() || null,
       logo_url: offerLogo || null,
       home_time: f.home_time.value.trim() || null,
       escrow: f.escrow.value.trim() || null,
-      sign_on: f.sign_on.value.trim() || null,
-      insurance: f.insurance.value.trim() || null,
-      rpm: f.rpm.value ? parseFloat(f.rpm.value) : null,
       avg_miles: f.avg_miles.value ? parseInt(f.avg_miles.value, 10) : null,
       is_published: f.is_published.value === 'true'
     };
-    if (!row.company) return;
-    sb.from('offers').insert(row).then(function (res) {
+    if (!row.company) { msg.className = 'form-msg err'; msg.textContent = 'A company name is required.'; return; }
+    if (row.rpm_min != null && row.rpm_max != null && row.rpm_min > row.rpm_max) {
+      msg.className = 'form-msg err'; msg.textContent = 'The rate range runs backwards — the low end is above the high end.'; return;
+    }
+    if (row.gross_min != null && row.gross_max != null && row.gross_min > row.gross_max) {
+      msg.className = 'form-msg err'; msg.textContent = 'The gross range runs backwards — the low end is above the high end.'; return;
+    }
+
+    insertTolerantly('offers', row, function (res, dropped) {
       if (res.error) { msg.className = 'form-msg err'; msg.textContent = res.error.message; return; }
-      msg.className = 'form-msg ok'; msg.textContent = 'Offer added.';
-      f.reset(); f.badge.value = 'Hiring now';
+      msg.className = 'form-msg ok';
+      msg.textContent = dropped.length
+        ? 'Offer added, but ' + dropped.join(', ') + ' could not be saved — run supabase/offer-details.sql to add those columns.'
+        : 'Offer added.';
+      f.reset();
+      f.badge.value = 'Hiring now';
+      clearPicks('f-equipment', false);
+      clearPicks('f-route', false);
+      clearPicks('f-offer-type', true);
+      syncOfferType();
       if (window.__resetOfferLogo) window.__resetOfferLogo();
-      setTimeout(function () { msg.textContent = ''; }, 2500);
+      setTimeout(function () { msg.textContent = ''; }, dropped.length ? 9000 : 2500);
       loadOffers();
     });
   });
