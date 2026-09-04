@@ -121,3 +121,21 @@
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--fg-2); margin-top: 3px;
 }
+
+/* ── carrier logo chip ───────────────────────────────────────────────────
+   Carrier logos arrive in every polarity: white art on transparent, black
+   art on transparent, colour. Rendering them as a white silhouette on a
+   black chip is the one treatment that is legible for all of them, and it
+   matches how the partner strip already handles logos. */
+.dc-avatar.has-logo, .oc-logo {
+  background: #000; border: 1px solid rgba(0,0,0,0.14);
+  overflow: hidden; padding: 6px;
+}
+.dc-avatar.has-logo img, .oc-logo img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+  filter: grayscale(1) brightness(0) invert(1);
+}
+.oc-logo {
+  width: 40px; height: 40px; flex: none; border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+}

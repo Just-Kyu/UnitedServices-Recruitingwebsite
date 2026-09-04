@@ -649,3 +649,16 @@
             mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
   }
 }
+
+/* Offer cards on the homepage carry the same logo chip as the board. */
+.offer-card .oc-id { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 auto; }
+.offer-card .oc-id > div { min-width: 0; }
+.offer-card .oc-logo {
+  width: 40px; height: 40px; flex: none; border-radius: 10px; padding: 6px;
+  background: #000; border: 1px solid rgba(0,0,0,0.14); overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.offer-card .oc-logo img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+  filter: grayscale(1) brightness(0) invert(1);
+}

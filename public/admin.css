@@ -230,8 +230,11 @@
   border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05);
   display: flex; align-items: center; justify-content: center;
 }
-/* Previewed exactly as the public site will render it: black and white. */
-.logo-prev img { max-width: 80%; max-height: 80%; object-fit: contain; filter: grayscale(1) contrast(1.25) brightness(1.5); }
+/* Previewed exactly as the public site renders it: a white silhouette on
+   black, which is the one treatment that works for a white logo and a dark
+   one alike. Upload with a transparent background. */
+.logo-prev { background: #000; }
+.logo-prev img { max-width: 80%; max-height: 80%; object-fit: contain; filter: grayscale(1) brightness(0) invert(1); }
 .logo-clear { background: none; border: 0; color: rgba(255,255,255,0.55); font-size: 12px; text-decoration: underline; cursor: pointer; }
 .logo-clear:hover { color: #fff; }
 
@@ -241,4 +244,5 @@
   width: 24px; height: 24px; margin-right: 8px; border-radius: 6px;
   border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.05); overflow: hidden;
 }
-.ar-logo img { max-width: 82%; max-height: 82%; object-fit: contain; filter: grayscale(1) contrast(1.25) brightness(1.5); }
+.ar-logo { background: #000; }
+.ar-logo img { max-width: 82%; max-height: 82%; object-fit: contain; filter: grayscale(1) brightness(0) invert(1); }

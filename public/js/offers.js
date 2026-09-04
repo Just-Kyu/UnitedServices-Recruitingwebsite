@@ -133,8 +133,15 @@
       var eqLine = line('Equipment', eqList.join(', '));
       var homeLine = line('Home time', o.home_time);
       var badge = o.badge ? '<span class="pill live"><span class="dot"></span>' + escapeHtml(o.badge) + '</span>' : '<span class="pill"><span class="dot"></span>Verified</span>';
+      // The carrier's own logo when there is one, the generic rig when there
+      // is not. Logos are rendered as a white silhouette on black, the same
+      // treatment the partner strip uses, so a light logo and a dark logo are
+      // both legible on the same card.
+      var avatar = o.logo_url
+        ? '<div class="dc-avatar has-logo"><img src="' + escapeHtml(o.logo_url) + '" alt="" loading="lazy"></div>'
+        : '<div class="dc-avatar">' + truckIco + '</div>';
       return '<div class="card driver-card edge-top">' +
-        '<div class="dc-top"><div class="dc-avatar">' + truckIco + '</div>' +
+        '<div class="dc-top">' + avatar +
           '<div><div class="dc-id">' + escapeHtml(o.company || 'Verified carrier') + '</div>' +
           '<div class="dc-loc">' + loc + '</div></div></div>' +
         '<div class="dc-meta">' + pay + rate + gross + eqLine + homeLine + '</div>' +
