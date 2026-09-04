@@ -22,6 +22,8 @@
 
     if (href.indexOf('tel:') === 0) {
       track('phone_click', { link_url: href, page_path: location.pathname });
+    } else if (/^https?:\/\/t\.me\//.test(href)) {
+      track('telegram_click', { link_url: href, page_path: location.pathname });
     } else if (href.indexOf('mailto:') === 0) {
       track('email_click', { link_url: href, page_path: location.pathname });
     } else if (/apply\.html/.test(href)) {
