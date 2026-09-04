@@ -113,6 +113,14 @@
       reader.readAsDataURL(file);
     });
     window.__resetOfferLogo = reset;
+    // Editing an existing offer loads its saved logo back into the picker, so
+    // saving without touching it keeps the logo rather than wiping it.
+    window.__setOfferLogo = function (url) {
+      if (!url) return reset();
+      offerLogo = url;
+      prev.querySelector('img').src = url;
+      prev.hidden = false; clear.hidden = false;
+    };
   })();
 
   /* ---------- chip pickers -------------------------------------------------
@@ -124,12 +132,6 @@
     var box = document.getElementById(id);
     if (!box) return [];
     return [].map.call(box.querySelectorAll('.pick.on'), function (b) { return b.getAttribute('data-v'); });
-  }
-  function clearPicks(id, firstOn) {
-    var box = document.getElementById(id);
-    if (!box) return;
-    var all = box.querySelectorAll('.pick');
-    [].forEach.call(all, function (b, i) { b.classList.toggle('on', !!firstOn && i === 0); });
   }
   document.addEventListener('click', function (e) {
     var b = e.target.closest('.pickset .pick');
@@ -181,6 +183,7 @@
       var list = document.getElementById('offer-list');
       if (res.error) { list.innerHTML = '<div class="admin-empty">' + esc(res.error.message) + '</div>'; return; }
       var rows = res.data || [];
+      OFFER_ROWS = rows;
       document.getElementById('cnt-offers').textContent = rows.length;
       if (!rows.length) { list.innerHTML = '<div class="admin-empty">No offers yet. Add one on the left.</div>'; return; }
       list.innerHTML = rows.map(function (o) {
@@ -192,21 +195,102 @@
           '<div class="ar-main"><div class="ar-title">' + thumb + esc(o.company) + '</div>' +
           '<div class="ar-sub">' + offerSummary(o) + '</div><div class="ar-tags">' + tags + '</div></div>' +
           '<div class="ar-actions">' +
+          '<button class="ar-btn" data-edit-offer="' + o.id + '">Edit</button>' +
           '<button class="ar-btn ' + (o.is_published ? 'pub' : 'hidden') + '" data-pub="offers" data-id="' + o.id + '" data-val="' + (o.is_published ? 'false' : 'true') + '">' + (o.is_published ? 'Live' : 'Draft') + '</button>' +
           '<button class="ar-btn del" data-del="offers" data-id="' + o.id + '">Delete</button>' +
           '</div></div>';
       }).join('');
+      markEditingRow();
     });
   }
 
+  /* ---------- editing an existing offer ---------------------------------
+   * The add form doubles as the edit form: an offer is loaded into it, the
+   * heading and button change, and submit becomes an update. Nothing is
+   * duplicated, so a field added to the form is editable the same day.
+   */
+  var editingOffer = null;
+  var OFFER_ROWS = [];
+
+  function setPicks(id, values) {
+    var box = document.getElementById(id);
+    if (!box) return;
+    var want = values || [];
+    [].forEach.call(box.querySelectorAll('.pick'), function (b) {
+      b.classList.toggle('on', want.indexOf(b.getAttribute('data-v')) !== -1);
+    });
+  }
+  function markEditingRow() {
+    document.querySelectorAll('#offer-list .admin-row').forEach(function (r) {
+      var btn = r.querySelector('[data-edit-offer]');
+      r.classList.toggle('is-editing',
+        !!editingOffer && !!btn && btn.getAttribute('data-edit-offer') === String(editingOffer.id));
+    });
+  }
+  function offerEditMode(o) {
+    var f = document.getElementById('offer-form');
+    editingOffer = o;
+    document.getElementById('offer-form-title').textContent = o ? 'Edit carrier offer' : 'Add a carrier offer';
+    document.getElementById('offer-submit').textContent = o ? 'Save changes' : 'Add offer';
+    var note = document.getElementById('offer-editing');
+    note.hidden = !o;
+    if (o) document.getElementById('offer-editing-name').textContent = o.company || 'this offer';
+    document.getElementById('offer-msg').textContent = '';
+
+    if (!o) {
+      f.reset();
+      f.badge.value = 'Hiring now';
+      setPicks('f-equipment', []); setPicks('f-route', []); setPicks('f-offer-type', ['company']);
+      if (window.__resetOfferLogo) window.__resetOfferLogo();
+      syncOfferType();
+      markEditingRow();
+      return;
+    }
+
+    f.company.value = o.company || '';
+    f.location.value = o.location || '';
+    f.pay.value = o.pay || '';
+    f.rpm_min.value = o.rpm_min != null ? o.rpm_min : '';
+    f.rpm_max.value = o.rpm_max != null ? o.rpm_max : '';
+    f.gross_min.value = o.gross_min != null ? o.gross_min : '';
+    f.gross_max.value = o.gross_max != null ? o.gross_max : '';
+    f.home_time.value = o.home_time || '';
+    f.escrow.value = o.escrow || '';
+    f.avg_miles.value = o.avg_miles != null ? o.avg_miles : '';
+    f.badge.value = o.badge || '';
+    f.tags.value = (o.tags || []).join(', ');
+    f.notes.value = o.notes || '';
+    f.is_published.value = o.is_published ? 'true' : 'false';
+    setPicks('f-equipment', arr(o.equipment_list, o.equipment));
+    setPicks('f-route', arr(o.route_list, o.route));
+    setPicks('f-offer-type', [o.offer_type === 'owner_operator' ? 'owner_operator' : 'company']);
+    if (window.__setOfferLogo) window.__setOfferLogo(o.logo_url);
+    syncOfferType();
+    markEditingRow();
+    f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-edit-offer]');
+    if (!btn) return;
+    var id = btn.getAttribute('data-edit-offer');
+    var row = null;
+    OFFER_ROWS.forEach(function (o) { if (String(o.id) === id) row = o; });
+    if (row) offerEditMode(row);
+  });
+  document.getElementById('offer-cancel').addEventListener('click', function () { offerEditMode(null); });
+
   /* An offer must never be lost because the database has not had
    * supabase/offer-details.sql run against it yet. Postgres rejects the whole
-   * insert over one unknown column, so drop whichever column it names and try
+   * write over one unknown column, so drop whichever column it names and try
    * again, then say plainly which fields did not make it. */
-  function insertTolerantly(table, row, done) {
+  function writeTolerantly(table, row, id, done) {
     var dropped = [];
     function attempt() {
-      sb.from(table).insert(row).then(function (res) {
+      var q = id
+        ? sb.from(table).update(row).eq('id', id)
+        : sb.from(table).insert(row);
+      q.then(function (res) {
         var m = res.error && /Could not find the '([a-z_]+)' column/i.exec(res.error.message || '');
         if (m && Object.prototype.hasOwnProperty.call(row, m[1]) && dropped.length < 20) {
           dropped.push(m[1]);
@@ -258,19 +342,16 @@
       msg.className = 'form-msg err'; msg.textContent = 'The gross range runs backwards — the low end is above the high end.'; return;
     }
 
-    insertTolerantly('offers', row, function (res, dropped) {
+    var editingId = editingOffer ? editingOffer.id : null;
+    writeTolerantly('offers', row, editingId, function (res, dropped) {
       if (res.error) { msg.className = 'form-msg err'; msg.textContent = res.error.message; return; }
+      var verb = editingId ? 'Changes saved' : 'Offer added';
+      // Reset first: leaving edit mode clears the message box.
+      offerEditMode(null);
       msg.className = 'form-msg ok';
       msg.textContent = dropped.length
-        ? 'Offer added, but ' + dropped.join(', ') + ' could not be saved — run supabase/offer-details.sql to add those columns.'
-        : 'Offer added.';
-      f.reset();
-      f.badge.value = 'Hiring now';
-      clearPicks('f-equipment', false);
-      clearPicks('f-route', false);
-      clearPicks('f-offer-type', true);
-      syncOfferType();
-      if (window.__resetOfferLogo) window.__resetOfferLogo();
+        ? verb + ', but ' + dropped.join(', ') + ' could not be saved — run supabase/offer-details.sql to add those columns.'
+        : verb + '.';
       setTimeout(function () { msg.textContent = ''; }, dropped.length ? 9000 : 2500);
       loadOffers();
     });
@@ -338,10 +419,15 @@
       if (!confirm(isLead
             ? 'Delete this enquiry permanently? Their details will be gone.'
             : 'Delete this listing permanently?')) return;
-      sb.from(t).delete().eq('id', del.getAttribute('data-id'))
+      var delId = del.getAttribute('data-id');
+      sb.from(t).delete().eq('id', delId)
         .then(function () {
           if (isLead) loadLeads();
-          else if (t === 'offers') loadOffers();
+          else if (t === 'offers') {
+            // Don't leave the form editing a row that no longer exists.
+            if (editingOffer && String(editingOffer.id) === String(delId)) offerEditMode(null);
+            loadOffers();
+          }
           else loadDrivers();
         });
     }
