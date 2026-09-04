@@ -59,9 +59,32 @@
   var truckIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><polyline points="14 8 18 8 22 12 22 17 14 17"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>';
   var arrowIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 
+  // An offer can cover several trailer types and several route types, so the
+  // list columns win when they are there and the old single columns are the
+  // fallback for rows written before the change.
+  function listOf(o, key) {
+    var many = o[key + '_list'];
+    if (Array.isArray(many) && many.length) return many;
+    return o[key] ? [o[key]] : [];
+  }
   function match(o) {
-    return (state.eq === 'all' || o.equipment === state.eq) &&
-           (state.route === 'all' || o.route === state.route);
+    return (state.eq === 'all' || listOf(o, 'equipment').indexOf(state.eq) !== -1) &&
+           (state.route === 'all' || listOf(o, 'route').indexOf(state.route) !== -1);
+  }
+
+  function num(v) { return (v === null || v === undefined || v === '') ? null : Number(v); }
+  function money(n) { return '$' + Number(n).toLocaleString(); }
+  function rateText(o) {
+    var lo = num(o.rpm_min), hi = num(o.rpm_max);
+    if (lo == null && hi == null) return '';
+    if (lo != null && hi != null && lo !== hi) return '$' + lo.toFixed(2) + '–$' + hi.toFixed(2) + ' / mi';
+    return '$' + Number(lo != null ? lo : hi).toFixed(2) + ' / mi';
+  }
+  function grossText(o) {
+    var lo = num(o.gross_min), hi = num(o.gross_max);
+    if (lo == null && hi == null) return '';
+    if (lo != null && hi != null && lo !== hi) return money(lo) + '–' + money(hi) + ' / wk';
+    return money(lo != null ? lo : hi) + ' / wk';
   }
 
   function postedAgo(iso) {
@@ -93,17 +116,28 @@
       return;
     }
     grid.innerHTML = list.map(function (o) {
-      var loc = [o.location, o.route].filter(Boolean).map(escapeHtml).join(' · ') || postedAgo(o.created_at);
-      var tags = (o.tags && o.tags.length ? o.tags : [o.equipment].filter(Boolean))
-        .map(function (t) { return '<span>' + escapeHtml(t) + '</span>'; }).join('');
-      var pay = o.pay ? '<div class="dc-line"><span class="lab">Pay</span><span class="val" style="color:var(--steel-hi)">' + escapeHtml(o.pay) + '</span></div>' : '';
-      var eqLine = o.equipment ? '<div class="dc-line"><span class="lab">Equipment</span><span class="val">' + escapeHtml(o.equipment) + '</span></div>' : '';
+      var eqList = listOf(o, 'equipment'), rtList = listOf(o, 'route');
+      var loc = [o.location, rtList.join(' · ')].filter(Boolean).map(escapeHtml).join(' · ') || postedAgo(o.created_at);
+      var isOO = o.offer_type === 'owner_operator';
+      var chips = (o.tags && o.tags.length ? o.tags.slice() : []);
+      if (o.offer_type) chips.unshift(isOO ? 'Owner operator' : 'Company driver');
+      if (!chips.length) chips = eqList.slice();
+      var tags = chips.map(function (t) { return '<span>' + escapeHtml(t) + '</span>'; }).join('');
+      function line(lab, val, hi) {
+        return val ? '<div class="dc-line"><span class="lab">' + lab + '</span><span class="val"' +
+          (hi ? ' style="color:var(--steel-hi)"' : '') + '>' + escapeHtml(val) + '</span></div>' : '';
+      }
+      var pay = line('Pay', o.pay, true);
+      var rate = line('Rate', rateText(o), true);
+      var gross = isOO ? line('Gross', grossText(o), true) : '';
+      var eqLine = line('Equipment', eqList.join(', '));
+      var homeLine = line('Home time', o.home_time);
       var badge = o.badge ? '<span class="pill live"><span class="dot"></span>' + escapeHtml(o.badge) + '</span>' : '<span class="pill"><span class="dot"></span>Verified</span>';
       return '<div class="card driver-card edge-top">' +
         '<div class="dc-top"><div class="dc-avatar">' + truckIco + '</div>' +
           '<div><div class="dc-id">' + escapeHtml(o.company || 'Verified carrier') + '</div>' +
           '<div class="dc-loc">' + loc + '</div></div></div>' +
-        '<div class="dc-meta">' + pay + eqLine + '</div>' +
+        '<div class="dc-meta">' + pay + rate + gross + eqLine + homeLine + '</div>' +
         (tags ? '<div class="dc-tags">' + tags + '</div>' : '') +
         (o.notes ? '<div class="dc-notes" style="font-size:13px;line-height:1.55;color:var(--silver-txt);margin-bottom:16px;">' + escapeHtml(o.notes) + '</div>' : '') +
         '<div class="dc-foot">' + badge +
@@ -127,8 +161,10 @@
   function ready() { return window.usrSupabase; }
   function go() {
     var sb = window.usrSupabase;
+    // select('*') on purpose: naming columns here breaks the whole board the
+    // moment the admin writes a field this file has not been taught about.
     sb.from('offers')
-      .select('id, created_at, company, location, route, equipment, pay, tags, badge, notes')
+      .select('*')
       .order('created_at', { ascending: false })
       .limit(120)
       .then(function (res) {
