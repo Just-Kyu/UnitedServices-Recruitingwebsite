@@ -75,6 +75,18 @@
 .admin-card { background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.5)); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 22px; }
 .admin-form h2 { font-family: var(--font-display, sans-serif); font-size: 18px; color: #fff; margin-bottom: 18px; }
 .admin-form .btn { width: 100%; margin-top: 4px; }
+.form-editing {
+  font-size: 13px; color: rgba(255,255,255,0.6); margin: -10px 0 16px;
+  padding: 9px 12px; border-radius: 10px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.16);
+}
+.form-editing b { color: #fff; font-weight: 600; }
+.form-editing button {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: rgba(255,255,255,0.6); font: inherit; text-decoration: underline; text-underline-offset: 2px;
+}
+.form-editing button:hover { color: #fff; }
+.admin-row.is-editing { border-color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.06); }
 
 .admin-list { display: flex; flex-direction: column; gap: 10px; }
 .admin-empty { color: var(--silver-dim, #ffffff); padding: 30px; text-align: center; border: 1px dashed rgba(255,255,255,0.14); border-radius: 14px; }

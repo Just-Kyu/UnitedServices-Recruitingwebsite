@@ -34,7 +34,7 @@ window.USR_PARTNERS = [
   function esc(s) { return String(s).replace(/"/g, '&quot;'); }
   function mark(p) {
     return '<div class="pt-mark"' + (p.scale ? ' style="--s:' + p.scale + '"' : '') +
-           '><img src="assets/partners/' + encodeURIComponent(p.file) + '?v=34' +
+           '><img src="assets/partners/' + encodeURIComponent(p.file) + '?v=35' +
            '" alt="' + esc(p.name) + '" loading="eager" decoding="async" draggable="false"></div>';
   }
 
