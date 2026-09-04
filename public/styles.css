@@ -393,3 +393,45 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline-offs
   transition: top .2s ease;
 }
 .skip-link:focus { top: 12px; }
+
+/* ── reach us another way ────────────────────────────────────────────────
+   A form is not everyone's first choice. Telegram, phone and email sit
+   together under the application and beside the carrier form so nobody has
+   to finish a form to get in touch. */
+.reach {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  margin: 22px auto 0; max-width: 720px;
+}
+.reach-lab {
+  font-family: var(--font-mono, monospace); font-size: 11px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--silver-dim, rgba(255,255,255,.55));
+  margin-right: 2px;
+}
+.reach-btn {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  font-size: 14px; font-weight: 600; color: var(--fg, #fff);
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 999px; padding: 9px 16px;
+  transition: border-color .18s, background .18s, color .18s;
+}
+.reach-btn:hover { border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.1); }
+.reach-btn svg { width: 15px; height: 15px; flex: none; opacity: .75; }
+.reach-btn.tg { background: #fff; color: #000; border-color: #fff; }
+.reach-btn.tg svg { opacity: 1; }
+.reach-btn.tg:hover { background: rgba(255,255,255,0.86); border-color: rgba(255,255,255,0.86); }
+.reach-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.28); }
+
+/* On a paper band the same strip has to invert. */
+[data-band="paper"] .reach-btn {
+  color: #000; background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.16);
+}
+[data-band="paper"] .reach-btn:hover { border-color: rgba(0,0,0,0.4); background: rgba(0,0,0,0.07); }
+[data-band="paper"] .reach-btn.tg { background: #000; color: #fff; border-color: #000; }
+
+.ok-tg { font-size: 14px; color: var(--silver-txt, rgba(255,255,255,.75)); margin: 14px 0 22px; }
+.ok-tg a { color: var(--fg, #fff); text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 520px) {
+  .reach { gap: 8px; }
+  .reach-lab { width: 100%; margin-bottom: 2px; }
+}

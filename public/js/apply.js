@@ -213,9 +213,10 @@
       box.innerHTML =
         '<h3>We couldn\'t send your application</h3>' +
         '<p>Something went wrong on our side — your details did not reach us, so please don\'t wait on a call. ' +
-        'Call or email us and we\'ll take it down directly, or try submitting again in a minute.</p>' +
+        'Call, message or email us and we\'ll take it down directly, or try submitting again in a minute.</p>' +
         '<div class="apply-error-row">' +
           '<a class="btn btn-chrome" href="tel:+14402968338">Call (440) 296-8338</a>' +
+          '<a class="btn btn-ghost" href="https://t.me/UnitedServices_Recruiting" target="_blank" rel="noopener">Telegram</a>' +
           '<a class="btn btn-ghost" href="mailto:recruiting@us-unitedservices.com">Email us</a>' +
         '</div>';
       (shell && shell.parentNode ? shell.parentNode : document.body).insertBefore(box, shell);
